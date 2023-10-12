@@ -13,9 +13,9 @@ class Ui_Main(QtWidgets.QWidget):
         self.QtStack = QtWidgets.QStackedLayout()#Função da biblioteca
         
         #quantidade de telas
-        self.stack0 = QtWidgets.QMainWindow()
-        self.stack1 = QtWidgets.QMainWindow()
-        self.stack2 = QtWidgets.QMainWindow()
+        self.stack0 =QtWidgets.QMainWindow()
+        self.stack1 =QtWidgets.QMainWindow()
+        self.stack2 =QtWidgets.QMainWindow()
         
         #Fazendo a chamada de cada uma individualmente
         self.tela_main_ui = Ui_Dialog()
