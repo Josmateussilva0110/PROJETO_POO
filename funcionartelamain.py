@@ -18,10 +18,10 @@ class Ui_Main(QtWidgets.QWidget):
         self.stack2 =QtWidgets.QMainWindow()
         
         #Fazendo a chamada de cada uma individualmente
-        self.tela_main_ui = Ui_Dialog()
+        self.tela_main_ui=Ui_Dialog()
         self.tela_main_ui.setupUi(self.stack0)
 
-        self.TELA_CADASTRO_ui = Cadastrar()
+        self.TELA_CADASTRO_ui=Cadastrar()
         self.TELA_CADASTRO_ui.setupUi(self.stack1)
 
         self.tela_login_ui = Login()
