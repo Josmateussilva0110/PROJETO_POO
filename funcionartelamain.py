@@ -4,7 +4,10 @@ from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox
 from tela_main_ui import *
 from TELA_CADASTRO_ui import *
 from tela_login_ui import *
+from classes.class_armazenar import *
+from classes.class_pessoa import *
 
+dados = Armazenar()
 
 class Main(QtWidgets.QWidget):
     def setupUi(self, Main):
@@ -51,26 +54,17 @@ class Main(QMainWindow, Main):
         #tela Cadastro
         self.TELA_CADASTRO_ui.pushButton_3.clicked.connect(self.VoltarMain) #Volta Menu Inicial
         self.TELA_CADASTRO_ui.pushButton_2.clicked.connect(self.abrirLogin) #Entra Direto no Login
-        self.TELA_CADASTRO_ui.pushButton.clicked.connect(self.botao_confirmacao) #abre a telinha de confirmação de cadastro
-        '''self.TELA_CADASTRO_ui.pushButton.clicked.connect(self.botaoCadastra)
-        self.cad = Cadastrar()'''
+        self.TELA_CADASTRO_ui.pushButton.clicked.connect(self.botao_Cadastra) #abre a telinha de confirmação de cadastro
         
-    '''def botaoCadastra(self):
-        nome = self.TELA_CADASTRO_ui.lineEdit_2.text()
-        endereco = self.TELA_CADASTRO_ui.lineEdit_3.text()
-        cpf = self.TELA_CADASTRO_ui.lineEdit_3.text()
-        nascimento = self.TELA_CADASTRO_ui.lineEdit_4.text()
-        if not(nome == '' or endereco == '' or cpf == '' or nascimento == ''):
-            p = Pessoa(nome,endereco,cpf,nascimento)
-            if (self.cad.cadastra(p)):
-                QMessageBox.information(None,'POOII', 'Cadastro realizado com sucesso!')
-                self.TELA_CADASTRO_ui.lineEdit.setText('')
-            else:
-                QMessageBox.information(None,'POOII', 'O CPF informado já está cadastrado na base de dados!')
-        else:
-            QMessageBox.information(None,'POOII', 'Todos os valores devem ser preenchidos!')
-
-        #self.QtStack.setCurrentIndex(0)'''
+    def botao_Cadastra(self):
+        nome = self.TELA_CADASTRO_ui.lineEdit.text()
+        cpf = self.TELA_CADASTRO_ui.lineEdit_2.text()
+        email = self.TELA_CADASTRO_ui.lineEdit_3.text()
+        senha = self.TELA_CADASTRO_ui.lineEdit_4.text()
+        pessoa = Pessoa(cpf, nome, email, senha)
+        dados.armazenar(pessoa)
+        dados.exibir_pessoa()
+        self.QtStack.setCurrentIndex(0)
     
     def botao_ok(self): #responsavel por abrir a tela de confirmação
         QtWidgets.QMessageBox.information(self, 'login', 'login realizado com sucesso.')
