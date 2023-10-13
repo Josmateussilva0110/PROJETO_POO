@@ -1,10 +1,17 @@
 import sys
 
-from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow
+from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox
 from tela_main_ui import *
 from TELA_CADASTRO_ui import *
 from tela_login_ui import *
 
+'''class Pessoa:
+    def __init__(self, nome, endereco, cpf, nascimento):
+        self.nome = nome
+        self.endereco = endereco
+        self.cpf = cpf
+        self.nascimento = nascimento
+'''
 class Main(QtWidgets.QWidget):
     def setupUi(self, Main):
         Main.setObjectName('Main')
@@ -49,8 +56,26 @@ class Main(QMainWindow, Main):
         #tela Cadastro
         self.TELA_CADASTRO_ui.pushButton_3.clicked.connect(self.VoltarMain) #Volta Menu Inicial
         self.TELA_CADASTRO_ui.pushButton_2.clicked.connect(self.abrirLogin) #Entra Direto no Login
+        '''self.TELA_CADASTRO_ui.pushButton.clicked.connect(self.botaoCadastra)
+        self.cad = Cadastrar()'''
         
-        
+    '''def botaoCadastra(self):
+        nome = self.TELA_CADASTRO_ui.lineEdit_2.text()
+        endereco = self.TELA_CADASTRO_ui.lineEdit_3.text()
+        cpf = self.TELA_CADASTRO_ui.lineEdit_3.text()
+        nascimento = self.TELA_CADASTRO_ui.lineEdit_4.text()
+        if not(nome == '' or endereco == '' or cpf == '' or nascimento == ''):
+            p = Pessoa(nome,endereco,cpf,nascimento)
+            if (self.cad.cadastra(p)):
+                QMessageBox.information(None,'POOII', 'Cadastro realizado com sucesso!')
+                self.TELA_CADASTRO_ui.lineEdit.setText('')
+            else:
+                QMessageBox.information(None,'POOII', 'O CPF informado já está cadastrado na base de dados!')
+        else:
+            QMessageBox.information(None,'POOII', 'Todos os valores devem ser preenchidos!')
+
+        #self.QtStack.setCurrentIndex(0)'''
+
     def fecharAplicacao(self): #Função responsavel por fechar 
         sys.exit()
     
