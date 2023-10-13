@@ -6,6 +6,7 @@ from TELA_CADASTRO_ui import *
 from tela_login_ui import *
 from classes.class_armazenar import *
 from classes.class_pessoa import *
+from classes.funcoes_aux import *
 
 dados = Armazenar()
 
@@ -57,14 +58,27 @@ class Main(QMainWindow, Main):
         self.TELA_CADASTRO_ui.pushButton.clicked.connect(self.botao_Cadastra) #abre a telinha de confirmação de cadastro
         
     def botao_Cadastra(self):
+        valid = False
         nome = self.TELA_CADASTRO_ui.lineEdit.text()
         cpf = self.TELA_CADASTRO_ui.lineEdit_2.text()
         email = self.TELA_CADASTRO_ui.lineEdit_3.text()
         senha = self.TELA_CADASTRO_ui.lineEdit_4.text()
-        pessoa = Pessoa(cpf, nome, email, senha)
-        dados.armazenar(pessoa)
-        dados.exibir_pessoa()
-        self.QtStack.setCurrentIndex(0)
+        
+        if nome == '' or cpf == '' or email == '' or senha == '':
+            QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
+        elif not verificar_nome(nome):
+            QtWidgets.QMessageBox.information(self, 'erro', 'Nome inválido. Digite apenas letras.')
+        elif not cpf.isdigit(): # Verifique se o CPF contém apenas dígitos
+            QtWidgets.QMessageBox.information(self, 'erro', 'CPF inválido. Digite apenas números.')
+        else:
+            pessoa = Pessoa(cpf, nome, email, senha)
+            dados.armazenar(pessoa)
+            QtWidgets.QMessageBox.information(self, 'cadastro', 'Cadastro realizado com sucesso.')
+            valid = True
+
+        if valid:
+            self.QtStack.setCurrentIndex(0)
+
     
     def botao_ok(self): #responsavel por abrir a tela de confirmação
         QtWidgets.QMessageBox.information(self, 'login', 'login realizado com sucesso.')
