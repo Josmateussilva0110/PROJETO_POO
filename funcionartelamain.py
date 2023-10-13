@@ -57,6 +57,7 @@ class Main(QMainWindow, Main):
         #tela Cadastro
         self.TELA_CADASTRO_ui.pushButton_3.clicked.connect(self.VoltarMain) #Volta Menu Inicial
         self.TELA_CADASTRO_ui.pushButton_2.clicked.connect(self.abrirLogin) #Entra Direto no Login
+        self.TELA_CADASTRO_ui.pushButton.clicked.connect(self.botao_confirmacao) #abre a telinha de confirmação de cadastro
         '''self.TELA_CADASTRO_ui.pushButton.clicked.connect(self.botaoCadastra)
         self.cad = Cadastrar()'''
         
@@ -79,6 +80,10 @@ class Main(QMainWindow, Main):
     
     def botao_ok(self): #responsavel por abrir a tela de confirmação
         QtWidgets.QMessageBox.information(self, 'login', 'login realizado com sucesso.')
+    
+
+    def botao_confirmacao(self): #responsavel por abrir a tela de confirmação de cadastro
+        QtWidgets.QMessageBox.information(self, 'cadastro', 'pessoa cadastrada com sucesso.')
 
     def fecharAplicacao(self): #Função responsavel por fechar 
         sys.exit()
