@@ -75,13 +75,26 @@ class Main(QMainWindow, Main):
             dados.armazenar(pessoa)
             QtWidgets.QMessageBox.information(self, 'cadastro', 'Cadastro realizado com sucesso.')
             valid = True
+            self.TELA_CADASTRO_ui.lineEdit.setText('')
+            self.TELA_CADASTRO_ui.lineEdit_2.setText('')
+            self.TELA_CADASTRO_ui.lineEdit_3.setText('')
+            self.TELA_CADASTRO_ui.lineEdit_4.setText('')
+
+            dados.exibir_pessoa()
 
         if valid:
             self.QtStack.setCurrentIndex(0)
-
+            
     
     def botao_ok(self): #responsavel por abrir a tela de confirmação
-        QtWidgets.QMessageBox.information(self, 'login', 'login realizado com sucesso.')
+        cpf = self.tela_login_ui.lineEdit.text()
+        senha = self.tela_login_ui.lineEdit_2.text()
+        if cpf == '' or senha == '':
+            QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
+        if cpf in dados:
+            QtWidgets.QMessageBox.information(self, 'confirmação', 'sucesso.')
+        else:
+            QtWidgets.QMessageBox.information(self, 'login', 'login realizado com sucesso.')
     
 
     def botao_confirmacao(self): #responsavel por abrir a tela de confirmação de cadastro

@@ -8,4 +8,5 @@ class Armazenar():
 
     def exibir_pessoa(self):
         for i, v in self._dados.items():
-            print(f'{i} - {v._nome} - {v._email}')
+            print(f'{i} - {v._nome} - {v._cpf} - {v._email} - {v._senha}')
+        

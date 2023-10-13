@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\QUARTO_PERIODO\PROGRAMAÇÃO ORIENTADA A OBJETOS II\Projetos\Projeto\TELA_LOGIN.ui'
+# Form implementation generated from reading ui file 'd:\QUARTO_PERIODO\PROGRAMAÇÃO ORIENTADA A OBJETOS II\Projetos\Projeto\PROJETO_POO\TELA_LOGIN.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -51,8 +51,8 @@ class Login(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.label.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt;\">LOGIN</span></p></body></html>"))
-        self.label_2.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">NOME =</span></p></body></html>"))
-        self.label_3.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">CPF =</span></p></body></html>"))
+        self.label_2.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">CPF =</span></p></body></html>"))
+        self.label_3.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">SENHA = </span></p></body></html>"))
         self.pushButton.setText(_translate("Dialog", "LOGIN"))
         self.pushButton_3.setText(_translate("Dialog", "VOLTAR"))
         self.pushButton_2.setText(_translate("Dialog", "CADASTRAR"))
