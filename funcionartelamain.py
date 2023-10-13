@@ -5,13 +5,7 @@ from tela_main_ui import *
 from TELA_CADASTRO_ui import *
 from tela_login_ui import *
 
-'''class Pessoa:
-    def __init__(self, nome, endereco, cpf, nascimento):
-        self.nome = nome
-        self.endereco = endereco
-        self.cpf = cpf
-        self.nascimento = nascimento
-'''
+
 class Main(QtWidgets.QWidget):
     def setupUi(self, Main):
         Main.setObjectName('Main')
