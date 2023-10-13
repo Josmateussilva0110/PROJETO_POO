@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\QUARTO_PERIODO\PROGRAMAÇÃO ORIENTADA A OBJETOS II\Projeto\Projeto\TELA_CADASTRO.ui'
+# Form implementation generated from reading ui file 'd:\QUARTO_PERIODO\PROGRAMAÇÃO ORIENTADA A OBJETOS II\Projetos\Projeto\TELA_CADASTRO.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #

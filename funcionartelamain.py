@@ -5,7 +5,7 @@ from tela_main_ui import *
 from TELA_CADASTRO_ui import *
 from tela_login_ui import *
 
-class Ui_Main(QtWidgets.QWidget):
+class Main(QtWidgets.QWidget):
     def setupUi(self, Main):
         Main.setObjectName('Main')
         Main.resize(640, 480)
@@ -32,7 +32,7 @@ class Ui_Main(QtWidgets.QWidget):
         self.QtStack.addWidget(self.stack1)
         self.QtStack.addWidget(self.stack2)
 
-class Main(QMainWindow, Ui_Main):
+class Main(QMainWindow, Main):
     def __init__(self):
         super(Main, self).__init__(None)
         self.setupUi(self)
