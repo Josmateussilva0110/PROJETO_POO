@@ -52,6 +52,7 @@ class Main(QMainWindow, Main):
         #tela Login
         self.tela_login_ui.pushButton_3.clicked.connect(self.VoltarMain) #Volta Menu Inicial
         self.tela_login_ui.pushButton_2.clicked.connect(self.abrirTelaCadastro) #Abre direto na tela cadastro
+        self.tela_login_ui.pushButton.clicked.connect(self.botao_ok) #abre a telinha de confirmação
         
         #tela Cadastro
         self.TELA_CADASTRO_ui.pushButton_3.clicked.connect(self.VoltarMain) #Volta Menu Inicial
@@ -75,6 +76,9 @@ class Main(QMainWindow, Main):
             QMessageBox.information(None,'POOII', 'Todos os valores devem ser preenchidos!')
 
         #self.QtStack.setCurrentIndex(0)'''
+    
+    def botao_ok(self): #responsavel por abrir a tela de confirmação
+        QtWidgets.QMessageBox.information(self, 'login', 'login realizado com sucesso.')
 
     def fecharAplicacao(self): #Função responsavel por fechar 
         sys.exit()
