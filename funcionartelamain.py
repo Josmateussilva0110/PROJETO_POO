@@ -70,6 +70,8 @@ class Main(QMainWindow, Main):
             QtWidgets.QMessageBox.information(self, 'erro', 'Nome inválido. Digite apenas letras.')
         elif not cpf.isdigit(): # Verifique se o CPF contém apenas dígitos
             QtWidgets.QMessageBox.information(self, 'erro', 'CPF inválido. Digite apenas números.')
+        elif not email_valido(email):
+            QtWidgets.QMessageBox.information(self, 'erro', 'Email inválido.')
         else:
             pessoa = Pessoa(cpf, nome, email, senha)
             dados.armazenar(pessoa)
