@@ -80,8 +80,6 @@ class Main(QMainWindow, Main):
             self.TELA_CADASTRO_ui.lineEdit_3.setText('')
             self.TELA_CADASTRO_ui.lineEdit_4.setText('')
 
-            dados.exibir_pessoa()
-
         if valid:
             self.QtStack.setCurrentIndex(0)
             
@@ -91,11 +89,14 @@ class Main(QMainWindow, Main):
         senha = self.tela_login_ui.lineEdit_2.text()
         if cpf == '' or senha == '':
             QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
-        if cpf in dados:
-            QtWidgets.QMessageBox.information(self, 'confirmação', 'sucesso.')
-        else:
+        
+        elif dados.verificar_login(cpf, senha):
             QtWidgets.QMessageBox.information(self, 'login', 'login realizado com sucesso.')
-    
+            self.tela_login_ui.lineEdit.setText('')
+            self.tela_login_ui.lineEdit_2.setText('')
+        else:
+            QtWidgets.QMessageBox.information(self, 'Erro', 'Login ou senha invalido.')
+        
 
     def botao_confirmacao(self): #responsavel por abrir a tela de confirmação de cadastro
         QtWidgets.QMessageBox.information(self, 'cadastro', 'pessoa cadastrada com sucesso.')
