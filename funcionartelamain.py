@@ -57,7 +57,7 @@ class Main(QMainWindow, Main):
         self.TELA_CADASTRO_ui.pushButton_2.clicked.connect(self.abrirLogin) #Entra Direto no Login
         self.TELA_CADASTRO_ui.pushButton.clicked.connect(self.botao_Cadastra) #abre a telinha de confirmação de cadastro
         
-    def botao_Cadastra(self):
+    def botao_Cadastra(self ):
         valid = False
         nome = self.TELA_CADASTRO_ui.lineEdit.text()
         cpf = self.TELA_CADASTRO_ui.lineEdit_2.text()
