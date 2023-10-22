@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\QUARTO_PERIODO\PROGRAMAÇÃO ORIENTADA A OBJETOS II\Projetos\Projeto\PROJETO_POO\TELA_MAIN.ui'
+# Form implementation generated from reading ui file 'd:\ESCOLA\QUARTO_PERIODO\PROGRAMAÇÃO ORIENTADA A OBJETOS II\Projetos\Projeto\PROJETO_POO\TELA_MAIN.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -14,19 +14,19 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(615, 499)
+        Dialog.resize(615, 549)
         self.label = QtWidgets.QLabel(Dialog)
-        self.label.setGeometry(QtCore.QRect(10, 50, 591, 61))
+        self.label.setGeometry(QtCore.QRect(220, 60, 178, 48))
         self.label.setMinimumSize(QtCore.QSize(55, 0))
         self.label.setObjectName("label")
         self.pushButton_3 = QtWidgets.QPushButton(Dialog)
-        self.pushButton_3.setGeometry(QtCore.QRect(20, 450, 93, 28))
+        self.pushButton_3.setGeometry(QtCore.QRect(20, 490, 93, 28))
         self.pushButton_3.setObjectName("pushButton_3")
         self.label_6 = QtWidgets.QLabel(Dialog)
-        self.label_6.setGeometry(QtCore.QRect(370, 450, 141, 31))
+        self.label_6.setGeometry(QtCore.QRect(370, 490, 141, 31))
         self.label_6.setObjectName("label_6")
         self.pushButton_4 = QtWidgets.QPushButton(Dialog)
-        self.pushButton_4.setGeometry(QtCore.QRect(500, 450, 93, 28))
+        self.pushButton_4.setGeometry(QtCore.QRect(500, 490, 93, 28))
         self.pushButton_4.setObjectName("pushButton_4")
         self.frame = QtWidgets.QFrame(Dialog)
         self.frame.setGeometry(QtCore.QRect(140, 180, 361, 201))

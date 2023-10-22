@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\QUARTO_PERIODO\PROGRAMAÇÃO ORIENTADA A OBJETOS II\Projetos\Projeto\PROJETO_POO\TELA_CADASTRO.ui'
+# Form implementation generated from reading ui file 'd:\ESCOLA\QUARTO_PERIODO\PROGRAMAÇÃO ORIENTADA A OBJETOS II\Projetos\Projeto\PROJETO_POO\TELA_CADASTRO.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -23,10 +23,10 @@ class Cadastrar(object):
         self.pushButton_3.setGeometry(QtCore.QRect(20, 450, 93, 28))
         self.pushButton_3.setObjectName("pushButton_3")
         self.pushButton = QtWidgets.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(300, 370, 101, 31))
+        self.pushButton.setGeometry(QtCore.QRect(300, 420, 101, 31))
         self.pushButton.setObjectName("pushButton")
         self.layoutWidget = QtWidgets.QWidget(Dialog)
-        self.layoutWidget.setGeometry(QtCore.QRect(140, 180, 411, 26))
+        self.layoutWidget.setGeometry(QtCore.QRect(140, 210, 411, 26))
         self.layoutWidget.setObjectName("layoutWidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.layoutWidget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
@@ -36,7 +36,7 @@ class Cadastrar(object):
         self.lineEdit.setObjectName("lineEdit")
         self.horizontalLayout.addWidget(self.lineEdit)
         self.layoutWidget1 = QtWidgets.QWidget(Dialog)
-        self.layoutWidget1.setGeometry(QtCore.QRect(140, 220, 411, 26))
+        self.layoutWidget1.setGeometry(QtCore.QRect(140, 250, 411, 26))
         self.layoutWidget1.setObjectName("layoutWidget1")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.layoutWidget1)
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -46,7 +46,7 @@ class Cadastrar(object):
         self.lineEdit_2.setObjectName("lineEdit_2")
         self.horizontalLayout_2.addWidget(self.lineEdit_2)
         self.layoutWidget2 = QtWidgets.QWidget(Dialog)
-        self.layoutWidget2.setGeometry(QtCore.QRect(140, 260, 411, 26))
+        self.layoutWidget2.setGeometry(QtCore.QRect(140, 290, 411, 26))
         self.layoutWidget2.setObjectName("layoutWidget2")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.layoutWidget2)
         self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -56,7 +56,7 @@ class Cadastrar(object):
         self.lineEdit_3.setObjectName("lineEdit_3")
         self.horizontalLayout_3.addWidget(self.lineEdit_3)
         self.layoutWidget3 = QtWidgets.QWidget(Dialog)
-        self.layoutWidget3.setGeometry(QtCore.QRect(140, 300, 411, 26))
+        self.layoutWidget3.setGeometry(QtCore.QRect(140, 330, 411, 26))
         self.layoutWidget3.setObjectName("layoutWidget3")
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.layoutWidget3)
         self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
@@ -69,6 +69,14 @@ class Cadastrar(object):
         self.label_2.setGeometry(QtCore.QRect(140, 100, 411, 41))
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
+        self.comboBox = QtWidgets.QComboBox(Dialog)
+        self.comboBox.setEnabled(True)
+        self.comboBox.setGeometry(QtCore.QRect(290, 160, 111, 22))
+        self.comboBox.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.comboBox.setEditable(False)
+        self.comboBox.setObjectName("comboBox")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -85,3 +93,5 @@ class Cadastrar(object):
         self.lineEdit_4.setPlaceholderText(_translate("Dialog", "Senha"))
         self.label_2.setText(_translate("Dialog", "Criar uma nova conta\n"
 "É rápido e fácil."))
+        self.comboBox.setItemText(0, _translate("Dialog", "CLIENTE"))
+        self.comboBox.setItemText(1, _translate("Dialog", "FUNCIONARIO"))
