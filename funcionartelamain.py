@@ -154,7 +154,7 @@ class Ui_Main(QMainWindow, Main):
         if tipo_selecionado == "Cliente":
             QMessageBox.information(self, 'Tipo selecionado', 'Você selecionou Cliente.')
         elif tipo_selecionado == "Funcionário":
-            QMessageBox.information(self, 'Tipo selecionado', 'Você selecionou Funcionário')
+            QMessageBox.information(self,'Tipo selecionado', 'Você selecionou Funcionário')
 
 
 if __name__ == '__main__':
