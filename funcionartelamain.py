@@ -157,7 +157,7 @@ class Ui_Main(QMainWindow, Main):
             QMessageBox.information(self, 'Tipo selecionado', 'Você selecionou Funcionário')
 
 
-if __name__ == '__main__':
+if __name__ == ' __main__':
     app = QApplication(sys.argv)
     show_main = Ui_Main()
     sys.exit(app.exec_())
