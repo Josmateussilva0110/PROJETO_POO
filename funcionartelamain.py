@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox
 from tela_main_ui import *
 from TELA_CADASTRO_ui import *
-from TELA_DPS_LOGIN1_ui import *
+from TELA_DPS_LOGIN_ui import *
 from TELA_DPS_LOGIN_FUNC_ui import *
 from classes.class_armazenar import *
 from classes.class_pessoa import *
