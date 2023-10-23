@@ -12,6 +12,7 @@ from TELA_LISTA_FILMES_ui import *
 from classes.class_armazenar import *
 from classes.class_pessoa import *
 from classes.funcoes_aux import *
+from classes.class_filme import *
 
 dados = Armazenar()
 
@@ -102,6 +103,7 @@ class Ui_Main(QMainWindow, Main):
         
         #Tela_Cadastrar_Filmes
         self.TELA_DPS_CADASTRAR_FUNC_ui.pushButton_3.clicked.connect(self.TelaGestao)
+        self.TELA_DPS_CADASTRAR_FUNC_ui.pushButton.clicked.connect(self.botao_cadastrar_filme)
         
         #Tela_Excluir_Filmes
         self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.TelaGestao)
@@ -221,3 +223,29 @@ class Ui_Main(QMainWindow, Main):
         
     def TelaListarFilmes(self):
         self.QtStack.setCurrentIndex(8)
+
+    #tela de cadastro de filmes
+    def botao_cadastrar_filme(self):
+        valid = False
+        id_filme = int(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit.text())
+        nome_filme = self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_2.text()
+        ano_filme = int(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_3.text())
+        preco = float(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_4.text())
+        classificacao = self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_5.text()
+        if id_filme == '' or nome_filme == '' or ano_filme == '' or preco == '' or classificacao == '':
+            QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
+        else:
+            filme = Filme(id_filme, nome_filme, ano_filme, preco, classificacao)
+            certo_filme = dados.armazenar_filme(filme, id_filme)
+            if certo_filme:
+                QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'filme cadastrado com sucesso.')
+                valid = True
+            else:
+                QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Erro, Id de filme já cadastrado.')
+        if valid:
+            self.QtStack.setCurrentIndex(5)
+        self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit.setText('')
+        self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_2.setText('')
+        self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_3.setText('')
+        self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_4.setText('')
+        self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_5.setText('')

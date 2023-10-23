@@ -2,6 +2,7 @@ class Armazenar():
     def __init__(self):
         self._dados = dict()
         self._dados_func = dict()
+        self._dados_filmes = dict()
     
     def armazenar(self, pessoa, cpf):
         if cpf not in self._dados and cpf not in self._dados_func:
@@ -16,7 +17,13 @@ class Armazenar():
             return True
         else:
             return False
-
+    
+    def armazenar_filme(self, filme, id):
+        if id not in self._dados_filmes:
+            self._dados_filmes[id] = filme
+            return True
+        else:
+            return False
     
 
     def exibir_pessoa(self):
