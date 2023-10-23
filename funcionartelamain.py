@@ -21,6 +21,7 @@ class Main(QtWidgets.QWidget):
         self.stack1 = QtWidgets.QMainWindow()
         self.stack2 = QtWidgets.QMainWindow()
         self.stack3 = QtWidgets.QMainWindow()
+        self.stack4 = QtWidgets.QMainWindow()
 
         self.tela_main_ui = Ui_Dialog()
         self.tela_main_ui.setupUi(self.stack0)
