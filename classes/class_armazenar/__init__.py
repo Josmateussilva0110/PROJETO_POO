@@ -3,11 +3,20 @@ class Armazenar():
         self._dados = dict()
         self._dados_func = dict()
     
-    def armazenar(self, pessoa):
-        self._dados[pessoa._cpf] = pessoa
+    def armazenar(self, pessoa, cpf):
+        if cpf not in self._dados and cpf not in self._dados_func:
+            self._dados[cpf] = pessoa
+            return True
+        else:
+            return False
         
-    def armazena_func(self,func):
-        self._dados_func[func._cpf] = func
+    def armazena_func(self,func, cpf):
+        if cpf not in self._dados and cpf not in self._dados_func:
+            self._dados_func[cpf] = func
+            return True
+        else:
+            return False
+
     
 
     def exibir_pessoa(self):
