@@ -221,8 +221,3 @@ class Ui_Main(QMainWindow, Main):
         
     def TelaListarFilmes(self):
         self.QtStack.setCurrentIndex(8)
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    show_main = Ui_Main()
-    sys.exit(app.exec_())
