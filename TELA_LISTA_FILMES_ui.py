@@ -26,3 +26,8 @@ class Listar_Filmes(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.pushButton_4.setText(_translate("Dialog", "VOLTAR"))
+    
+    def exibir_filmes(self, filmes):
+        for filme in filmes:
+            item = QtWidgets.QListWidgetItem(filme)
+            self.listWidget.addItem(item)

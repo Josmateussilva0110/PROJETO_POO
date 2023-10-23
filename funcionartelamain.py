@@ -13,6 +13,7 @@ from classes.class_armazenar import *
 from classes.class_pessoa import *
 from classes.funcoes_aux import *
 from classes.class_filme import *
+from tela_lista_filmes_teste import *
 
 dados = Armazenar()
 
@@ -57,7 +58,7 @@ class Main(QtWidgets.QWidget):
         self.TELA_EXCUIR_FILME_ui = Exluir_Filmes()
         self.TELA_EXCUIR_FILME_ui.setupUi(self.stack7)
         
-        self.TELA_LISTA_FILMES_ui = Listar_Filmes()
+        self.TELA_LISTA_FILMES_ui = Tela_Lista_Filmes()
         self.TELA_LISTA_FILMES_ui.setupUi(self.stack8)
 
 
@@ -99,7 +100,6 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_GESTAO_FILMES_ui.pushButton_4.clicked.connect(self.abrirLoginFunc)
         self.TELA_GESTAO_FILMES_ui.pushButton_3.clicked.connect(self.TelaCadastraFilme)
         self.TELA_GESTAO_FILMES_ui.pushButton_2.clicked.connect(self.TelaExcluiFilme)
-        self.TELA_GESTAO_FILMES_ui.pushButton.clicked.connect(self.TelaListarFilmes)
         
         #Tela_Cadastrar_Filmes
         self.TELA_DPS_CADASTRAR_FUNC_ui.pushButton_3.clicked.connect(self.TelaGestao)
@@ -109,7 +109,9 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.TelaGestao)
         
         #Tela_Listar_Filmes
-        self.TELA_LISTA_FILMES_ui.pushButton_4.clicked.connect(self.TelaGestao)
+        #self.TELA_LISTA_FILMES_ui.pushButton_4.clicked.connect(self.TelaGestao)
+
+        self.lista_filmes_cadastrados = list()
 
     def botao_Cadastra(self):
         valid = False
@@ -221,8 +223,6 @@ class Ui_Main(QMainWindow, Main):
     def TelaExcluiFilme(self):
         self.QtStack.setCurrentIndex(7)
         
-    def TelaListarFilmes(self):
-        self.QtStack.setCurrentIndex(8)
 
     #tela de cadastro de filmes
     def botao_cadastrar_filme(self):
@@ -237,6 +237,7 @@ class Ui_Main(QMainWindow, Main):
         else:
             filme = Filme(id_filme, nome_filme, ano_filme, preco, classificacao)
             certo_filme = dados.armazenar_filme(filme, id_filme)
+            self.lista_filmes_cadastrados.append(filme)
             if certo_filme:
                 QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'filme cadastrado com sucesso.')
                 valid = True
