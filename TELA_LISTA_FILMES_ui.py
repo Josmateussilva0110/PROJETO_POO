@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\ESCOLA\QUARTO_PERIODO\PROGRAMAÇÃO ORIENTADA A OBJETOS II\Projetos\Projeto\PROJETO_POO\TELA_ESTATISTICA.ui'
+# Form implementation generated from reading ui file 'd:\ESCOLA\QUARTO_PERIODO\PROGRAMAÇÃO ORIENTADA A OBJETOS II\Projetos\Projeto\PROJETO_POO\TELA_LISTA_FILMES.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -11,12 +11,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Estatistica(object):
+class Listar_Filmes(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(751, 598)
+        Dialog.resize(619, 500)
         self.pushButton_4 = QtWidgets.QPushButton(Dialog)
-        self.pushButton_4.setGeometry(QtCore.QRect(10, 550, 93, 28))
+        self.pushButton_4.setGeometry(QtCore.QRect(10, 460, 93, 28))
         self.pushButton_4.setObjectName("pushButton_4")
 
         self.retranslateUi(Dialog)

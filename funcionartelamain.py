@@ -6,6 +6,9 @@ from TELA_DPS_LOGIN_ui import *
 from TELA_DPS_LOGIN_FUNC_ui import *
 from TELA_ESTATISTICA_ui import *
 from TELA_GESTAO_FILMES_ui import *
+from TELA_DPS_CADASTRAR_FUNC_ui import *
+from TELA_EXCLUIR_FILME_ui import *
+from TELA_LISTA_FILMES_ui import *
 from classes.class_armazenar import *
 from classes.class_pessoa import *
 from classes.funcoes_aux import *
@@ -25,6 +28,9 @@ class Main(QtWidgets.QWidget):
         self.stack3 = QtWidgets.QMainWindow()
         self.stack4 = QtWidgets.QMainWindow()
         self.stack5 = QtWidgets.QMainWindow()
+        self.stack6 = QtWidgets.QMainWindow()
+        self.stack7 = QtWidgets.QMainWindow()
+        self.stack8 = QtWidgets.QMainWindow()
 
         self.tela_main_ui = Ui_Dialog()
         self.tela_main_ui.setupUi(self.stack0)
@@ -43,6 +49,16 @@ class Main(QtWidgets.QWidget):
         
         self.TELA_GESTAO_FILMES_ui = GESTAO_FILMES()
         self.TELA_GESTAO_FILMES_ui.setupUi(self.stack5)
+        
+        self.TELA_DPS_CADASTRAR_FUNC_ui = Cadastrar_Filme()
+        self.TELA_DPS_CADASTRAR_FUNC_ui.setupUi(self.stack6)
+        
+        self.TELA_EXCUIR_FILME_ui = Exluir_Filmes()
+        self.TELA_EXCUIR_FILME_ui.setupUi(self.stack7)
+        
+        self.TELA_LISTA_FILMES_ui = Listar_Filmes()
+        self.TELA_LISTA_FILMES_ui.setupUi(self.stack8)
+
 
         self.QtStack.addWidget(self.stack0)
         self.QtStack.addWidget(self.stack1)
@@ -50,6 +66,9 @@ class Main(QtWidgets.QWidget):
         self.QtStack.addWidget(self.stack3)
         self.QtStack.addWidget(self.stack4)
         self.QtStack.addWidget(self.stack5)
+        self.QtStack.addWidget(self.stack6)
+        self.QtStack.addWidget(self.stack7)
+        self.QtStack.addWidget(self.stack8)
 
 class Ui_Main(QMainWindow, Main):
     def __init__(self):
@@ -77,6 +96,18 @@ class Ui_Main(QMainWindow, Main):
         
         #Tela_Gestao
         self.TELA_GESTAO_FILMES_ui.pushButton_4.clicked.connect(self.abrirLoginFunc)
+        self.TELA_GESTAO_FILMES_ui.pushButton_3.clicked.connect(self.TelaCadastraFilme)
+        self.TELA_GESTAO_FILMES_ui.pushButton_2.clicked.connect(self.TelaExcluiFilme)
+        self.TELA_GESTAO_FILMES_ui.pushButton.clicked.connect(self.TelaListarFilmes)
+        
+        #Tela_Cadastrar_Filmes
+        self.TELA_DPS_CADASTRAR_FUNC_ui.pushButton_3.clicked.connect(self.TelaGestao)
+        
+        #Tela_Excluir_Filmes
+        self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.TelaGestao)
+        
+        #Tela_Listar_Filmes
+        self.TELA_LISTA_FILMES_ui.pushButton_4.clicked.connect(self.TelaGestao)
 
     def botao_Cadastra(self):
         valid = False
@@ -180,7 +211,16 @@ class Ui_Main(QMainWindow, Main):
         self.QtStack.setCurrentIndex(4)
         
     def TelaGestao(self):
-        self.QtStack.setCurrentIndex(5) 
+        self.QtStack.setCurrentIndex(5)
+        
+    def TelaCadastraFilme(self):
+        self.QtStack.setCurrentIndex(6)
+        
+    def TelaExcluiFilme(self):
+        self.QtStack.setCurrentIndex(7)
+        
+    def TelaListarFilmes(self):
+        self.QtStack.setCurrentIndex(8)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
