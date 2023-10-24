@@ -52,27 +52,11 @@
     <string>VOLTAR</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_3">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>260</y>
-     <width>341</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="placeholderText">
-    <string>Nome Filme</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>330</y>
+     <x>240</x>
+     <y>260</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -81,7 +65,7 @@
     <string>EXCLUIR</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -92,7 +76,7 @@
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2"/>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -103,13 +87,13 @@
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_3"/>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>140</x>
      <y>200</y>
      <width>341</width>
-     <height>25</height>
+     <height>30</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">

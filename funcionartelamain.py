@@ -7,7 +7,7 @@ from TELA_DPS_LOGIN_FUNC_ui import *
 from TELA_ESTATISTICA_ui import *
 from TELA_GESTAO_FILMES_ui import *
 from TELA_DPS_CADASTRAR_FUNC_ui import *
-from TELA_EXCLUIR_FILME_ui import *
+from TELA_EXCLUIR_FILME import *
 from TELA_LISTA_FILMES_ui import *
 from classes.class_armazenar import *
 from classes.class_pessoa import *
@@ -55,7 +55,7 @@ class Main(QtWidgets.QWidget):
         self.TELA_DPS_CADASTRAR_FUNC_ui = Cadastrar_Filme()
         self.TELA_DPS_CADASTRAR_FUNC_ui.setupUi(self.stack6)
         
-        self.TELA_EXCUIR_FILME_ui = Exluir_Filmes()
+        self.TELA_EXCUIR_FILME_ui = Excluir_Filme()
         self.TELA_EXCUIR_FILME_ui.setupUi(self.stack7)
         
         self.TELA_LISTA_FILMES_ui = Tela_Lista_Filmes()
@@ -107,11 +107,12 @@ class Ui_Main(QMainWindow, Main):
         
         #Tela_Excluir_Filmes
         self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.TelaGestao)
+        self.TELA_EXCUIR_FILME_ui.pushButton_2.clicked.connect(self.buscar_filme)
+        self.TELA_EXCUIR_FILME_ui.pushButton.clicked.connect(self.excluir_filme)
         
         #Tela_Listar_Filmes
         #self.TELA_LISTA_FILMES_ui.pushButton_4.clicked.connect(self.TelaGestao)
 
-        self.lista_filmes_cadastrados = list()
 
     def botao_Cadastra(self):
         valid = False
@@ -237,7 +238,6 @@ class Ui_Main(QMainWindow, Main):
         else:
             filme = Filme(id_filme, nome_filme, ano_filme, preco, classificacao)
             certo_filme = dados.armazenar_filme(filme, id_filme)
-            self.lista_filmes_cadastrados.append(filme)
             if certo_filme:
                 QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'filme cadastrado com sucesso.')
                 valid = True
@@ -250,3 +250,26 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_3.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_4.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_5.setText('')
+
+    #tela de excluir
+    def buscar_filme(self):
+        id = int(self.TELA_EXCUIR_FILME_ui.lineEdit_2.text())
+        achado = dados.buscar_filme(id)
+        if achado is not None:
+            QtWidgets.QMessageBox.information(self, 'Filme', f'Id: {achado._id}\nNome: {achado._nome}\nAno: {achado._ano}\nPreco: {achado._preco}\nClassificacao: {achado._classificacao}')
+        else:
+            QtWidgets.QMessageBox.information(self, 'Filme', 'Erro, filme nao encontrado.')
+        #self.TELA_EXCUIR_FILME_ui.lineEdit_2.setText('')
+
+
+
+    def excluir_filme(self):
+        id = int(self.TELA_EXCUIR_FILME_ui.lineEdit_2.text())
+        achado = dados.buscar_filme(id)
+        if achado is not None:
+            del dados._dados_filmes[id]
+            QtWidgets.QMessageBox.information(self, 'Filme excluído', f'O filme com ID {id} foi excluído com sucesso.')
+        else:
+            QtWidgets.QMessageBox.information(self, 'Erro', 'Filme não encontrado.')
+
+        self.TELA_EXCUIR_FILME_ui.lineEdit_2.setText('')

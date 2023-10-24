@@ -47,3 +47,9 @@ class Armazenar():
             if pessoa._cpf == cpf and pessoa._senha == senha:
                 return True
         return False
+    
+    def buscar_filme(self, id):
+        for i in self._dados_filmes.keys():
+            if i == id:
+                return self._dados_filmes[id]
+        return None

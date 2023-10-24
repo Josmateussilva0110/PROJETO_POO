@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\ESCOLA\QUARTO_PERIODO\PROGRAMAÇÃO ORIENTADA A OBJETOS II\Projetos\Projeto\PROJETO_POO\TELA_EXCLUIR_FILME.ui'
+# Form implementation generated from reading ui file '.\TELA_EXCLUIR_FILME.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Exluir_Filmes(object):
+class Excluir_Filme(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(635, 507)
@@ -24,36 +24,32 @@ class Exluir_Filmes(object):
         self.pushButton_3 = QtWidgets.QPushButton(Dialog)
         self.pushButton_3.setGeometry(QtCore.QRect(10, 450, 93, 28))
         self.pushButton_3.setObjectName("pushButton_3")
-        self.lineEdit_3 = QtWidgets.QLineEdit(Dialog)
-        self.lineEdit_3.setGeometry(QtCore.QRect(140, 260, 341, 24))
-        self.lineEdit_3.setAlignment(QtCore.Qt.AlignCenter)
-        self.lineEdit_3.setObjectName("lineEdit_3")
         self.pushButton = QtWidgets.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(270, 330, 93, 28))
+        self.pushButton.setGeometry(QtCore.QRect(240, 260, 93, 28))
         self.pushButton.setObjectName("pushButton")
-        self.widget = QtWidgets.QWidget(Dialog)
-        self.widget.setGeometry(QtCore.QRect(0, 0, 2, 2))
-        self.widget.setObjectName("widget")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget)
+        self.layoutWidget = QtWidgets.QWidget(Dialog)
+        self.layoutWidget.setGeometry(QtCore.QRect(0, 0, 2, 2))
+        self.layoutWidget.setObjectName("layoutWidget")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.layoutWidget)
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.widget1 = QtWidgets.QWidget(Dialog)
-        self.widget1.setGeometry(QtCore.QRect(0, 0, 2, 2))
-        self.widget1.setObjectName("widget1")
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.widget1)
+        self.layoutWidget1 = QtWidgets.QWidget(Dialog)
+        self.layoutWidget1.setGeometry(QtCore.QRect(0, 0, 2, 2))
+        self.layoutWidget1.setObjectName("layoutWidget1")
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.layoutWidget1)
         self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.widget2 = QtWidgets.QWidget(Dialog)
-        self.widget2.setGeometry(QtCore.QRect(140, 200, 341, 25))
-        self.widget2.setObjectName("widget2")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget2)
+        self.layoutWidget2 = QtWidgets.QWidget(Dialog)
+        self.layoutWidget2.setGeometry(QtCore.QRect(140, 200, 341, 30))
+        self.layoutWidget2.setObjectName("layoutWidget2")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.layoutWidget2)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.lineEdit_2 = QtWidgets.QLineEdit(self.widget2)
+        self.lineEdit_2 = QtWidgets.QLineEdit(self.layoutWidget2)
         self.lineEdit_2.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_2.setObjectName("lineEdit_2")
         self.horizontalLayout.addWidget(self.lineEdit_2)
-        self.pushButton_2 = QtWidgets.QPushButton(self.widget2)
+        self.pushButton_2 = QtWidgets.QPushButton(self.layoutWidget2)
         self.pushButton_2.setObjectName("pushButton_2")
         self.horizontalLayout.addWidget(self.pushButton_2)
 
@@ -66,7 +62,6 @@ class Exluir_Filmes(object):
         self.label_2.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-weight:600;\">EXPLUIR FILMES</span></p></body></html>"))
         self.label.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt;\">CINEPLUS</span></p></body></html>"))
         self.pushButton_3.setText(_translate("Dialog", "VOLTAR"))
-        self.lineEdit_3.setPlaceholderText(_translate("Dialog", "Nome Filme"))
         self.pushButton.setText(_translate("Dialog", "EXCLUIR"))
         self.lineEdit_2.setPlaceholderText(_translate("Dialog", "ID do Filme"))
         self.pushButton_2.setText(_translate("Dialog", "BUSCAR"))
