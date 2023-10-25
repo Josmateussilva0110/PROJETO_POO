@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\ESCOLA\QUARTO_PERIODO\PROGRAMAÇÃO ORIENTADA A OBJETOS II\Projetos\Projeto\PROJETO_POO\PROJETO_POO\TELA_DPS_CADASTRAR_FUNC.ui'
+# Form implementation generated from reading ui file '.\TELA_DPS_CADASTRAR_FUNC.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -65,7 +65,7 @@ class Cadastrar_Filme(object):
         self.pushButton_3.setGeometry(QtCore.QRect(20, 450, 93, 28))
         self.pushButton_3.setObjectName("pushButton_3")
         self.pushButton = QtWidgets.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(280, 400, 101, 31))
+        self.pushButton.setGeometry(QtCore.QRect(280, 420, 101, 31))
         self.pushButton.setObjectName("pushButton")
         self.horizontalLayoutWidget = QtWidgets.QWidget(Dialog)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(130, 340, 411, 31))
@@ -77,6 +77,10 @@ class Cadastrar_Filme(object):
         self.lineEdit_5.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_5.setObjectName("lineEdit_5")
         self.horizontalLayout_5.addWidget(self.lineEdit_5)
+        self.lineEdit_6 = QtWidgets.QLineEdit(Dialog)
+        self.lineEdit_6.setGeometry(QtCore.QRect(130, 380, 409, 24))
+        self.lineEdit_6.setAlignment(QtCore.Qt.AlignCenter)
+        self.lineEdit_6.setObjectName("lineEdit_6")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -93,3 +97,4 @@ class Cadastrar_Filme(object):
         self.pushButton_3.setText(_translate("Dialog", "VOLTAR"))
         self.pushButton.setText(_translate("Dialog", "CADASTRAR"))
         self.lineEdit_5.setPlaceholderText(_translate("Dialog", "Classificação"))
+        self.lineEdit_6.setPlaceholderText(_translate("Dialog", "Horário"))
