@@ -243,10 +243,11 @@ class Ui_Main(QMainWindow, Main):
         preco = float(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_4.text())
         classificacao = self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_5.text()
         horario = self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_6.text()
+        tipo_filme = self.TELA_DPS_CADASTRAR_FUNC_ui.comboBox.currentText()
         if id_filme == '' or nome_filme == '' or ano_filme == '' or preco == '' or classificacao == '':
             QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
         else:
-            filme = Filme(id_filme, nome_filme, ano_filme, preco, classificacao, horario)
+            filme = Filme(id_filme, nome_filme, ano_filme, preco, classificacao, horario, tipo_filme)
             certo_filme = dados.armazenar_filme(filme, id_filme)
             if certo_filme:
                 QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'filme cadastrado com sucesso.')
@@ -254,7 +255,7 @@ class Ui_Main(QMainWindow, Main):
             else:
                 QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Erro, Id de filme já cadastrado.')
         if valid:
-            filmes_adicionados_funcionario.append(Filme(id_filme, nome_filme, ano_filme, preco, classificacao, horario))
+            filmes_adicionados_funcionario.append(Filme(id_filme, nome_filme, ano_filme, preco, classificacao, horario, tipo_filme))
             self.QtStack.setCurrentIndex(5)
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_2.setText('')
@@ -268,7 +269,7 @@ class Ui_Main(QMainWindow, Main):
         id = int(self.TELA_EXCUIR_FILME_ui.lineEdit_2.text())
         achado = dados.buscar_filme(id)
         if achado is not None:
-            QtWidgets.QMessageBox.information(self, 'Filme', f'Id: {achado._id}\nNome: {achado._nome}\nAno: {achado._ano}\nPreco: {achado._preco}\nClassificacao: {achado._classificacao}\nHorario: {achado._horario}')
+            QtWidgets.QMessageBox.information(self, 'Filme', f'Id: {achado._id}\nNome: {achado._nome}\nAno: {achado._ano}\nPreco: {achado._preco}\nClassificacao: {achado._classificacao}\nHorario: {achado._horario}\nTipo: {achado._tipo}')
         else:
             QtWidgets.QMessageBox.information(self, 'Filme', 'Erro, filme nao encontrado.')
     #self.TELA_EXCUIR_FILME_ui.lineEdit_2.setText('')
@@ -280,7 +281,7 @@ class Ui_Main(QMainWindow, Main):
         lista_de_filmes = obter_lista_de_filmes()  # Use a função fpara obter os filmes
 
         for filme in lista_de_filmes:
-            item = QStandardItem(f'ID: {filme._id} - Nome: {filme._nome} - Ano: {filme._ano} - Preço: {filme._preco} - classificação: {filme._classificacao} - Horário: {filme._horario}')
+            item = QStandardItem(f'ID: {filme._id} - Nome: {filme._nome} - Ano: {filme._ano} - Preço: {filme._preco} - classificação: {filme._classificacao} - Horário: {filme._horario} - Tipo: {filme._tipo}')
             modelo.appendRow(item)
 
         lista_view.setModel(modelo)

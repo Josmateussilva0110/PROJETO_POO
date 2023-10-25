@@ -1,11 +1,12 @@
 class Filme():
-    def __init__(self, id, nome, ano, preco, classificacao, horario):
+    def __init__(self, id, nome, ano, preco, classificacao, horario, tipo):
         self._id = id
         self._nome = nome
         self._ano = ano
         self._preco = preco
         self._classificacao = classificacao
         self._horario = horario
+        self._tipo = tipo
     
 
     def ver_filme(self):
