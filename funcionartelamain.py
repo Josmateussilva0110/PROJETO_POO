@@ -1,5 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from tela_main_ui import *
 from TELA_CADASTRO_ui import *
 from TELA_DPS_LOGIN_ui import *
@@ -13,9 +14,13 @@ from classes.class_armazenar import *
 from classes.class_pessoa import *
 from classes.funcoes_aux import *
 from classes.class_filme import *
-from tela_lista_filmes_teste import *
 
 dados = Armazenar()
+filmes_adicionados_funcionario = [] ##Pega os filmes cadastrados
+
+# Esta função retorna a lista de filmes para cadastrados
+def obter_lista_de_filmes():
+    return filmes_adicionados_funcionario
 
 class Main(QtWidgets.QWidget):
     def setupUi(self, Main):
@@ -100,6 +105,7 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_GESTAO_FILMES_ui.pushButton_4.clicked.connect(self.abrirLoginFunc)
         self.TELA_GESTAO_FILMES_ui.pushButton_3.clicked.connect(self.TelaCadastraFilme)
         self.TELA_GESTAO_FILMES_ui.pushButton_2.clicked.connect(self.TelaExcluiFilme)
+        self.TELA_GESTAO_FILMES_ui.pushButton.clicked.connect(self.TelaVerTodosFilmes)
         
         #Tela_Cadastrar_Filmes
         self.TELA_DPS_CADASTRAR_FUNC_ui.pushButton_3.clicked.connect(self.TelaGestao)
@@ -111,7 +117,7 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_EXCUIR_FILME_ui.pushButton.clicked.connect(self.excluir_filme)
         
         #Tela_Listar_Filmes
-        #self.TELA_LISTA_FILMES_ui.pushButton_4.clicked.connect(self.TelaGestao)
+        self.TELA_LISTA_FILMES_ui.pushButton_4.clicked.connect(self.TelaGestao)
 
 
     def botao_Cadastra(self):
@@ -224,6 +230,9 @@ class Ui_Main(QMainWindow, Main):
     def TelaExcluiFilme(self):
         self.QtStack.setCurrentIndex(7)
         
+    def TelaVerTodosFilmes(self):
+        self.QtStack.setCurrentIndex(8)
+        
 
     #tela de cadastro de filmes
     def botao_cadastrar_filme(self):
@@ -244,6 +253,7 @@ class Ui_Main(QMainWindow, Main):
             else:
                 QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Erro, Id de filme já cadastrado.')
         if valid:
+            filmes_adicionados_funcionario.append(Filme(id_filme, nome_filme, ano_filme, preco, classificacao))
             self.QtStack.setCurrentIndex(5)
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_2.setText('')
@@ -259,16 +269,31 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.information(self, 'Filme', f'Id: {achado._id}\nNome: {achado._nome}\nAno: {achado._ano}\nPreco: {achado._preco}\nClassificacao: {achado._classificacao}')
         else:
             QtWidgets.QMessageBox.information(self, 'Filme', 'Erro, filme nao encontrado.')
-        #self.TELA_EXCUIR_FILME_ui.lineEdit_2.setText('')
+    #self.TELA_EXCUIR_FILME_ui.lineEdit_2.setText('')
 
+    def TelaVerTodosFilmes(self):
+        self.QtStack.setCurrentIndex(8)
+        lista_view = self.TELA_LISTA_FILMES_ui.listView
+        modelo = QStandardItemModel()
+        lista_de_filmes = obter_lista_de_filmes()  # Use a função fpara obter os filmes
 
+        for filme in lista_de_filmes:
+            item = QStandardItem(f'ID: {filme._id} - Nome: {filme._nome} - Ano: {filme._ano} - preço: {filme._preco} - classificação: {filme._classificacao}')
+            modelo.appendRow(item)
 
+        lista_view.setModel(modelo)
+    
     def excluir_filme(self):
         id = int(self.TELA_EXCUIR_FILME_ui.lineEdit_2.text())
         achado = dados.buscar_filme(id)
         if achado is not None:
             del dados._dados_filmes[id]
             QtWidgets.QMessageBox.information(self, 'Filme excluído', f'O filme com ID {id} foi excluído com sucesso.')
+            
+            # Remova o filme da lista de filmes adicionados pelo funcionário
+            for filme in filmes_adicionados_funcionario:
+                if filme._id == id:
+                    filmes_adicionados_funcionario.remove(filme)
         else:
             QtWidgets.QMessageBox.information(self, 'Erro', 'Filme não encontrado.')
 
