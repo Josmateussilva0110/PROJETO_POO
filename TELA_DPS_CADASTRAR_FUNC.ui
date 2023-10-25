@@ -175,34 +175,44 @@
     </item>
    </layout>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_6">
+  <widget class="QTimeEdit" name="timeEdit">
    <property name="geometry">
     <rect>
      <x>130</x>
      <y>380</y>
-     <width>409</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="placeholderText">
-    <string>Horário</string>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="comboBox">
-   <property name="geometry">
-    <rect>
-     <x>300</x>
-     <y>410</y>
-     <width>73</width>
+     <width>411</width>
      <height>22</height>
     </rect>
    </property>
-   <property name="currentText">
-    <string/>
+  </widget>
+  <widget class="QComboBox" name="comboBox">
+   <property name="enabled">
+    <bool>false</bool>
    </property>
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>410</y>
+     <width>111</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="editable">
+    <bool>false</bool>
+   </property>
+   <item>
+    <property name="text">
+     <string>CLIENTE</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>FUNCIONARIO</string>
+    </property>
+   </item>
   </widget>
  </widget>
  <resources/>

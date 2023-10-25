@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'TELA_DPS_CADASTRAR_FUNC.ui'
+# Form implementation generated from reading ui file '.\TELA_DPS_CADASTRAR_FUNC.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -77,13 +77,12 @@ class Cadastrar_Filme(object):
         self.lineEdit_5.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_5.setObjectName("lineEdit_5")
         self.horizontalLayout_5.addWidget(self.lineEdit_5)
-        self.lineEdit_6 = QtWidgets.QLineEdit(Dialog)
-        self.lineEdit_6.setGeometry(QtCore.QRect(130, 380, 409, 24))
-        self.lineEdit_6.setAlignment(QtCore.Qt.AlignCenter)
-        self.lineEdit_6.setObjectName("lineEdit_6")
+        self.timeEdit = QtWidgets.QTimeEdit(Dialog)
+        self.timeEdit.setGeometry(QtCore.QRect(130, 380, 411, 22))
+        self.timeEdit.setObjectName("timeEdit")
         self.comboBox = QtWidgets.QComboBox(Dialog)
         self.comboBox.setEnabled(True)
-        self.comboBox.setGeometry(QtCore.QRect(290, 420, 111, 22))
+        self.comboBox.setGeometry(QtCore.QRect(280, 410, 111, 22))
         self.comboBox.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.comboBox.setEditable(False)
         self.comboBox.setObjectName("comboBox")
@@ -105,6 +104,5 @@ class Cadastrar_Filme(object):
         self.pushButton_3.setText(_translate("Dialog", "VOLTAR"))
         self.pushButton.setText(_translate("Dialog", "CADASTRAR"))
         self.lineEdit_5.setPlaceholderText(_translate("Dialog", "Classificação"))
-        self.lineEdit_6.setPlaceholderText(_translate("Dialog", "Horário"))
         self.comboBox.setItemText(0, _translate("Dialog", "2D"))
         self.comboBox.setItemText(1, _translate("Dialog", "3D"))

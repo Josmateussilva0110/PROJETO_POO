@@ -242,7 +242,7 @@ class Ui_Main(QMainWindow, Main):
         ano_filme = int(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_3.text())
         preco = float(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_4.text())
         classificacao = self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_5.text()
-        horario = self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_6.text()
+        horario = self.TELA_DPS_CADASTRAR_FUNC_ui.timeEdit.text()
         tipo_filme = self.TELA_DPS_CADASTRAR_FUNC_ui.comboBox.currentText()
         if id_filme == '' or nome_filme == '' or ano_filme == '' or preco == '' or classificacao == '':
             QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
@@ -262,7 +262,8 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_3.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_4.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_5.setText('')
-        self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_6.setText('')
+        self.TELA_DPS_CADASTRAR_FUNC_ui.timeEdit.setTime(QtCore.QTime(0, 0))
+
 
     #tela de excluir
     def buscar_filme(self):
