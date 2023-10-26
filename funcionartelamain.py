@@ -121,7 +121,7 @@ class Ui_Main(QMainWindow, Main):
         
         #Tela_Listar_Filmes
         self.TELA_LISTA_FILMES_ui.pushButton_4.clicked.connect(self.TelaGestao)
-        self.filme_encontrado = None
+        self.filme_encontrado = None #usado para nao poder modificar os valores 
 
 
     def botao_Cadastra(self):
@@ -239,7 +239,6 @@ class Ui_Main(QMainWindow, Main):
     def botao_cadastrar_horario(self):
         horario = self.TELA_DPS_CADASTRAR_FUNC_ui.dateTimeEdit.text()
         horarios_adicionados.append(horario)
-        #print(horarios_adicionados)
         QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Horário adicionado com sucesso.')
         
     def horarios_formatados(self):
