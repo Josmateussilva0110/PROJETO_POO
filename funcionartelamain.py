@@ -117,10 +117,11 @@ class Ui_Main(QMainWindow, Main):
         #Tela_Excluir_Filmes
         self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.TelaGestao)
         self.TELA_EXCUIR_FILME_ui.pushButton_2.clicked.connect(self.buscar_filme)
-        self.TELA_EXCUIR_FILME_ui.pushButton.clicked.connect(self.excluir_filme)
+        self.TELA_EXCUIR_FILME_ui.pushButton.clicked.connect(self.remover_filme)
         
         #Tela_Listar_Filmes
         self.TELA_LISTA_FILMES_ui.pushButton_4.clicked.connect(self.TelaGestao)
+        self.filme_encontrado = None
 
 
     def botao_Cadastra(self):
@@ -238,7 +239,8 @@ class Ui_Main(QMainWindow, Main):
     def botao_cadastrar_horario(self):
         horario = self.TELA_DPS_CADASTRAR_FUNC_ui.dateTimeEdit.text()
         horarios_adicionados.append(horario)
-        print(horarios_adicionados)
+        #print(horarios_adicionados)
+        QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Horário adicionado com sucesso.')
         
     def horarios_formatados(self):
         return [horario for horario in horarios_adicionados]
@@ -250,10 +252,19 @@ class Ui_Main(QMainWindow, Main):
         id = int(self.TELA_EXCUIR_FILME_ui.lineEdit_2.text())
         achado = dados.buscar_filme(id)
         if achado is not None:
-            QtWidgets.QMessageBox.information(self, 'Filme', f'Id: {achado._id}\nNome: {achado._nome}\nAno: {achado._ano}\nPreco: {achado._preco}\nClassificacao: {achado._classificacao}\nHorario: {achado._horario}\nTipo: {achado._tipo}')
+            self.filme_encontrado = achado  # Armazena o filme encontrado
+            filme_encontrado = self.TELA_EXCUIR_FILME_ui.listView
+            modelo_filme = QStandardItemModel()
+            item_filme = QStandardItem(f'ID: {achado._id} - Nome: {achado._nome} - Ano: {achado._ano} - Preço: {achado._preco} - classificação: {achado._classificacao} - Tipo: {achado._tipo}')
+            item_filme.setEditable(False)  # Torna o item não editável
+            modelo_filme.appendRow(item_filme)
+            filme_encontrado.setModel(modelo_filme)
         else:
-            QtWidgets.QMessageBox.information(self, 'Filme', 'Erro, filme nao encontrado.')
-    #self.TELA_EXCUIR_FILME_ui.lineEdit_2.setText('')
+            self.filme_encontrado = None  # Limpa a variável de filme encontrado
+            QtWidgets.QMessageBox.information(self, 'Filme', 'Erro, filme não encontrado.')
+        #self.TELA_EXCUIR_FILME_ui.lineEdit_2.setText('')
+
+
 
     def TelaVerTodosFilmes(self):
         self.QtStack.setCurrentIndex(8)
@@ -268,22 +279,15 @@ class Ui_Main(QMainWindow, Main):
 
         lista_view.setModel(modelo)
     
-    def excluir_filme(self):
-        id = int(self.TELA_EXCUIR_FILME_ui.lineEdit_2.text())
-        achado = dados.buscar_filme(id)
-        if achado is not None:
-            
-            del dados._dados_filmes[id]
-            QtWidgets.QMessageBox.information(self, 'Filme excluído', f'O filme com ID {id} foi excluído com sucesso.')
-            
+    def remover_filme(self):
+        if self.filme_encontrado is not None:
+            del dados._dados_filmes[self.filme_encontrado._id]
+
             # Remova o filme da lista de filmes adicionados pelo funcionário
             for filme in filmes_adicionados_funcionario:
-                if filme._id == id:
+                if filme._id == self.filme_encontrado._id:
                     filmes_adicionados_funcionario.remove(filme)
-                    
-            horarios_adicionados.clear()
-            
-        else:
-            QtWidgets.QMessageBox.information(self, 'Erro', 'Filme não encontrado.')
 
-        self.TELA_EXCUIR_FILME_ui.lineEdit_2.setText('')
+            self.filme_encontrado = None  # Limpa a variável de filme encontrado
+            self.TELA_EXCUIR_FILME_ui.listView.setModel(QStandardItemModel())  # Limpa a lista de filmes na tela
+            QtWidgets.QMessageBox.information(self, 'Filme excluído', f'Filme excluído com sucesso.')
