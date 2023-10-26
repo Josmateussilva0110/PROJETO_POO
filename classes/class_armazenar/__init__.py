@@ -32,7 +32,7 @@ class Armazenar():
             print(f'{i} - {v._nome} - {v._cpf} - {v._email} - {v._senha}')
             
     def exibir_fnc(self):
-        print('Fuucionario')    
+        print('Funcionario')    
         for i, v in self._dados_func.items():
             print(f'{i} - {v._nome} - {v._cpf} - {v._email} - {v._senha}')
 

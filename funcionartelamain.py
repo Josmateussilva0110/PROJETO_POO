@@ -260,7 +260,6 @@ class Ui_Main(QMainWindow, Main):
         horarios_adicionados.append(horario)
         print(horarios_adicionados)
         
-        
     def horarios_formatados(self):
         return [horario for horario in horarios_adicionados]
 
@@ -301,6 +300,8 @@ class Ui_Main(QMainWindow, Main):
             for filme in filmes_adicionados_funcionario:
                 if filme._id == id:
                     filmes_adicionados_funcionario.remove(filme)
+                    
+            horarios_adicionados.clear()
             
         else:
             QtWidgets.QMessageBox.information(self, 'Erro', 'Filme não encontrado.')

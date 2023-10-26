@@ -78,7 +78,7 @@ class Cadastrar_Filme(object):
         self.lineEdit_5.setObjectName("lineEdit_5")
         self.horizontalLayout_5.addWidget(self.lineEdit_5)
         self.comboBox = QtWidgets.QComboBox(Dialog)
-        self.comboBox.setEnabled(False)
+        self.comboBox.setEnabled(True)
         self.comboBox.setGeometry(QtCore.QRect(280, 370, 111, 22))
         self.comboBox.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.comboBox.setEditable(False)
