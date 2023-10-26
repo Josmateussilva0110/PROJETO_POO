@@ -163,35 +163,21 @@ class Ui_Main(QMainWindow, Main):
             self.QtStack.setCurrentIndex(0)
 
     def botao_ok(self):
-        valid = 0
         cpf = self.tela_main_ui.lineEdit_2.text()
         senha = self.tela_main_ui.lineEdit.text()
         if cpf == '' or senha == '':
             QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
-        elif dados.verificar_login(cpf, senha) or dados.verificar_login_func(cpf,senha):
-            tipo_selecionado = self.TELA_CADASTRO_ui.comboBox.currentText()
-            if tipo_selecionado == "Cliente":
+        else:
+            if dados.verificar_login(cpf, senha):
                 QtWidgets.QMessageBox.information(self, 'login', 'login cliente realizado com sucesso.')
-                valid = 1
-                self.tela_main_ui.lineEdit_2.setText('')
-                self.tela_main_ui.lineEdit.setText('')
                 self.QtStack.setCurrentIndex(2)
                 
-            elif tipo_selecionado == "Funcionário":
+            elif dados.verificar_login_func(cpf,senha):
                 QMessageBox.information(self, 'login', 'login funcionario realizado com sucesso.')
-                valid = 2
-                self.tela_main_ui.lineEdit_2.setText('')
-                self.tela_main_ui.lineEdit.setText('')
-                
-        else:
-            QtWidgets.QMessageBox.information(self, 'Erro', 'Login ou senha inválidos.')
-            self.tela_main_ui.lineEdit_2.setText('')
-            self.tela_main_ui.lineEdit.setText('')
-
-        if valid == 1:
-            self.QtStack.setCurrentIndex(2)
-        elif valid == 2:
-           self.QtStack.setCurrentIndex(3)
+                self.QtStack.setCurrentIndex(3)
+        self.tela_main_ui.lineEdit_2.setText('')
+        self.tela_main_ui.lineEdit.setText('')        
+            
 
     def fecharAplicacao(self):
         sys.exit()
