@@ -7,7 +7,7 @@ from TELA_DPS_LOGIN_ui import *
 from TELA_DPS_LOGIN_FUNC_ui import *
 from TELA_ESTATISTICA_ui import *
 from TELA_GESTAO_FILMES_ui import *
-from TELA_DPS_CADASTRAR_FUNC import *
+from TELA_DPS_CADASTRAR_FUNC_ui import *
 from TELA_EXCLUIR_FILME import *
 from TELA_LISTA_FILMES_ui import *
 from classes.class_armazenar import *
@@ -17,6 +17,7 @@ from classes.class_filme import *
 
 dados = Armazenar()
 filmes_adicionados_funcionario = [] ##Pega os filmes cadastrados
+horarios_adicionados = []
 
 # Esta função retorna a lista de filmes para cadastrados
 def obter_lista_de_filmes():
@@ -110,6 +111,7 @@ class Ui_Main(QMainWindow, Main):
         #Tela_Cadastrar_Filmes
         self.TELA_DPS_CADASTRAR_FUNC_ui.pushButton_3.clicked.connect(self.TelaGestao)
         self.TELA_DPS_CADASTRAR_FUNC_ui.pushButton.clicked.connect(self.botao_cadastrar_filme)
+        self.TELA_DPS_CADASTRAR_FUNC_ui.pushButton_2.clicked.connect(self.botao_cadastrar_horario)
         
         #Tela_Excluir_Filmes
         self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.TelaGestao)
@@ -220,15 +222,18 @@ class Ui_Main(QMainWindow, Main):
         self.QtStack.setCurrentIndex(8)
         
 
-    #tela de cadastro de filmes
+   #tela de cadastro de filmes
     def botao_cadastrar_filme(self):
+        minimum_date = QtCore.QDate(1800, 9, 14)
+        midnight_time = QtCore.QTime(0, 0, 0)
+        zero_datetime = QtCore.QDateTime(minimum_date, midnight_time)
         valid = False
         id_filme = int(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit.text())
         nome_filme = self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_2.text()
         ano_filme = int(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_3.text())
         preco = float(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_4.text())
         classificacao = self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_5.text()
-        horario = self.TELA_DPS_CADASTRAR_FUNC_ui.timeEdit.text()
+        horario = self.TELA_DPS_CADASTRAR_FUNC_ui.dateTimeEdit.text()
         tipo_filme = self.TELA_DPS_CADASTRAR_FUNC_ui.comboBox.currentText()
         if id_filme == '' or nome_filme == '' or ano_filme == '' or preco == '' or classificacao == '':
             QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
@@ -248,7 +253,17 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_3.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_4.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_5.setText('')
-        self.TELA_DPS_CADASTRAR_FUNC_ui.timeEdit.setTime(QtCore.QTime(0, 0))
+        self.TELA_DPS_CADASTRAR_FUNC_ui.dateTimeEdit.setDateTime(zero_datetime)
+        
+    def botao_cadastrar_horario(self):
+        horario = self.TELA_DPS_CADASTRAR_FUNC_ui.dateTimeEdit.text()
+        horarios_adicionados.append(horario)
+        print(horarios_adicionados)
+        
+        
+    def horarios_formatados(self):
+        return [horario for horario in horarios_adicionados]
+
 
 
     #tela de excluir
@@ -268,7 +283,8 @@ class Ui_Main(QMainWindow, Main):
         lista_de_filmes = obter_lista_de_filmes()  # Use a função fpara obter os filmes
 
         for filme in lista_de_filmes:
-            item = QStandardItem(f'ID: {filme._id} - Nome: {filme._nome} - Ano: {filme._ano} - Preço: {filme._preco} - classificação: {filme._classificacao} - Horário: {filme._horario} - Tipo: {filme._tipo}')
+            horarios_formatados = ', '.join(self.horarios_formatados())
+            item = QStandardItem(f'ID: {filme._id} - Nome: {filme._nome} - Ano: {filme._ano} - Preço: {filme._preco} - classificação: {filme._classificacao} - Horário: {horarios_formatados} - Tipo: {filme._tipo}')
             modelo.appendRow(item)
 
         lista_view.setModel(modelo)
@@ -277,6 +293,7 @@ class Ui_Main(QMainWindow, Main):
         id = int(self.TELA_EXCUIR_FILME_ui.lineEdit_2.text())
         achado = dados.buscar_filme(id)
         if achado is not None:
+            
             del dados._dados_filmes[id]
             QtWidgets.QMessageBox.information(self, 'Filme excluído', f'O filme com ID {id} foi excluído com sucesso.')
             
@@ -284,6 +301,7 @@ class Ui_Main(QMainWindow, Main):
             for filme in filmes_adicionados_funcionario:
                 if filme._id == id:
                     filmes_adicionados_funcionario.remove(filme)
+            
         else:
             QtWidgets.QMessageBox.information(self, 'Erro', 'Filme não encontrado.')
 
