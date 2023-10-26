@@ -14,9 +14,16 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Estatistica(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(751, 598)
+        Dialog.resize(800, 600)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(Dialog.sizePolicy().hasHeightForWidth())
+        Dialog.setSizePolicy(sizePolicy)
+        Dialog.setMinimumSize(QtCore.QSize(800, 600))
+        Dialog.setMaximumSize(QtCore.QSize(800, 600))
         self.pushButton_4 = QtWidgets.QPushButton(Dialog)
-        self.pushButton_4.setGeometry(QtCore.QRect(10, 550, 93, 28))
+        self.pushButton_4.setGeometry(QtCore.QRect(10, 560, 93, 28))
         self.pushButton_4.setObjectName("pushButton_4")
 
         self.retranslateUi(Dialog)

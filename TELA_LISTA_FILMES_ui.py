@@ -14,22 +14,23 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Tela_Lista_Filmes(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(739, 561)
+        Dialog.resize(800, 600)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(Dialog.sizePolicy().hasHeightForWidth())
+        Dialog.setSizePolicy(sizePolicy)
+        Dialog.setMinimumSize(QtCore.QSize(800, 600))
+        Dialog.setMaximumSize(QtCore.QSize(800, 600))
         self.pushButton_4 = QtWidgets.QPushButton(Dialog)
-        self.pushButton_4.setGeometry(QtCore.QRect(10, 510, 93, 28))
+        self.pushButton_4.setGeometry(QtCore.QRect(0, 560, 93, 28))
         self.pushButton_4.setObjectName("pushButton_4")
-        
         self.listView = QtWidgets.QListView(Dialog)
-        self.listView.setGeometry(QtCore.QRect(10, 120, 721, 371))
+        self.listView.setGeometry(QtCore.QRect(10, 120, 781, 421))
         self.listView.setObjectName("listView")
-        
-        # Defina a edição para NoEditTriggers
-        self.listView.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-
         self.label_2 = QtWidgets.QLabel(Dialog)
         self.label_2.setGeometry(QtCore.QRect(320, 90, 117, 16))
         self.label_2.setObjectName("label_2")
-        
         self.label = QtWidgets.QLabel(Dialog)
         self.label.setGeometry(QtCore.QRect(290, 10, 178, 48))
         self.label.setObjectName("label")
@@ -43,4 +44,3 @@ class Tela_Lista_Filmes(object):
         self.pushButton_4.setText(_translate("Dialog", "VOLTAR"))
         self.label_2.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-weight:600;\">FILMES</span></p></body></html>"))
         self.label.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt;\">CINEPLUS</span></p></body></html>"))
-

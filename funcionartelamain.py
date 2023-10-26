@@ -1,21 +1,22 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
-from tela_main_ui import *
-from TELA_CADASTRO_ui import *
-from TELA_DPS_LOGIN_ui import *
-from TELA_DPS_LOGIN_FUNC_ui import *
-from TELA_ESTATISTICA_ui import *
-from TELA_GESTAO_FILMES_ui import *
-from TELA_DPS_CADASTRAR_FUNC_ui import *
-from TELA_EXCLUIR_FILME import *
-from TELA_LISTA_FILMES_ui import *
+from tela_main_ui import *#
+from TELA_CADASTRO_ui import *#
+from TELA_DPS_LOGIN_ui import *#
+from TELA_DPS_LOGIN_FUNC_ui import *#
+from TELA_ESTATISTICA_ui import *#
+from TELA_GESTAO_FILMES_ui import *#
+from TELA_DPS_CADASTRAR_FUNC_ui import *#
+from TELA_EXCLUIR_FILME_ui import *#
+from TELA_LISTA_FILMES_ui import *#
 from classes.class_armazenar import *
 from classes.class_pessoa import *
 from classes.funcoes_aux import *
 from classes.class_filme import *
 
 dados = Armazenar()
+
 filmes_adicionados_funcionario = [] ##Pega os filmes cadastrados
 horarios_adicionados = []
 
@@ -49,6 +50,7 @@ class Main(QtWidgets.QWidget):
         self.TELA_DPS_LOGIN_ui = AposLogin()
         self.TELA_DPS_LOGIN_ui.setupUi(self.stack2)
         
+        #Usa-se só para ajustar essa tela
         self.TELA_DPS_LOGIN_FUNC_ui = LOGIN_FUNC()
         self.TELA_DPS_LOGIN_FUNC_ui.setupUi(self.stack3)
         
@@ -82,11 +84,13 @@ class Ui_Main(QMainWindow, Main):
     def __init__(self):
         super(Main, self).__init__(None)
         self.setupUi(self)
-
+        
+        #Tela_Main(Inicio)
         self.tela_main_ui.pushButton_3.clicked.connect(self.fecharAplicacao)
         self.tela_main_ui.pushButton_4.clicked.connect(self.abrirTelaCadastro)
         self.tela_main_ui.pushButton.clicked.connect(self.botao_ok)
-
+        
+        #Tela Cadastra
         self.TELA_CADASTRO_ui.pushButton_3.clicked.connect(self.VoltarMain)
         self.TELA_CADASTRO_ui.pushButton.clicked.connect(self.botao_Cadastra)
 
@@ -95,9 +99,6 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_DPS_LOGIN_FUNC_ui.pushButton_4.clicked.connect(self.VoltarMain)
         self.TELA_DPS_LOGIN_FUNC_ui.pushButton.clicked.connect(self.Tela_Estatistica)
         self.TELA_DPS_LOGIN_FUNC_ui.pushButton_2.clicked.connect(self.TelaGestao)
-
-        # Adicione a função de configuração da combobox
-        self.configurar_combobox()
 
         #Tela Estatistica
         self.TELA_ESTATISTICA_ui.pushButton_4.clicked.connect(self.abrirLoginFunc)
@@ -138,24 +139,14 @@ class Ui_Main(QMainWindow, Main):
         elif not email_valido(email):
             QtWidgets.QMessageBox.information(self, 'erro', 'Email inválido.')
         else:
-            #Seleciona o tipo
-            tipo_selecionado = self.TELA_CADASTRO_ui.comboBox.currentText()
-            if tipo_selecionado == "Cliente":
-                pessoa = Pessoa(cpf, nome, email, senha)
-                certo_cliente = dados.armazenar(pessoa, cpf)
-                if certo_cliente:
-                    QMessageBox.information(self, 'cadastro', 'Cadastro Cliente realizado com sucesso.')
-                    valid = True
-                else:
-                    QMessageBox.information(self, 'cadastro', 'erro, cpf ja tem cadastro.')
-            elif tipo_selecionado == "Funcionário":
-                funcionario = Pessoa(cpf, nome, email, senha)
-                certo_funcionario = dados.armazena_func(funcionario, cpf)
-                if certo_funcionario:
-                    QMessageBox.information(self, 'cadastro', 'Cadastro Funcionario realizado com sucesso.')
-                    valid = True
-                else:
-                    QMessageBox.information(self, 'cadastro', 'erro, cpf ja tem cadastro.')
+            pessoa = Pessoa(cpf, nome, email, senha)
+            certo_cliente = dados.armazenar(pessoa, cpf)
+            if certo_cliente:
+                QMessageBox.information(self, 'cadastro', 'Cadastro realizado com sucesso.')
+                valid = True
+            else:
+                QMessageBox.information(self, 'cadastro', 'erro, cpf ja tem cadastro.')
+                
         self.TELA_CADASTRO_ui.lineEdit.setText('')
         self.TELA_CADASTRO_ui.lineEdit_2.setText('')
         self.TELA_CADASTRO_ui.lineEdit_3.setText('')
@@ -169,14 +160,16 @@ class Ui_Main(QMainWindow, Main):
         senha = self.tela_main_ui.lineEdit.text()
         if cpf == '' or senha == '':
             QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
-        else:
-            if dados.verificar_login(cpf, senha):
+        elif dados.verificar_login_Cliente(cpf, senha):
                 QtWidgets.QMessageBox.information(self, 'login', 'login cliente realizado com sucesso.')
-                self.QtStack.setCurrentIndex(2)
+                self.QtStack.setCurrentIndex(3)##Aqui vai mudar só para poder entre cliente e funcionario
                 
-            elif dados.verificar_login_func(cpf,senha):
-                QMessageBox.information(self, 'login', 'login funcionario realizado com sucesso.')
-                self.QtStack.setCurrentIndex(3)
+        elif dados.verificar_login_Ger(cpf,senha):
+            QMessageBox.information(self, 'login', 'login Gerente realizado com sucesso.')
+            self.QtStack.setCurrentIndex(2)##Aqui vai mudar só para poder entre cliente e funcionario
+        else:
+            QMessageBox.information(self, 'erro', 'Preencha os dados corretamente.')
+                
         self.tela_main_ui.lineEdit_2.setText('')
         self.tela_main_ui.lineEdit.setText('')        
             
@@ -192,19 +185,6 @@ class Ui_Main(QMainWindow, Main):
     
     def abrirLoginFunc(self):
         self.QtStack.setCurrentIndex(3)
-
-    def configurar_combobox(self):
-        opcoes = ["Cliente", "Funcionário"]
-        self.TELA_CADASTRO_ui.comboBox.clear()
-        self.TELA_CADASTRO_ui.comboBox.addItems(opcoes)
-        self.TELA_CADASTRO_ui.comboBox.currentIndexChanged.connect(self.selecionar_tipo)
-    
-    def selecionar_tipo(self, index):
-        tipo_selecionado = self.TELA_CADASTRO_ui.comboBox.itemText(index)
-        if tipo_selecionado == "Cliente":
-            QMessageBox.information(self, 'Tipo selecionado', 'Você selecionou Cliente.')
-        elif tipo_selecionado == "Funcionário":
-            QMessageBox.information(self,'Tipo selecionado', 'Você selecionou Funcionário')
 
     def Tela_Estatistica(self):
         self.QtStack.setCurrentIndex(4)

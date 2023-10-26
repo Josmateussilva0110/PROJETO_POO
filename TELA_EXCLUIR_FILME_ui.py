@@ -11,21 +11,28 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Dialog(object):
+class Excluir_Filme(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(635, 507)
+        Dialog.resize(800, 600)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(Dialog.sizePolicy().hasHeightForWidth())
+        Dialog.setSizePolicy(sizePolicy)
+        Dialog.setMinimumSize(QtCore.QSize(800, 600))
+        Dialog.setMaximumSize(QtCore.QSize(800, 600))
         self.label_2 = QtWidgets.QLabel(Dialog)
-        self.label_2.setGeometry(QtCore.QRect(250, 140, 128, 16))
+        self.label_2.setGeometry(QtCore.QRect(330, 170, 128, 16))
         self.label_2.setObjectName("label_2")
         self.label = QtWidgets.QLabel(Dialog)
-        self.label.setGeometry(QtCore.QRect(220, 60, 178, 48))
+        self.label.setGeometry(QtCore.QRect(300, 90, 178, 48))
         self.label.setObjectName("label")
         self.pushButton_3 = QtWidgets.QPushButton(Dialog)
-        self.pushButton_3.setGeometry(QtCore.QRect(10, 450, 93, 28))
+        self.pushButton_3.setGeometry(QtCore.QRect(10, 560, 93, 28))
         self.pushButton_3.setObjectName("pushButton_3")
         self.pushButton = QtWidgets.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(240, 260, 93, 28))
+        self.pushButton.setGeometry(QtCore.QRect(320, 520, 93, 28))
         self.pushButton.setObjectName("pushButton")
         self.layoutWidget = QtWidgets.QWidget(Dialog)
         self.layoutWidget.setGeometry(QtCore.QRect(0, 0, 2, 2))
@@ -40,7 +47,7 @@ class Ui_Dialog(object):
         self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.layoutWidget2 = QtWidgets.QWidget(Dialog)
-        self.layoutWidget2.setGeometry(QtCore.QRect(140, 200, 341, 30))
+        self.layoutWidget2.setGeometry(QtCore.QRect(210, 460, 341, 30))
         self.layoutWidget2.setObjectName("layoutWidget2")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.layoutWidget2)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
@@ -52,6 +59,9 @@ class Ui_Dialog(object):
         self.pushButton_2 = QtWidgets.QPushButton(self.layoutWidget2)
         self.pushButton_2.setObjectName("pushButton_2")
         self.horizontalLayout.addWidget(self.pushButton_2)
+        self.listView = QtWidgets.QListView(Dialog)
+        self.listView.setGeometry(QtCore.QRect(20, 190, 761, 251))
+        self.listView.setObjectName("listView")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
