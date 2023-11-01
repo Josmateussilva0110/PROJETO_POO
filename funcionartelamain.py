@@ -4,8 +4,8 @@ from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from tela_main_ui import *#
 from TELA_CADASTRO_ui import *#
-from TELA_DPS_LOGIN_ui import *#
-from TELA_DPS_LOGIN_FUNC_ui import *#
+from TELA_USUARIO import *#
+from TELA_GERENCIAMENTO import *#
 from TELA_ESTATISTICA_ui import *#
 from TELA_GESTAO_FILMES_ui import *#
 from TELA_CADASTRO_FILMES import *#
@@ -45,8 +45,8 @@ class Main(QtWidgets.QWidget):
         self.TELA_CADASTRO_ui = Cadastrar()
         self.TELA_CADASTRO_ui.setupUi(self.stack1)
 
-        self.TELA_DPS_LOGIN_ui = AposLogin()
-        self.TELA_DPS_LOGIN_ui.setupUi(self.stack2)
+        self.TELA_USUARIO = AposLogin()
+        self.TELA_USUARIO.setupUi(self.stack2)
         
         #Usa-se só para ajustar essa tela
         self.TELA_DPS_LOGIN_FUNC_ui = LOGIN_FUNC()
@@ -58,8 +58,8 @@ class Main(QtWidgets.QWidget):
         self.TELA_GESTAO_FILMES_ui = GESTAO_FILMES()
         self.TELA_GESTAO_FILMES_ui.setupUi(self.stack5)
         
-        self.TELA_DPS_CADASTRAR_FUNC_ui = Cadastrar_filme()
-        self.TELA_DPS_CADASTRAR_FUNC_ui.setupUi(self.stack6)
+        self.TELA_CADASTRO_FILMES = Cadastrar_filme()
+        self.TELA_CADASTRO_FILMES.setupUi(self.stack6)
         
         self.TELA_EXCUIR_FILME_ui = Excluir_Filme()
         self.TELA_EXCUIR_FILME_ui.setupUi(self.stack7)
@@ -95,7 +95,7 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_CADASTRO_ui.pushButton.clicked.connect(self.botao_Cadastra)
 
         #Tela dps de login
-        self.TELA_DPS_LOGIN_ui.pushButton_4.clicked.connect(self.VoltarMain)
+        self.TELA_USUARIO.pushButton_4.clicked.connect(self.VoltarMain)
         
         self.TELA_DPS_LOGIN_FUNC_ui.pushButton_4.clicked.connect(self.VoltarMain)
         self.TELA_DPS_LOGIN_FUNC_ui.pushButton.clicked.connect(self.Tela_Estatistica)
@@ -111,9 +111,9 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_GESTAO_FILMES_ui.pushButton.clicked.connect(self.TelaVerTodosFilmes)
         
         #Tela_Cadastrar_Filmes
-        self.TELA_DPS_CADASTRAR_FUNC_ui.pushButton_3.clicked.connect(self.TelaGestao)
-        self.TELA_DPS_CADASTRAR_FUNC_ui.pushButton.clicked.connect(self.botao_cadastrar_filme)
-        self.TELA_DPS_CADASTRAR_FUNC_ui.pushButton_2.clicked.connect(self.adicionar_horarios)
+        self.TELA_CADASTRO_FILMES.pushButton_3.clicked.connect(self.TelaGestao)
+        self.TELA_CADASTRO_FILMES.pushButton.clicked.connect(self.botao_cadastrar_filme)
+        self.TELA_CADASTRO_FILMES.pushButton_2.clicked.connect(self.adicionar_horarios)
         
         #Tela_Excluir_Filmes
         self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.TelaGestao)
@@ -210,21 +210,22 @@ class Ui_Main(QMainWindow, Main):
         midnight_time = QtCore.QTime(0, 0, 0)
         zero_datetime = QtCore.QDateTime(minimum_date, midnight_time)
         valid = False
-        nome_filme = self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_2.text()
-        ano_filme = int(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_3.text())
-        preco = float(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_4.text())
-        classificacao = self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_5.text()
+        nome_filme = self.TELA_CADASTRO_FILMES.lineEdit_2.text()
+        ano_filme = int(self.TELA_CADASTRO_FILMES.lineEdit_3.text())
+        preco_str = float(self.TELA_CADASTRO_FILMES.lineEdit_4.text())
+        classificacao = self.TELA_CADASTRO_FILMES.lineEdit_5.text()
 
         horarios_escolhidos.extend(self.horarios_selecionados)
         horarios_str = ', '.join(horarios_escolhidos)
 
-        tipo_filme = self.TELA_DPS_CADASTRAR_FUNC_ui.comboBox.currentText()
+        tipo_filme = self.TELA_CADASTRO_FILMES.comboBox.currentText()
         
-        if nome_filme == '' or ano_filme == '' or preco == '' or classificacao == '':
+        if nome_filme == '' or ano_filme == '' or preco_str == '' or classificacao == '':
             QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
         elif not horarios_escolhidos:
             QtWidgets.QMessageBox.information(self, 'erro', 'Selecione pelo menos um horário.')
         else:
+            preco = round(float(preco_str), 2)
             filme = Filme(nome_filme, ano_filme, preco, classificacao, horarios_str, tipo_filme)
             if dados.armazenar_filmes(filme):
                 QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Filme cadastrado com sucesso.')
@@ -234,18 +235,18 @@ class Ui_Main(QMainWindow, Main):
 
         if valid:
             self.QtStack.setCurrentIndex(5)
-        self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_2.setText('')
-        self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_3.setText('')
-        self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_4.setText('')
-        self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_5.setText('')
-        self.TELA_DPS_CADASTRAR_FUNC_ui.dateTimeEdit.setDateTime(zero_datetime)
+        self.TELA_CADASTRO_FILMES.lineEdit_2.setText('')
+        self.TELA_CADASTRO_FILMES.lineEdit_3.setText('')
+        self.TELA_CADASTRO_FILMES.lineEdit_4.setText('')
+        self.TELA_CADASTRO_FILMES.lineEdit_5.setText('')
+        self.TELA_CADASTRO_FILMES.dateTimeEdit.setDateTime(zero_datetime)
 
     
     def adicionar_horarios(self):
-        horario = self.TELA_DPS_CADASTRAR_FUNC_ui.dateTimeEdit.text()
+        horario = self.TELA_CADASTRO_FILMES.dateTimeEdit.text()
         if horario:
             self.horarios_selecionados.append(horario)
-            horario_usar = self.TELA_DPS_CADASTRAR_FUNC_ui.listView
+            horario_usar = self.TELA_CADASTRO_FILMES.listView
             modelo_horario = QStandardItemModel()
             for horario in self.horarios_selecionados:
                 item_horario = QStandardItem(f'HORÁRIOS: {horario}')
