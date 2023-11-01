@@ -166,7 +166,7 @@ class Ui_Main(QMainWindow, Main):
             QMessageBox.information(self, 'login', 'login Gerente realizado com sucesso.')
             self.QtStack.setCurrentIndex(3)##Aqui vai mudar só para poder entre cliente e funcionario
         else:
-            QMessageBox.information(self, 'erro', 'Preencha os dados corretamente.')
+            QMessageBox.information(self, 'erro', 'Preencha os dados corretamente.!')
                 
         self.tela_main_ui.lineEdit_2.setText('')
         self.tela_main_ui.lineEdit.setText('')        
