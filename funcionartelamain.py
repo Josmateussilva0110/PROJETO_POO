@@ -1,4 +1,5 @@
 import sys
+import mysql.connector
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from tela_main_ui import *#
@@ -14,15 +15,12 @@ from classes.class_armazenar import *
 from classes.class_pessoa import *
 from classes.funcoes_aux import *
 from classes.class_filme import *
+from classes.class_conexao_bd import *
 
-dados = Armazenar()
+mydb = configure_mysql_connection()
+db = create_database()
 
-filmes_adicionados_funcionario = [] ##Pega os filmes cadastrados
-horarios_adicionados = []
-
-# Esta função retorna a lista de filmes para cadastrados
-def obter_lista_de_filmes():
-    return filmes_adicionados_funcionario
+dados = Armazenar(mydb)
 
 class Main(QtWidgets.QWidget):
     def setupUi(self, Main):
@@ -90,10 +88,11 @@ class Ui_Main(QMainWindow, Main):
         self.tela_main_ui.pushButton_4.clicked.connect(self.abrirTelaCadastro)
         self.tela_main_ui.pushButton.clicked.connect(self.botao_ok)
         
-        #Tela Cadastra
+        #Tela Cadastra pessoa
         self.TELA_CADASTRO_ui.pushButton_3.clicked.connect(self.VoltarMain)
         self.TELA_CADASTRO_ui.pushButton.clicked.connect(self.botao_Cadastra)
 
+        #Tela dps de login
         self.TELA_DPS_LOGIN_ui.pushButton_4.clicked.connect(self.VoltarMain)
         
         self.TELA_DPS_LOGIN_FUNC_ui.pushButton_4.clicked.connect(self.VoltarMain)
@@ -112,7 +111,6 @@ class Ui_Main(QMainWindow, Main):
         #Tela_Cadastrar_Filmes
         self.TELA_DPS_CADASTRAR_FUNC_ui.pushButton_3.clicked.connect(self.TelaGestao)
         self.TELA_DPS_CADASTRAR_FUNC_ui.pushButton.clicked.connect(self.botao_cadastrar_filme)
-        self.TELA_DPS_CADASTRAR_FUNC_ui.pushButton_2.clicked.connect(self.botao_cadastrar_horario)
         
         #Tela_Excluir_Filmes
         self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.TelaGestao)
@@ -132,27 +130,26 @@ class Ui_Main(QMainWindow, Main):
         senha = self.TELA_CADASTRO_ui.lineEdit_4.text()
 
         if nome == '' or cpf == '' or email == '' or senha == '':
-            QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
+            QtWidgets.QMessageBox.information(self, 'Erro', 'Digite valores válidos.')
         elif not verificar_nome(nome):
-            QtWidgets.QMessageBox.information(self, 'erro', 'Nome inválido. Digite apenas letras.')
+            QtWidgets.QMessageBox.information(self, 'Erro', 'Nome inválido. Digite apenas letras.')
         elif not cpf.isdigit():
-            QtWidgets.QMessageBox.information(self, 'erro', 'CPF inválido. Digite apenas números.')
+            QtWidgets.QMessageBox.information(self, 'Erro', 'CPF inválido. Digite apenas números.')
         elif not email_valido(email):
-            QtWidgets.QMessageBox.information(self, 'erro', 'Email inválido.')
+            QtWidgets.QMessageBox.information(self, 'Erro', 'Email inválido.')
         else:
             pessoa = Pessoa(cpf, nome, email, senha)
-            certo_cliente = dados.armazenar(pessoa, cpf)
-            if certo_cliente:
-                QMessageBox.information(self, 'cadastro', 'Cadastro realizado com sucesso.')
+            if dados.armazenar(pessoa):
+                QtWidgets.QMessageBox.information(self, 'Cadastro', 'Cadastro realizado com sucesso.')
                 valid = True
             else:
-                QMessageBox.information(self, 'cadastro', 'erro, cpf ja tem cadastro.')
-                
+                QtWidgets.QMessageBox.information(self, 'Erro', 'CPF já cadastrado.')
+
         self.TELA_CADASTRO_ui.lineEdit.setText('')
         self.TELA_CADASTRO_ui.lineEdit_2.setText('')
         self.TELA_CADASTRO_ui.lineEdit_3.setText('')
         self.TELA_CADASTRO_ui.lineEdit_4.setText('')
-            
+
         if valid:
             self.QtStack.setCurrentIndex(0)
 
@@ -163,11 +160,11 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
         elif dados.verificar_login_Cliente(cpf, senha):
                 QtWidgets.QMessageBox.information(self, 'login', 'login cliente realizado com sucesso.')
-                self.QtStack.setCurrentIndex(3)##Aqui vai mudar só para poder entre cliente e funcionario
+                self.QtStack.setCurrentIndex(2)##Aqui vai mudar só para poder entre cliente e funcionario
                 
         elif dados.verificar_login_Ger(cpf,senha):
             QMessageBox.information(self, 'login', 'login Gerente realizado com sucesso.')
-            self.QtStack.setCurrentIndex(2)##Aqui vai mudar só para poder entre cliente e funcionario
+            self.QtStack.setCurrentIndex(3)##Aqui vai mudar só para poder entre cliente e funcionario
         else:
             QMessageBox.information(self, 'erro', 'Preencha os dados corretamente.')
                 
@@ -227,7 +224,6 @@ class Ui_Main(QMainWindow, Main):
             else:
                 QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Erro, Id de filme já cadastrado.')
         if valid:
-            filmes_adicionados_funcionario.append(Filme(id_filme, nome_filme, ano_filme, preco, classificacao, horario, tipo_filme))
             self.QtStack.setCurrentIndex(5)
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_2.setText('')
@@ -235,15 +231,6 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_4.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_5.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.dateTimeEdit.setDateTime(zero_datetime)
-        
-    def botao_cadastrar_horario(self):
-        horario = self.TELA_DPS_CADASTRAR_FUNC_ui.dateTimeEdit.text()
-        horarios_adicionados.append(horario)
-        QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Horário adicionado com sucesso.')
-        
-    def horarios_formatados(self):
-        return [horario for horario in horarios_adicionados]
-
 
 
     #tela de excluir
@@ -267,26 +254,6 @@ class Ui_Main(QMainWindow, Main):
 
     def TelaVerTodosFilmes(self):
         self.QtStack.setCurrentIndex(8)
-        lista_view = self.TELA_LISTA_FILMES_ui.listView
-        modelo = QStandardItemModel()
-        lista_de_filmes = obter_lista_de_filmes()  # Use a função fpara obter os filmes
-
-        for filme in lista_de_filmes:
-            horarios_formatados = ', '.join(self.horarios_formatados())
-            item = QStandardItem(f'ID: {filme._id} - Nome: {filme._nome} - Ano: {filme._ano} - Preço: {filme._preco} - classificação: {filme._classificacao} - Horário: {horarios_formatados} - Tipo: {filme._tipo}')
-            modelo.appendRow(item)
-
-        lista_view.setModel(modelo)
     
     def remover_filme(self):
-        if self.filme_encontrado is not None:
-            del dados._dados_filmes[self.filme_encontrado._id]
-
-            # Remova o filme da lista de filmes adicionados pelo funcionário
-            for filme in filmes_adicionados_funcionario:
-                if filme._id == self.filme_encontrado._id:
-                    filmes_adicionados_funcionario.remove(filme)
-
-            self.filme_encontrado = None  # Limpa a variável de filme encontrado
-            self.TELA_EXCUIR_FILME_ui.listView.setModel(QStandardItemModel())  # Limpa a lista de filmes na tela
-            QtWidgets.QMessageBox.information(self, 'Filme excluído', f'Filme excluído com sucesso.')
+        pass
