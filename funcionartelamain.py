@@ -8,7 +8,7 @@ from TELA_DPS_LOGIN_ui import *#
 from TELA_DPS_LOGIN_FUNC_ui import *#
 from TELA_ESTATISTICA_ui import *#
 from TELA_GESTAO_FILMES_ui import *#
-from TELA_DPS_CADASTRAR_FUNC_ui import *#
+from TELA_CADASTRO_FILME import *#
 from TELA_EXCLUIR_FILME_ui import *#
 from TELA_LISTA_FILMES_ui import *#
 from classes.class_armazenar import *
@@ -58,7 +58,7 @@ class Main(QtWidgets.QWidget):
         self.TELA_GESTAO_FILMES_ui = GESTAO_FILMES()
         self.TELA_GESTAO_FILMES_ui.setupUi(self.stack5)
         
-        self.TELA_DPS_CADASTRAR_FUNC_ui = Cadastrar_Filme()
+        self.TELA_DPS_CADASTRAR_FUNC_ui = Cadastrar_filme()
         self.TELA_DPS_CADASTRAR_FUNC_ui.setupUi(self.stack6)
         
         self.TELA_EXCUIR_FILME_ui = Excluir_Filme()
@@ -206,26 +206,25 @@ class Ui_Main(QMainWindow, Main):
         midnight_time = QtCore.QTime(0, 0, 0)
         zero_datetime = QtCore.QDateTime(minimum_date, midnight_time)
         valid = False
-        id_filme = int(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit.text())
+        #id_filme = int(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit.text())
         nome_filme = self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_2.text()
         ano_filme = int(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_3.text())
         preco = float(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_4.text())
         classificacao = self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_5.text()
         horario = self.TELA_DPS_CADASTRAR_FUNC_ui.dateTimeEdit.text()
         tipo_filme = self.TELA_DPS_CADASTRAR_FUNC_ui.comboBox.currentText()
-        if id_filme == '' or nome_filme == '' or ano_filme == '' or preco == '' or classificacao == '':
+        if nome_filme == '' or ano_filme == '' or preco == '' or classificacao == '':
             QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
         else:
-            filme = Filme(id_filme, nome_filme, ano_filme, preco, classificacao, horario, tipo_filme)
-            certo_filme = dados.armazenar_filme(filme, id_filme)
-            if certo_filme:
+            filme = Filme(nome_filme, ano_filme, preco, classificacao, horario, tipo_filme)
+            if dados.armazenar_filmes(filme):
                 QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'filme cadastrado com sucesso.')
                 valid = True
             else:
-                QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Erro, Id de filme já cadastrado.')
+                QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Erro, filme nao cadastrado.')
         if valid:
             self.QtStack.setCurrentIndex(5)
-        self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit.setText('')
+        #self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_2.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_3.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_4.setText('')

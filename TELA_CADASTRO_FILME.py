@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\ESCOLA\QUARTO_PERIODO\PROGRAMAÇÃO ORIENTADA A OBJETOS II\Projetos\Projeto\PROJETO_POO\PROJETO_POO\TELA_DPS_CADASTRAR_FUNC.ui'
+# Form implementation generated from reading ui file '.\TELA_DPS_CADASTRAR_FUNC.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Cadastrar_Filme(object):
+class Cadastrar_filme(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(800, 600)
@@ -52,16 +52,6 @@ class Cadastrar_Filme(object):
         self.lineEdit_3.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_3.setObjectName("lineEdit_3")
         self.horizontalLayout_3.addWidget(self.lineEdit_3)
-        self.layoutWidget_4 = QtWidgets.QWidget(Dialog)
-        self.layoutWidget_4.setGeometry(QtCore.QRect(200, 170, 411, 26))
-        self.layoutWidget_4.setObjectName("layoutWidget_4")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.layoutWidget_4)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.lineEdit = QtWidgets.QLineEdit(self.layoutWidget_4)
-        self.lineEdit.setAlignment(QtCore.Qt.AlignCenter)
-        self.lineEdit.setObjectName("lineEdit")
-        self.horizontalLayout.addWidget(self.lineEdit)
         self.label_2 = QtWidgets.QLabel(Dialog)
         self.label_2.setGeometry(QtCore.QRect(350, 110, 128, 16))
         self.label_2.setObjectName("label_2")
@@ -117,7 +107,6 @@ class Cadastrar_Filme(object):
         self.lineEdit_4.setPlaceholderText(_translate("Dialog", "Preço"))
         self.lineEdit_2.setPlaceholderText(_translate("Dialog", "Nome do Filme"))
         self.lineEdit_3.setPlaceholderText(_translate("Dialog", "Ano do Filme"))
-        self.lineEdit.setPlaceholderText(_translate("Dialog", "ID Filme"))
         self.label_2.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-weight:600;\">CADASTRAR FILMES</span></p></body></html>"))
         self.label.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt;\">CINEPLUS</span></p></body></html>"))
         self.pushButton_3.setText(_translate("Dialog", "VOLTAR"))

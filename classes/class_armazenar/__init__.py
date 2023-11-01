@@ -6,13 +6,13 @@ class Armazenar:
         self.create_users_table()
         self.cria_gerente()
         self.inserir_gerente()
+        self.tabela_filmes()
 
     def create_users_table(self):
-        cursor = self.db_connection.cursor()
-        
         # Use o banco de dados 'Cineplus'
+        cursor = self.db_connection.cursor()
         cursor.execute("USE Cineplus")
-        
+
         create_table_query = """
         CREATE TABLE IF NOT EXISTS Usuarios (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -24,13 +24,12 @@ class Armazenar:
         """
         cursor.execute(create_table_query)
         self.db_connection.commit()
-        
+
     def cria_gerente(self):
-        cursor = self.db_connection.cursor()
-        
         # Use o banco de dados 'Cineplus'
+        cursor = self.db_connection.cursor()
         cursor.execute("USE Cineplus")
-        
+
         create_table_query = """
         CREATE TABLE IF NOT EXISTS Gerencia (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -42,7 +41,26 @@ class Armazenar:
         """
         cursor.execute(create_table_query)
         self.db_connection.commit()
-        
+
+    def tabela_filmes(self):
+        # Use o banco de dados 'Cineplus'
+        cursor = self.db_connection.cursor()
+        cursor.execute("USE Cineplus")
+
+        criar_tabela_filmes = """
+        CREATE TABLE IF NOT EXISTS Filmes (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nome_filme VARCHAR(100) NOT NULL,
+            ano INT NOT NULL,
+            preco FLOAT NOT NULL,
+            classificacao INT NOT NULL,
+            horario VARCHAR(200) NOT NULL,
+            tipo VARCHAR(10) NOT NULL
+        )
+        """
+        cursor.execute(criar_tabela_filmes)
+        self.db_connection.commit()
+
     def inserir_gerente(self):
         cursor = self.db_connection.cursor()
         nome = 'rai'
@@ -59,6 +77,9 @@ class Armazenar:
         values1 = (nome1, cpf1, email1, senha1)
         cursor.execute(insert_query, values)
         cursor.execute(insert_query_1, values1)
+
+        # Certifique-se de fechar os cursores
+        cursor.close()
 
     def armazenar(self, pessoa):
         cursor = self.db_connection.cursor()
@@ -87,9 +108,22 @@ class Armazenar:
                 print("Erro ao inserir dados no banco de dados:", err)
                 self.db_connection.rollback()
                 return False
-
-
-
+            finally:
+                # Certifique-se de fechar o cursor
+                cursor.close()
+    
+    def armazenar_filmes(self, filme):
+        try:
+            cursor = self.db_connection.cursor()
+            inserir = "INSERT INTO Filmes (nome_filme, ano, preco, classificacao, horario, tipo) VALUES (%s, %s, %s, %s, %s, %s)"
+            values = (filme._nome, filme._ano, filme._preco, filme._classificacao, filme._horario, filme._tipo)
+            cursor.execute(inserir, values)
+            self.db_connection.commit()
+            return True
+        except mysql.connector.Error as err:
+            print('Erro ao inserir dados no banco de dados:', err)
+            self.db_connection.rollback()
+            return False
 
     def verificar_login_Cliente(self, cpf, senha):
         cursor = self.db_connection.cursor()
@@ -98,7 +132,8 @@ class Armazenar:
         cursor.execute(select_query, values)
         result = cursor.fetchone()
         return result is not None
-    
+   
+
     def verificar_login_Ger(self, cpf, senha):
         cursor = self.db_connection.cursor()
         select_query = "SELECT * FROM Gerencia WHERE cpf = %s AND senha = %s"
