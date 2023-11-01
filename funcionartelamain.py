@@ -170,7 +170,7 @@ class Ui_Main(QMainWindow, Main):
                 
         self.tela_main_ui.lineEdit_2.setText('')
         self.tela_main_ui.lineEdit.setText('')        
-            
+        dados.db_connection.consume_results()
 
     def fecharAplicacao(self):
         sys.exit()
