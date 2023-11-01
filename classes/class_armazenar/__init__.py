@@ -24,6 +24,7 @@ class Armazenar:
         """
         cursor.execute(create_table_query)
         self.db_connection.commit()
+        cursor.close()
 
     def cria_gerente(self):
         # Use o banco de dados 'Cineplus'
@@ -41,6 +42,7 @@ class Armazenar:
         """
         cursor.execute(create_table_query)
         self.db_connection.commit()
+        cursor.close()
 
     def tabela_filmes(self):
         # Use o banco de dados 'Cineplus'
@@ -60,6 +62,7 @@ class Armazenar:
         """
         cursor.execute(criar_tabela_filmes)
         self.db_connection.commit()
+        cursor.close()
 
     def inserir_gerente(self):
         cursor = self.db_connection.cursor()
@@ -103,27 +106,32 @@ class Armazenar:
             try:
                 cursor.execute(insert_query, values)
                 self.db_connection.commit()
+                cursor.close()
                 return True
             except mysql.connector.Error as err:
                 print("Erro ao inserir dados no banco de dados:", err)
                 self.db_connection.rollback()
-                return False
-            finally:
-                # Certifique-se de fechar o cursor
                 cursor.close()
+                return False
     
     def armazenar_filmes(self, filme):
+        cursor = self.db_connection.cursor()
+
+        insert_query = "INSERT INTO Filmes(nome_filme, ano, preco, classificacao, horario, tipo) VALUES (%s, %s, %s, %s, %s, %s)"
+        values = (filme._nome, filme._ano, filme._preco, filme._classificacao, filme._horarios, filme._tipo)
         try:
-            cursor = self.db_connection.cursor()
-            inserir = "INSERT INTO Filmes (nome_filme, ano, preco, classificacao, horario, tipo) VALUES (%s, %s, %s, %s, %s, %s)"
-            values = (filme._nome, filme._ano, filme._preco, filme._classificacao, filme._horario, filme._tipo)
-            cursor.execute(inserir, values)
+            cursor.execute(insert_query, values)
             self.db_connection.commit()
+            cursor.close()  # Feche o cursor após a inserção bem-sucedida
             return True
         except mysql.connector.Error as err:
+            print('passou aqui')
             print('Erro ao inserir dados no banco de dados:', err)
             self.db_connection.rollback()
+            cursor.close()
             return False
+
+
 
     def verificar_login_Cliente(self, cpf, senha):
         cursor = self.db_connection.cursor()
@@ -131,6 +139,7 @@ class Armazenar:
         values = (cpf, senha)
         cursor.execute(select_query, values)
         result = cursor.fetchone()
+        cursor.close()
         return result is not None
    
 
@@ -140,4 +149,5 @@ class Armazenar:
         values = (cpf, senha)
         cursor.execute(select_query, values)
         result = cursor.fetchone()
+        #self.db_connection.close()
         return result is not None

@@ -8,7 +8,7 @@ from TELA_DPS_LOGIN_ui import *#
 from TELA_DPS_LOGIN_FUNC_ui import *#
 from TELA_ESTATISTICA_ui import *#
 from TELA_GESTAO_FILMES_ui import *#
-from TELA_CADASTRO_FILME import *#
+from TELA_CADASTRO_FILMES import *#
 from TELA_EXCLUIR_FILME_ui import *#
 from TELA_LISTA_FILMES_ui import *#
 from classes.class_armazenar import *
@@ -82,7 +82,9 @@ class Ui_Main(QMainWindow, Main):
     def __init__(self):
         super(Main, self).__init__(None)
         self.setupUi(self)
+        self.horarios_selecionados = list()
         
+
         #Tela_Main(Inicio)
         self.tela_main_ui.pushButton_3.clicked.connect(self.fecharAplicacao)
         self.tela_main_ui.pushButton_4.clicked.connect(self.abrirTelaCadastro)
@@ -111,6 +113,7 @@ class Ui_Main(QMainWindow, Main):
         #Tela_Cadastrar_Filmes
         self.TELA_DPS_CADASTRAR_FUNC_ui.pushButton_3.clicked.connect(self.TelaGestao)
         self.TELA_DPS_CADASTRAR_FUNC_ui.pushButton.clicked.connect(self.botao_cadastrar_filme)
+        self.TELA_DPS_CADASTRAR_FUNC_ui.pushButton_2.clicked.connect(self.adicionar_horarios)
         
         #Tela_Excluir_Filmes
         self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.TelaGestao)
@@ -202,34 +205,57 @@ class Ui_Main(QMainWindow, Main):
 
    #tela de cadastro de filmes
     def botao_cadastrar_filme(self):
+        horarios_escolhidos = list()
         minimum_date = QtCore.QDate(1800, 9, 14)
         midnight_time = QtCore.QTime(0, 0, 0)
         zero_datetime = QtCore.QDateTime(minimum_date, midnight_time)
         valid = False
-        #id_filme = int(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit.text())
         nome_filme = self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_2.text()
         ano_filme = int(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_3.text())
         preco = float(self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_4.text())
         classificacao = self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_5.text()
-        horario = self.TELA_DPS_CADASTRAR_FUNC_ui.dateTimeEdit.text()
+
+        horarios_escolhidos.extend(self.horarios_selecionados)
+        horarios_str = ', '.join(horarios_escolhidos)
+
         tipo_filme = self.TELA_DPS_CADASTRAR_FUNC_ui.comboBox.currentText()
+        
         if nome_filme == '' or ano_filme == '' or preco == '' or classificacao == '':
             QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
+        elif not horarios_escolhidos:
+            QtWidgets.QMessageBox.information(self, 'erro', 'Selecione pelo menos um horário.')
         else:
-            filme = Filme(nome_filme, ano_filme, preco, classificacao, horario, tipo_filme)
+            filme = Filme(nome_filme, ano_filme, preco, classificacao, horarios_str, tipo_filme)
             if dados.armazenar_filmes(filme):
-                QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'filme cadastrado com sucesso.')
+                QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Filme cadastrado com sucesso.')
                 valid = True
             else:
-                QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Erro, filme nao cadastrado.')
+                QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Erro, filme não cadastrado.')
+
         if valid:
             self.QtStack.setCurrentIndex(5)
-        #self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_2.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_3.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_4.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.lineEdit_5.setText('')
         self.TELA_DPS_CADASTRAR_FUNC_ui.dateTimeEdit.setDateTime(zero_datetime)
+
+    
+    def adicionar_horarios(self):
+        horario = self.TELA_DPS_CADASTRAR_FUNC_ui.dateTimeEdit.text()
+        if horario:
+            self.horarios_selecionados.append(horario)
+            horario_usar = self.TELA_DPS_CADASTRAR_FUNC_ui.listView
+            modelo_horario = QStandardItemModel()
+            for horario in self.horarios_selecionados:
+                item_horario = QStandardItem(f'HORÁRIOS: {horario}')
+                item_horario.setEditable(False)
+                modelo_horario.appendRow(item_horario)
+            QtWidgets.QMessageBox.information(self, 'Horário', 'Horário adicionado com sucesso.')
+            horario_usar.setModel(modelo_horario)
+        else:
+            QtWidgets.QMessageBox.information(self, 'Horário', 'Selecione um horário antes de adicionar.')
+
 
 
     #tela de excluir

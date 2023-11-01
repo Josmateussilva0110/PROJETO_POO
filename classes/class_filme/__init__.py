@@ -1,12 +1,13 @@
 class Filme():
-    def __init__(self, nome, ano, preco, classificacao, horario, tipo):
+    def __init__(self, nome, ano, preco, classificacao, horarios, tipo):
         self._nome = nome
         self._ano = ano
         self._preco = preco
         self._classificacao = classificacao
-        self._horario = horario
+        self._horarios = str(horarios)  # Agora, horários são uma string
         self._tipo = tipo
     
 
     def ver_filme(self):
-        print(f'nome: {self._nome}\nano: {self._ano}\npreco: {self._preco}\nclassificao: {self._classificacao}\nhorario: {self._horario}')
+        pass
+    

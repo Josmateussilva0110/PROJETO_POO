@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\TELA_DPS_CADASTRAR_FUNC.ui'
+# Form implementation generated from reading ui file '.\TELA_CADASTRO_FILMES.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -62,7 +62,7 @@ class Cadastrar_filme(object):
         self.pushButton_3.setGeometry(QtCore.QRect(10, 560, 93, 28))
         self.pushButton_3.setObjectName("pushButton_3")
         self.pushButton = QtWidgets.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(350, 500, 111, 31))
+        self.pushButton.setGeometry(QtCore.QRect(350, 540, 111, 31))
         self.pushButton.setObjectName("pushButton")
         self.horizontalLayoutWidget = QtWidgets.QWidget(Dialog)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(200, 330, 411, 31))
@@ -95,7 +95,7 @@ class Cadastrar_filme(object):
         self.pushButton_2.setObjectName("pushButton_2")
         self.horizontalLayout_6.addWidget(self.pushButton_2)
         self.listView = QtWidgets.QListView(Dialog)
-        self.listView.setGeometry(QtCore.QRect(200, 440, 411, 51))
+        self.listView.setGeometry(QtCore.QRect(200, 440, 411, 91))
         self.listView.setObjectName("listView")
 
         self.retranslateUi(Dialog)
