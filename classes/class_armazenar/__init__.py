@@ -74,8 +74,7 @@ class Armazenar:
         cpf1 = '111'  # CPF do gerente a ser inserido
         select_query1 = "SELECT cpf FROM Gerencia WHERE cpf = %s"
         cursor1.execute(select_query1, (cpf1,))
-        existing_gerente_cpf1 = cursor1.fetchone()
-        
+        existing_gerente_cpf1 = cursor1.fetchone()   
         if not existing_gerente_cpf:
             nome = 'rai'
             email = 'raileal_gerente@gmail.com'
