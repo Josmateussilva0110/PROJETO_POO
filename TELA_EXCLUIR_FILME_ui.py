@@ -56,12 +56,11 @@ class Excluir_Filme(object):
         self.lineEdit_2.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_2.setObjectName("lineEdit_2")
         self.horizontalLayout.addWidget(self.lineEdit_2)
-        self.pushButton_2 = QtWidgets.QPushButton(self.layoutWidget2)
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.horizontalLayout.addWidget(self.pushButton_2)
         self.listView = QtWidgets.QListView(Dialog)
         self.listView.setGeometry(QtCore.QRect(20, 190, 761, 251))
         self.listView.setObjectName("listView")
+        self.listView.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -74,4 +73,3 @@ class Excluir_Filme(object):
         self.pushButton_3.setText(_translate("Dialog", "VOLTAR"))
         self.pushButton.setText(_translate("Dialog", "EXCLUIR"))
         self.lineEdit_2.setPlaceholderText(_translate("Dialog", "ID do Filme"))
-        self.pushButton_2.setText(_translate("Dialog", "BUSCAR"))

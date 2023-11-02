@@ -5,8 +5,7 @@ class Armazenar:
         self.db_connection = db_connection
         self.create_users_table()
         self.cria_gerente()
-        self.inserir_gerente()
-        self.tabela_filmes()
+        self.inserir_gerente1()
 
     def create_users_table(self):
         # Use o banco de dados 'Cineplus'
@@ -44,7 +43,7 @@ class Armazenar:
         self.db_connection.commit()
         cursor.close()
 
-    def tabela_filmes(self):
+    def cria_tabela_filmes(self):
         # Use o banco de dados 'Cineplus'
         cursor = self.db_connection.cursor()
         cursor.execute("USE Cineplus")
@@ -64,24 +63,36 @@ class Armazenar:
         self.db_connection.commit()
         cursor.close()
 
-    def inserir_gerente(self):
+    def inserir_gerente1(self):
         cursor = self.db_connection.cursor()
-        nome = 'rai'
-        cpf = '777'
-        email = 'raileal_gerente@gmail.com'
-        senha = '777'
-        nome1 = 'mateus'
-        cpf1 = '111'
-        email1 = 'mateus_gerente@gmail.com'
-        senha1 = '111'
-        insert_query = "INSERT INTO Gerencia (nome, cpf, email, senha) VALUES (%s, %s, %s, %s)"
-        values = (nome, cpf, email, senha)
-        insert_query_1 = "INSERT INTO Gerencia (nome, cpf, email, senha) VALUES (%s, %s, %s, %s)"
-        values1 = (nome1, cpf1, email1, senha1)
-        cursor.execute(insert_query, values)
-        cursor.execute(insert_query_1, values1)
+        cpf = '777'  # CPF do gerente a ser inserido
+        select_query = "SELECT cpf FROM Gerencia WHERE cpf = %s"
+        cursor.execute(select_query, (cpf,))
+        existing_gerente_cpf = cursor.fetchone()
+        
+        cursor1 = self.db_connection.cursor()
+        cpf1 = '111'  # CPF do gerente a ser inserido
+        select_query1 = "SELECT cpf FROM Gerencia WHERE cpf = %s"
+        cursor1.execute(select_query1, (cpf1,))
+        existing_gerente_cpf1 = cursor1.fetchone()
+        
+        if not existing_gerente_cpf:
+            nome = 'rai'
+            email = 'raileal_gerente@gmail.com'
+            senha = '777'
+            insert_query = "INSERT INTO Gerencia (nome, cpf, email, senha) VALUES (%s, %s, %s, %s)"
+            values = (nome, cpf, email, senha)
+            cursor.execute(insert_query, values)
+            
+        if not existing_gerente_cpf1:
+            nome1 = 'mateus'
+            email1 = 'mateus_gerente@gmail.com'
+            senha1 = '111'
+            insert_query1 = "INSERT INTO Gerencia (nome, cpf, email, senha) VALUES (%s, %s, %s, %s)"
+            values1 = (nome1, cpf1, email1, senha1)
+            cursor1.execute(insert_query1, values1)
 
-        # Certifique-se de fechar os cursores
+        # Certifique-se de fechar o cursor
         cursor.close()
 
     def armazenar(self, pessoa):
@@ -102,7 +113,7 @@ class Armazenar:
             return False
         else:
             insert_query = "INSERT INTO Usuarios (nome, cpf, email, senha) VALUES (%s, %s, %s, %s)"
-            values = (pessoa.nome, pessoa.cpf, pessoa.email, pessoa.senha)
+            values = (pessoa._nome, pessoa._cpf, pessoa._email, pessoa._senha)
             try:
                 cursor.execute(insert_query, values)
                 self.db_connection.commit()
@@ -113,24 +124,6 @@ class Armazenar:
                 self.db_connection.rollback()
                 cursor.close()
                 return False
-    
-    def armazenar_filmes(self, filme):
-        cursor = self.db_connection.cursor()
-
-        insert_query = "INSERT INTO Filmes(nome_filme, ano, preco, classificacao, horario, tipo) VALUES (%s, %s, %s, %s, %s, %s)"
-        values = (filme._nome, filme._ano, filme._preco, filme._classificacao, filme._horarios, filme._tipo)
-        try:
-            cursor.execute(insert_query, values)
-            self.db_connection.commit()
-            cursor.close()  # Feche o cursor após a inserção bem-sucedida
-            return True
-        except mysql.connector.Error as err:
-            print('passou aqui')
-            print('Erro ao inserir dados no banco de dados:', err)
-            self.db_connection.rollback()
-            cursor.close()
-            return False
-
 
 
     def verificar_login_Cliente(self, cpf, senha):

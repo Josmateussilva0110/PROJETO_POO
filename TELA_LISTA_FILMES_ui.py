@@ -28,6 +28,7 @@ class Tela_Lista_Filmes(object):
         self.listView = QtWidgets.QListView(Dialog)
         self.listView.setGeometry(QtCore.QRect(10, 120, 781, 421))
         self.listView.setObjectName("listView")
+        self.listView.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.label_2 = QtWidgets.QLabel(Dialog)
         self.label_2.setGeometry(QtCore.QRect(320, 90, 117, 16))
         self.label_2.setObjectName("label_2")

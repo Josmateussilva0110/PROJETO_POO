@@ -2,6 +2,7 @@ import sys
 import mysql.connector
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
+from PyQt5.QtCore import QStringListModel
 from tela_main_ui import *#
 from TELA_CADASTRO_ui import *#
 from TELA_USUARIO import *#
@@ -16,11 +17,13 @@ from classes.class_pessoa import *
 from classes.funcoes_aux import *
 from classes.class_filme import *
 from classes.class_conexao_bd import *
+from classes.classe_armazena_filme import *
 
 mydb = configure_mysql_connection()
 db = create_database()
 
 dados = Armazenar(mydb)
+dados_filme = Armazenar_filmes(mydb)
 
 class Main(QtWidgets.QWidget):
     def setupUi(self, Main):
@@ -117,12 +120,10 @@ class Ui_Main(QMainWindow, Main):
         
         #Tela_Excluir_Filmes
         self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.TelaGestao)
-        self.TELA_EXCUIR_FILME_ui.pushButton_2.clicked.connect(self.buscar_filme)
-        self.TELA_EXCUIR_FILME_ui.pushButton.clicked.connect(self.remover_filme)
+        self.TELA_EXCUIR_FILME_ui.pushButton.clicked.connect(self.TelaExcluiFilme)
         
         #Tela_Listar_Filmes
-        self.TELA_LISTA_FILMES_ui.pushButton_4.clicked.connect(self.TelaGestao)
-        self.filme_encontrado = None #usado para nao poder modificar os valores 
+        self.TELA_LISTA_FILMES_ui.pushButton_4.clicked.connect(self.TelaGestao) 
 
 
     def botao_Cadastra(self):
@@ -227,7 +228,7 @@ class Ui_Main(QMainWindow, Main):
         else:
             preco = round(float(preco_str), 2)
             filme = Filme(nome_filme, ano_filme, preco, classificacao, horarios_str, tipo_filme)
-            if dados.armazenar_filmes(filme):
+            if dados_filme.armazenar_filmes(filme):
                 QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Filme cadastrado com sucesso.')
                 valid = True
             else:
@@ -252,34 +253,76 @@ class Ui_Main(QMainWindow, Main):
                 item_horario = QStandardItem(f'HORÁRIOS: {horario}')
                 item_horario.setEditable(False)
                 modelo_horario.appendRow(item_horario)
-            QtWidgets.QMessageBox.information(self, 'Horário', 'Horário adicionado com sucesso.')
             horario_usar.setModel(modelo_horario)
         else:
             QtWidgets.QMessageBox.information(self, 'Horário', 'Selecione um horário antes de adicionar.')
+            
+    def TelaVerTodosFilmes(self):   
+        # Obtenha a lista de filmes do banco de dados
+        filmes = dados_filme.obter_todos_filmes()
 
+        if filmes:
+            # Crie um modelo de lista para armazenar os nomes dos filmes
+            model = QStringListModel()
+            model.setStringList(filmes)
 
-
-    #tela de excluir
-    def buscar_filme(self):
-        id = int(self.TELA_EXCUIR_FILME_ui.lineEdit_2.text())
-        achado = dados.buscar_filme(id)
-        if achado is not None:
-            self.filme_encontrado = achado  # Armazena o filme encontrado
-            filme_encontrado = self.TELA_EXCUIR_FILME_ui.listView
-            modelo_filme = QStandardItemModel()
-            item_filme = QStandardItem(f'ID: {achado._id} - Nome: {achado._nome} - Ano: {achado._ano} - Preço: {achado._preco} - classificação: {achado._classificacao} - Tipo: {achado._tipo}')
-            item_filme.setEditable(False)  # Torna o item não editável
-            modelo_filme.appendRow(item_filme)
-            filme_encontrado.setModel(modelo_filme)
+            # Associe o modelo ao QListView
+            self.TELA_LISTA_FILMES_ui.listView.setModel(model)
+            
+            self.QtStack.setCurrentIndex(8)
         else:
-            self.filme_encontrado = None  # Limpa a variável de filme encontrado
-            QtWidgets.QMessageBox.information(self, 'Filme', 'Erro, filme não encontrado.')
-        #self.TELA_EXCUIR_FILME_ui.lineEdit_2.setText('')
+            QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
+            
+    def TelaExcluiFilme(self):
+        
+        # Obtenha a lista de filmes do banco de dados
+        filmes = dados_filme.obter_todos_filmes()
+        
+        if filmes:
+            # Crie um modelo de lista para armazenar os nomes dos filmes
+            model = QStringListModel()
+            model.setStringList(filmes)
 
+            # Associe o modelo ao QListView
+            self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
+            
+            self.QtStack.setCurrentIndex(7)
+            
+            filme_id = self.TELA_EXCUIR_FILME_ui.lineEdit_2.text()
+            if filme_id:
+                # Verificar se o filme com o ID especificado existe no banco de dados
+                if dados_filme.verificar_filme(filme_id):
 
-
-    def TelaVerTodosFilmes(self):
-        self.QtStack.setCurrentIndex(8)
+                    # O filme foi encontrado, agora você pode removê-lo do banco de dados
+                    if dados_filme.excluir_filmes(filme_id):
     
-    def remover_filme(self):
-        pass
+                        # Atualize a lista de filmes após a exclusão
+                        filmes_atualizados = dados_filme.obter_todos_filmes()
+                        model.setStringList(filmes_atualizados)
+                        self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
+                        QtWidgets.QMessageBox.information(self, 'Excluir Filme', 'Filme removido com sucesso.')
+                    else:
+    
+                        QtWidgets.QMessageBox.information(self, 'Erro', 'Erro ao excluir o filme.')
+                else:
+
+                    QtWidgets.QMessageBox.information(self, 'Excluir Filme', 'Nenhum filme com o ID especificado foi encontrado.')
+                    
+                # Limpar o campo de entrada do ID
+                self.TELA_EXCUIR_FILME_ui.lineEdit_2.setText('')
+        else:
+            QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
+
+
+
+
+
+                        
+                    
+
+                
+
+
+
+                
+                
