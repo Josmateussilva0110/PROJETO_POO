@@ -73,7 +73,7 @@
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>320</x>
+     <x>350</x>
      <y>520</y>
      <width>93</width>
      <height>28</height>
@@ -110,7 +110,7 @@
     <rect>
      <x>210</x>
      <y>460</y>
-     <width>341</width>
+     <width>411</width>
      <height>30</height>
     </rect>
    </property>
@@ -122,6 +122,20 @@
       </property>
       <property name="placeholderText">
        <string>ID do Filme</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton_2">
+      <property name="text">
+       <string>Buscar</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton_4">
+      <property name="text">
+       <string>Mostrar Filmes</string>
       </property>
      </widget>
     </item>
