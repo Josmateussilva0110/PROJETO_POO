@@ -295,7 +295,6 @@ class Ui_Main(QMainWindow, Main):
 
                     # O filme foi encontrado, agora você pode removê-lo do banco de dados
                     if dados_filme.excluir_filmes(filme_id):
-    
                         # Atualize a lista de filmes após a exclusão
                         filmes_atualizados = dados_filme.obter_todos_filmes()
                         model.setStringList(filmes_atualizados)
