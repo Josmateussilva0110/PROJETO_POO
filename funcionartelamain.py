@@ -97,7 +97,7 @@ class Ui_Main(QMainWindow, Main):
     def __init__(self):
         super(Main, self).__init__(None)
         self.setupUi(self)
-        self.horarios_selecionados = list()
+        self.horarios_selecionados = dict()
         
 
         #Tela_Main(Inicio)
@@ -227,35 +227,43 @@ class Ui_Main(QMainWindow, Main):
         self.QtStack.setCurrentIndex(6)
         
 
-   #tela de cadastro de filmes
+     #tela de cadastro de filmes
     def botao_cadastrar_filme(self):
         horarios_escolhidos = list()
+        valid = False
+        filme = ''
         minimum_date = QtCore.QDate(1800, 9, 14)
         midnight_time = QtCore.QTime(0, 0, 0)
         zero_datetime = QtCore.QDateTime(minimum_date, midnight_time)
-        valid = False
         nome_filme = self.TELA_CADASTRO_FILMES.lineEdit_2.text()
-        ano_filme = int(self.TELA_CADASTRO_FILMES.lineEdit_3.text())
-        preco_str = float(self.TELA_CADASTRO_FILMES.lineEdit_4.text())
+        ano_filme = self.TELA_CADASTRO_FILMES.lineEdit_3.text()
+        preco_str = self.TELA_CADASTRO_FILMES.lineEdit_4.text()
         classificacao = self.TELA_CADASTRO_FILMES.lineEdit_5.text()
 
+        #converter o dicionario de horários em string
         horarios_escolhidos.extend(self.horarios_selecionados)
-        horarios_str = ', '.join(horarios_escolhidos)
-
-        tipo_filme = self.TELA_CADASTRO_FILMES.comboBox.currentText()
+        horarios_str = ', '.join([f'{horario} - {tipo}' for horario, tipo in self.horarios_selecionados.items()])
+        #limpar a lista de horarios
+        self.horarios_selecionados.clear()
         
-        if nome_filme == '' or ano_filme == '' or preco_str == '' or classificacao == '':
+        if verificar_espacos(nome_filme, ano_filme, preco_str, classificacao):
             QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
         elif not horarios_escolhidos:
             QtWidgets.QMessageBox.information(self, 'erro', 'Selecione pelo menos um horário.')
+        elif not verificar_valor_inteiro(ano_filme) or not verificar_valor_flutuante(preco_str):
+            QtWidgets.QMessageBox.information(self, 'erro', 'Valores de ano ou preço incorretos.')
         else:
-            preco = round(float(preco_str), 2)
-            filme = Filme(nome_filme, ano_filme, preco, classificacao, horarios_str, tipo_filme)
-            if dados_filme.armazenar_filmes(filme):
-                QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Filme cadastrado com sucesso.')
-                valid = True
+            preco = float(preco_str)
+            if preco < 0.0:
+                QtWidgets.QMessageBox.information(self, 'erro', 'O preço deve ser maior que zero.')
             else:
-                QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Erro, filme não cadastrado.')
+                filme = Filme(nome_filme, ano_filme, preco, classificacao, horarios_str)
+                aux = dados_filme.armazenar_filmes(filme)
+                if aux:
+                    QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Filme cadastrado com sucesso.')
+                    valid = True
+                else:
+                    QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Erro, filme não cadastrado.')
 
         if valid:
             self.QtStack.setCurrentIndex(5)
@@ -264,16 +272,24 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_CADASTRO_FILMES.lineEdit_4.setText('')
         self.TELA_CADASTRO_FILMES.lineEdit_5.setText('')
         self.TELA_CADASTRO_FILMES.dateTimeEdit.setDateTime(zero_datetime)
+        self.TELA_CADASTRO_FILMES.listView.setModel(QStandardItemModel())
 
     
     def adicionar_horarios(self):
         horario = self.TELA_CADASTRO_FILMES.dateTimeEdit.text()
+        tipo_filme = self.TELA_CADASTRO_FILMES.comboBox.currentText()
+        
         if horario:
-            self.horarios_selecionados.append(horario)
+            # Adicione o par horário-tipo ao dicionário
+            self.horarios_selecionados[horario] = tipo_filme
+
+            # Crie uma lista de strings para representar os pares horário-tipo
+            horarios_strings = [f'{horario} - {tipo_filme}' for horario, tipo_filme in self.horarios_selecionados.items()]
+            # Atualize o QListView com a lista de strings
             horario_usar = self.TELA_CADASTRO_FILMES.listView
             modelo_horario = QStandardItemModel()
-            for horario in self.horarios_selecionados:
-                item_horario = QStandardItem(f'HORÁRIOS: {horario}')
+            for horario_str in horarios_strings:
+                item_horario = QStandardItem(horario_str)
                 item_horario.setEditable(False)
                 modelo_horario.appendRow(item_horario)
             horario_usar.setModel(modelo_horario)

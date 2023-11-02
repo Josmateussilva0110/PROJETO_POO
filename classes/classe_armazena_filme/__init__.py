@@ -16,9 +16,8 @@ class Armazenar_filmes:
             nome_filme VARCHAR(100) NOT NULL,
             ano INT NOT NULL,
             preco FLOAT NOT NULL,
-            classificacao INT NOT NULL,
-            horario VARCHAR(200) NOT NULL,
-            tipo VARCHAR(10) NOT NULL
+            classificacao VARCHAR(100) NOT NULL,
+            horario VARCHAR(255) NOT NULL
         )
         """
         cursor.execute(criar_tabela_filmes)
@@ -34,21 +33,26 @@ class Armazenar_filmes:
 
     def armazenar_filmes(self, filme):
         cursor = self.db_connection.cursor()
-        max_id = self.obter_ultimo_id()
+        valid = False
         
-        novo_id = max_id - 1 if max_id is not None else 1
+        # Consulte o valor máximo atual do ID na tabela
+        cursor.execute("SELECT MAX(id) FROM Filmes")
+        max_id = cursor.fetchone()[0]
+        
+        # Calcule o novo ID
+        novo_id = max_id + 1 if max_id is not None else 1
 
-        insert_query = "INSERT INTO Filmes(id, nome_filme, ano, preco, classificacao, horario, tipo) VALUES (%s,%s, %s, %s, %s, %s, %s)"
-        values = (novo_id,filme._nome, filme._ano, filme._preco, filme._classificacao, filme._horarios, filme._tipo)
+        insert_query = "INSERT INTO Filmes(id, nome_filme, ano, preco, classificacao, horario) VALUES (%s,%s, %s, %s, %s, %s)"
+        values = (novo_id, filme._nome, filme._ano, filme._preco, filme._classificacao, filme._horarios)
         try:
             cursor.execute(insert_query, values)
             self.db_connection.commit()
-            cursor.close()  # Feche o cursor após a inserção bem-sucedida
-            return True
-        except mysql.connector.Error as err:
+            valid = True 
+            cursor.close()
+        except mysql.connector.Error:
             self.db_connection.rollback()
             cursor.close()
-            return False
+        return valid
         
 
     def verificar_filme(self, filme_id):
@@ -85,9 +89,8 @@ class Armazenar_filmes:
 
             if result:
                 # Film with the provided ID found, format its information as a string
-                filme_info = f"ID: {result[0]}\nNome: {result[1]}\nAno: {result[2]}\nPreço: {result[3]}\nClassificação: {result[4]}\nHorário: {result[5]}\nTipo: {result[6]}"
+                filme_info = f"ID: {result[0]}\nNome: {result[1]}\nAno: {result[2]}\nPreço: {result[3]}\nClassificação: {result[4]}\nHorário: {result[5]}\n"
                 cursor.close()
-                print(filme_info)
                 return filme_info
             else:
                 # No film with the provided ID was found
@@ -117,18 +120,7 @@ class Armazenar_filmes:
             cursor = self.db_connection.cursor()
             cursor.execute("SELECT * FROM Filmes")
             filmes = cursor.fetchall()
-            filme_strings = [f"ID: {filme[0]}, Nome: {filme[1]}, Ano: {filme[2]}, Preço: {filme[3]}, Classificação: {filme[4]}, Horário: {filme[5]}, Tipo: {filme[6]}" for filme in filmes]
+            filme_strings = [f"ID: {filme[0]}\nNome: {filme[1]}\nAno: {filme[2]}\nPreço: {filme[3]}\nClassificação: {filme[4]}\nHorário: {filme[5]}\n" for filme in filmes]
             return filme_strings
         except mysql.connector.Error as err:
             return []
-        
-        
-    
-
-        
-
-
-
-
-
-
