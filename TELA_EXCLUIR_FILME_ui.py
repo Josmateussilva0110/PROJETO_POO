@@ -73,7 +73,7 @@ class Excluir_Filme(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.label_2.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-weight:600;\">EXPLUIR FILMES</span></p></body></html>"))
+        self.label_2.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-weight:600;\">EXCLUIR FILMES</span></p></body></html>"))
         self.label.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt;\">CINEPLUS</span></p></body></html>"))
         self.pushButton_3.setText(_translate("Dialog", "VOLTAR"))
         self.pushButton.setText(_translate("Dialog", "EXCLUIR"))

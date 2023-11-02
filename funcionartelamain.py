@@ -12,6 +12,8 @@ from TELA_GESTAO_FILMES_ui import *#
 from TELA_CADASTRO_FILMES import *#
 from TELA_EXCLUIR_FILME_ui import *#
 from TELA_LISTA_FILMES_ui import *#
+from TELA_CLIENTE_VER_FILMES_ui import *
+from TELA_ESCOLHE_LUGAR_ui import *
 from classes.class_armazenar import *
 from classes.class_pessoa import *
 from classes.funcoes_aux import *
@@ -41,6 +43,8 @@ class Main(QtWidgets.QWidget):
         self.stack6 = QtWidgets.QMainWindow()
         self.stack7 = QtWidgets.QMainWindow()
         self.stack8 = QtWidgets.QMainWindow()
+        self.stack9 = QtWidgets.QMainWindow()
+        self.stack10 = QtWidgets.QMainWindow()
 
         self.tela_main_ui = Ui_Dialog()
         self.tela_main_ui.setupUi(self.stack0)
@@ -69,6 +73,12 @@ class Main(QtWidgets.QWidget):
         
         self.TELA_LISTA_FILMES_ui = Tela_Lista_Filmes()
         self.TELA_LISTA_FILMES_ui.setupUi(self.stack8)
+        
+        self.TELA_CLIENTE_VER_FILMES_ui = TELA_VER_FILMES()
+        self.TELA_CLIENTE_VER_FILMES_ui.setupUi(self.stack9)
+        
+        self.TELA_ESCOLHE_LUGAR_ui = Escolhe_Lugar()
+        self.TELA_ESCOLHE_LUGAR_ui.setupUi(self.stack10)
 
 
         self.QtStack.addWidget(self.stack0)
@@ -80,6 +90,8 @@ class Main(QtWidgets.QWidget):
         self.QtStack.addWidget(self.stack6)
         self.QtStack.addWidget(self.stack7)
         self.QtStack.addWidget(self.stack8)
+        self.QtStack.addWidget(self.stack9)
+        self.QtStack.addWidget(self.stack10)
 
 class Ui_Main(QMainWindow, Main):
     def __init__(self):
@@ -96,9 +108,6 @@ class Ui_Main(QMainWindow, Main):
         #Tela Cadastra pessoa
         self.TELA_CADASTRO_ui.pushButton_3.clicked.connect(self.VoltarMain)
         self.TELA_CADASTRO_ui.pushButton.clicked.connect(self.botao_Cadastra)
-
-        #Tela dps de login
-        self.TELA_USUARIO.pushButton_4.clicked.connect(self.VoltarMain)
         
         self.TELA_DPS_LOGIN_FUNC_ui.pushButton_4.clicked.connect(self.VoltarMain)
         self.TELA_DPS_LOGIN_FUNC_ui.pushButton.clicked.connect(self.Tela_Estatistica)
@@ -122,10 +131,25 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.TelaGestao)
         self.TELA_EXCUIR_FILME_ui.pushButton.clicked.connect(self.TelaExcluiFilme)
         self.TELA_EXCUIR_FILME_ui.pushButton_2.clicked.connect(self.botao_buscar)
-        self.TELA_EXCUIR_FILME_ui.pushButton_4.clicked.connect(self.carregar_lista_completa_filmes)
+        self.TELA_EXCUIR_FILME_ui.pushButton_4.clicked.connect(self.carregar_lista_completa_filmes_quando_exclui)
         
         #Tela_Listar_Filmes
-        self.TELA_LISTA_FILMES_ui.pushButton_4.clicked.connect(self.TelaGestao) 
+        self.TELA_LISTA_FILMES_ui.pushButton_4.clicked.connect(self.TelaGestao)
+        
+        
+        ##TELA_CLIENTES
+        #Tela dps de login (TELA CLIENTE)
+        self.TELA_USUARIO.pushButton_4.clicked.connect(self.VoltarMain)
+        self.TELA_USUARIO.pushButton.clicked.connect(self.Tela_Cliente_Ver_Filmes)
+        
+        ##TELA_USER_VER_FILMES
+        self.TELA_CLIENTE_VER_FILMES_ui.pushButton.clicked.connect(self.abrirTelaDPSLoginCli)
+        self.TELA_CLIENTE_VER_FILMES_ui.pushButton_3.clicked.connect(self.botao_selecionar)
+        self.TELA_CLIENTE_VER_FILMES_ui.pushButton_2.clicked.connect(self.Tela_Cliente_botao_buscar)
+        self.TELA_CLIENTE_VER_FILMES_ui.pushButton_4.clicked.connect(self.Tela_Cliente_carregar_lista_completa_filmes)
+        
+        #TELA_ESCOLHE_LUGAR
+        self.TELA_ESCOLHE_LUGAR_ui.pushButton.clicked.connect(self.Tela_Cliente_Ver_Filmes) 
 
 
     def botao_Cadastra(self):
@@ -186,6 +210,9 @@ class Ui_Main(QMainWindow, Main):
 
     def abrirTelaCadastro(self):
         self.QtStack.setCurrentIndex(1)
+        
+    def abrirTelaDPSLoginCli(self):
+        self.QtStack.setCurrentIndex(2)
     
     def abrirLoginFunc(self):
         self.QtStack.setCurrentIndex(3)
@@ -198,12 +225,6 @@ class Ui_Main(QMainWindow, Main):
         
     def TelaCadastraFilme(self):
         self.QtStack.setCurrentIndex(6)
-        
-    def TelaExcluiFilme(self):
-        self.QtStack.setCurrentIndex(7)
-        
-    def TelaVerTodosFilmes(self):
-        self.QtStack.setCurrentIndex(8)
         
 
    #tela de cadastro de filmes
@@ -276,7 +297,7 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
     
      
-    def carregar_lista_completa_filmes(self):
+    def carregar_lista_completa_filmes_quando_exclui(self):
         filmes = dados_filme.obter_todos_filmes()
         if filmes:
             model = QStringListModel()
@@ -344,3 +365,62 @@ class Ui_Main(QMainWindow, Main):
                 self.TELA_EXCUIR_FILME_ui.lineEdit_2.setText('')
         else:
             QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
+            
+    def Tela_Cliente_Ver_Filmes(self):
+        # Obtenha a lista de filmes do banco de dados
+        filmes = dados_filme.obter_todos_filmes()
+
+        if filmes:
+            # Crie um modelo de lista para armazenar os nomes dos filmes
+            model = QStringListModel()
+            model.setStringList(filmes)
+
+            # Associe o modelo ao QListView na tela do cliente
+            self.TELA_CLIENTE_VER_FILMES_ui.listView.setModel(model)
+            
+            self.QtStack.setCurrentIndex(9)  # Altere o índice para a tela do cliente
+        else:
+            QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
+            
+    def Tela_Cliente_botao_buscar(self):
+        filme_id = self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.text()
+
+        # Verificar se o ID do filme é válido (deve ser um número inteiro)
+        if not filme_id.isdigit():
+            QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'ID do filme deve ser um número inteiro.')
+            return
+        # Chamar a função para buscar o filme no banco de dados
+        filme_nome = dados_filme.buscar_filme_por_id(filme_id)
+
+        # Verificar se o filme foi encontrado
+        if filme_nome:
+            # Criar um modelo de lista
+            model = QStringListModel()
+
+            # Adicionar o nome do filme ao modelo
+            model.setStringList([filme_nome])
+
+            # Associar o modelo ao QListView
+            self.TELA_CLIENTE_VER_FILMES_ui.listView.setModel(model)
+        else:
+            QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
+            
+    def Tela_Cliente_carregar_lista_completa_filmes(self):
+        filmes = dados_filme.obter_todos_filmes()
+        if filmes:
+            model = QStringListModel()
+            model.setStringList(filmes)
+            self.TELA_CLIENTE_VER_FILMES_ui.listView.setModel(model)
+            
+    def botao_selecionar(self):
+        reply = QtWidgets.QMessageBox.question(self, 'Seleção', 'Deseja comprar o ingresso para esse filme?',
+                                           QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+        # Verifique a resposta do usuário
+        if reply == QtWidgets.QMessageBox.Yes:
+            self.QtStack.setCurrentIndex(10)
+        else:
+            self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
+            
+    def escolhe_lugar(self):
+        self.QtStack.setCurrentIndex(10)
+        
