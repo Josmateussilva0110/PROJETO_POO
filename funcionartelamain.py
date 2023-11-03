@@ -129,8 +129,8 @@ class Ui_Main(QMainWindow, Main):
         
         #Tela_Excluir_Filmes
         self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.TelaGestao)
-        self.TELA_EXCUIR_FILME_ui.pushButton.clicked.connect(self.TelaExcluiFilme)
         self.TELA_EXCUIR_FILME_ui.pushButton_2.clicked.connect(self.botao_buscar)
+        self.TELA_EXCUIR_FILME_ui.pushButton.clicked.connect(self.botao_excluir)
         self.TELA_EXCUIR_FILME_ui.pushButton_4.clicked.connect(self.carregar_lista_completa_filmes_quando_exclui)
         
         #Tela_Listar_Filmes
@@ -225,6 +225,21 @@ class Ui_Main(QMainWindow, Main):
         
     def TelaCadastraFilme(self):
         self.QtStack.setCurrentIndex(6)
+        
+    def TelaExcluiFilme(self):
+        # Obtenha a lista de filmes do banco de dados
+        filmes = dados_filme.obter_todos_filmes()
+        
+        if filmes:
+            # Crie um modelo de lista para armazenar os nomes dos filmes
+            model = QStringListModel()
+            model.setStringList(filmes)
+
+            # Associe o modelo ao QListView
+            self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
+            self.QtStack.setCurrentIndex(7)
+        else:
+            QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
         
 
      #tela de cadastro de filmes
@@ -328,6 +343,7 @@ class Ui_Main(QMainWindow, Main):
         if not filme_id.isdigit():
             QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'ID do filme deve ser um número inteiro.')
             return
+        
         # Chamar a função para buscar o filme no banco de dados
         filme_nome = dados_filme.buscar_filme_por_id(filme_id)
 
@@ -344,43 +360,31 @@ class Ui_Main(QMainWindow, Main):
         else:
             QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
         
-    def TelaExcluiFilme(self):    
-        # Obtenha a lista de filmes do banco de dados
-        filmes = dados_filme.obter_todos_filmes()
-        
-        if filmes:
-            # Crie um modelo de lista para armazenar os nomes dos filmes
-            model = QStringListModel()
-            model.setStringList(filmes)
-
-            # Associe o modelo ao QListView
-            self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
+    def botao_excluir(self):    
             
-            self.QtStack.setCurrentIndex(7)
-            
-            filme_id = self.TELA_EXCUIR_FILME_ui.lineEdit_2.text()
-            if filme_id:
-                # Verificar se o filme com o ID especificado existe no banco de dados
-                if dados_filme.verificar_filme(filme_id):
-                    # O filme foi encontrado, agora você pode removê-lo do banco de dados
-                    if dados_filme.excluir_filmes(filme_id):
-                        # Atualize a lista de filmes após a exclusão
-                        filmes_atualizados = dados_filme.obter_todos_filmes()
-                        model.setStringList(filmes_atualizados)
-                        self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
-                        self.QtStack.setCurrentIndex(7)
-                        QtWidgets.QMessageBox.information(self, 'Excluir Filme', 'Filme removido com sucesso.')
-                    else:
-    
-                        QtWidgets.QMessageBox.information(self, 'Erro', 'Erro ao excluir o filme.')
+        filme_id = self.TELA_EXCUIR_FILME_ui.lineEdit_2.text()
+        if filme_id:
+            # Verificar se o filme com o ID especificado existe no banco de dados
+            if dados_filme.verificar_filme(filme_id):
+                # O filme foi encontrado, agora você pode removê-lo do banco de dados
+                if dados_filme.excluir_filmes(filme_id):
+                    model = QStringListModel()
+                    # Atualize a lista de filmes após a exclusão
+                    filmes_atualizados = dados_filme.obter_todos_filmes()
+                    model.setStringList(filmes_atualizados)
+                    self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
+                    self.QtStack.setCurrentIndex(7)
+                    QtWidgets.QMessageBox.information(self, 'Excluir Filme', 'Filme removido com sucesso.')
                 else:
 
-                    QtWidgets.QMessageBox.information(self, 'Excluir Filme', 'Nenhum filme com o ID especificado foi encontrado.')
-                    
-                # Limpar o campo de entrada do ID
-                self.TELA_EXCUIR_FILME_ui.lineEdit_2.setText('')
-        else:
-            QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
+                    QtWidgets.QMessageBox.information(self, 'Erro', 'Erro ao excluir o filme.')
+            else:
+
+                QtWidgets.QMessageBox.information(self, 'Excluir Filme', 'Nenhum filme com o ID especificado foi encontrado.')
+                
+            # Limpar o campo de entrada do ID
+            self.TELA_EXCUIR_FILME_ui.lineEdit_2.setText('')
+
             
     def Tela_Cliente_Ver_Filmes(self):
         # Obtenha a lista de filmes do banco de dados

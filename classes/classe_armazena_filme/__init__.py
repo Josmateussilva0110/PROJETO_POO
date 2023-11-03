@@ -23,24 +23,36 @@ class Armazenar_filmes:
         cursor.execute(criar_tabela_filmes)
         self.db_connection.commit()
         cursor.close()
-        
+
     def obter_ultimo_id(self):
         cursor = self.db_connection.cursor()
         cursor.execute("SELECT MAX(id) FROM Filmes")
         max_id = cursor.fetchone()[0]
         cursor.close()
-        return max_id
+        return max_id if max_id is not None else 0  # Retorna 0 se não houver registros na tabela
+
+    def recalcular_ids(self):
+        cursor = self.db_connection.cursor()
+
+        # Recupere todos os IDs atuais na ordem original
+        cursor.execute("SELECT id FROM Filmes")
+        ids_atuais = cursor.fetchall()
+
+        # Recalcule os IDs na ordem crescente
+        novo_id = 1
+        for id_atual in ids_atuais:
+            cursor.execute("UPDATE Filmes SET id = %s WHERE id = %s", (novo_id, id_atual[0]))
+            novo_id += 1
+
+        self.db_connection.commit()
+        cursor.close()
 
     def armazenar_filmes(self, filme):
         cursor = self.db_connection.cursor()
         valid = False
         
-        # Consulte o valor máximo atual do ID na tabela
-        cursor.execute("SELECT MAX(id) FROM Filmes")
-        max_id = cursor.fetchone()[0]
-        
-        # Calcule o novo ID
-        novo_id = max_id + 1 if max_id is not None else 1
+        # Obtém o próximo ID automaticamente
+        novo_id = self.obter_ultimo_id() + 1
 
         insert_query = "INSERT INTO Filmes(id, nome_filme, ano, preco, classificacao, horario) VALUES (%s,%s, %s, %s, %s, %s)"
         values = (novo_id, filme._nome, filme._ano, filme._preco, filme._classificacao, filme._horarios)
@@ -53,18 +65,36 @@ class Armazenar_filmes:
             self.db_connection.rollback()
             cursor.close()
         return valid
-        
+
+    def excluir_filmes(self, filme_id):
+        cursor = self.db_connection.cursor()
+        # Consulta para excluir o filme com base no ID
+        delete_query = "DELETE FROM Filmes WHERE id = %s"
+
+        try:
+            cursor.execute(delete_query, (filme_id,))
+            self.db_connection.commit()
+            cursor.close()
+
+            # Recalcular IDs após a exclusão
+            self.recalcular_ids()
+
+            return True
+        except mysql.connector.Error as err:
+            self.db_connection.rollback()
+            cursor.close()
+            return False
 
     def verificar_filme(self, filme_id):
         cursor = self.db_connection.cursor()
 
         # Consulta para verificar se o filme com o ID fornecido existe
         select_query = "SELECT * FROM Filmes WHERE id = %s"
-        
+
         try:
             cursor.execute(select_query, (filme_id,))
             result = cursor.fetchone()
-            
+
             if result:
                 # O filme com o ID fornecido foi encontrado, imprima suas informações
                 cursor.close()
@@ -76,7 +106,7 @@ class Armazenar_filmes:
         except mysql.connector.Error as err:
             cursor.close()
             return False
-        
+
     def buscar_filme_por_id(self, filme_id):
         cursor = self.db_connection.cursor()
 
@@ -99,22 +129,7 @@ class Armazenar_filmes:
         except mysql.connector.Error as err:
             cursor.close()
             return None
-        
-    def excluir_filmes(self, filme_id):
-        cursor = self.db_connection.cursor()
-        # Consulta para excluir o filme com base no ID
-        delete_query = "DELETE FROM Filmes WHERE id = %s"
 
-        try:
-            cursor.execute(delete_query, (filme_id,))
-            self.db_connection.commit()
-            cursor.close()
-            return True
-        except mysql.connector.Error as err:
-            self.db_connection.rollback()
-            cursor.close()
-            return False
-        
     def obter_todos_filmes(self):
         try:
             cursor = self.db_connection.cursor()
