@@ -13,7 +13,7 @@ from TELA_CADASTRO_FILMES import *#
 from TELA_EXCLUIR_FILME_ui import *#
 from TELA_LISTA_FILMES_ui import *#
 from TELA_CLIENTE_VER_FILMES_ui import *
-from TELA_ESCOLHE_LUGAR_ui import *
+from TELA_LAYOUT import *
 from classes.class_armazenar import *
 from classes.class_pessoa import *
 from classes.funcoes_aux import *
@@ -77,7 +77,7 @@ class Main(QtWidgets.QWidget):
         self.TELA_CLIENTE_VER_FILMES_ui = TELA_VER_FILMES()
         self.TELA_CLIENTE_VER_FILMES_ui.setupUi(self.stack9)
         
-        self.TELA_ESCOLHE_LUGAR_ui = Escolhe_Lugar()
+        self.TELA_ESCOLHE_LUGAR_ui = Tela_layout()
         self.TELA_ESCOLHE_LUGAR_ui.setupUi(self.stack10)
 
 
