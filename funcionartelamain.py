@@ -77,8 +77,8 @@ class Main(QtWidgets.QWidget):
         self.TELA_CLIENTE_VER_FILMES_ui = TELA_VER_FILMES()
         self.TELA_CLIENTE_VER_FILMES_ui.setupUi(self.stack9)
         
-        self.TELA_ESCOLHE_LUGAR_ui = Tela_layout()
-        self.TELA_ESCOLHE_LUGAR_ui.setupUi(self.stack10)
+        self.TELA_LAYOUT = Tela_layout()
+        self.TELA_LAYOUT.setupUi(self.stack10)
 
 
         self.QtStack.addWidget(self.stack0)
@@ -149,7 +149,7 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_CLIENTE_VER_FILMES_ui.pushButton_4.clicked.connect(self.Tela_Cliente_carregar_lista_completa_filmes)
         
         #TELA_ESCOLHE_LUGAR
-        self.TELA_ESCOLHE_LUGAR_ui.pushButton.clicked.connect(self.Tela_Cliente_Ver_Filmes) 
+        self.TELA_LAYOUT.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes) 
 
 
     def botao_Cadastra(self):
