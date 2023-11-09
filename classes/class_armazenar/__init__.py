@@ -43,26 +43,6 @@ class Armazenar:
         self.db_connection.commit()
         cursor.close()
 
-    def cria_tabela_filmes(self):
-        # Use o banco de dados 'Cineplus'
-        cursor = self.db_connection.cursor()
-        cursor.execute("USE Cineplus")
-
-        criar_tabela_filmes = """
-        CREATE TABLE IF NOT EXISTS Filmes (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            nome_filme VARCHAR(100) NOT NULL,
-            ano INT NOT NULL,
-            preco FLOAT NOT NULL,
-            classificacao INT NOT NULL,
-            horario VARCHAR(200) NOT NULL,
-            tipo VARCHAR(10) NOT NULL
-        )
-        """
-        cursor.execute(criar_tabela_filmes)
-        self.db_connection.commit()
-        cursor.close()
-
     def inserir_gerente1(self):
         cursor = self.db_connection.cursor()
         cpf = '777'  # CPF do gerente a ser inserido
