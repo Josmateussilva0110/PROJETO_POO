@@ -132,23 +132,17 @@ class Armazenar_filmes:
 
     def buscar_horarios_id(self, filme_id):
         cursor = self.db_connection.cursor()
-
-        # Query to fetch the film with the given ID
         select_query = "SELECT * FROM Filmes WHERE id = %s"
 
         try:
             cursor.execute(select_query, (filme_id,))
             result = cursor.fetchone()
             if result:
-                # Film with the provided ID found, extract horário information
-                horario_info = result[5]  # Assuming result[5] contains the horário information
+                horario_info = result[5]  
                 cursor.close()
-
-                # Split horario_info into a list of dates and horários
                 horarios_list = horario_info.split(', ')
                 return horarios_list
             else:
-                # No film with the provided ID was found
                 cursor.close()
                 return None
         except mysql.connector.Error as err:
