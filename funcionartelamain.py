@@ -1,6 +1,6 @@
 import sys
 import mysql.connector
-from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox, QInputDialog
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QStringListModel
 from tela_main_ui import *#
@@ -449,19 +449,37 @@ class Ui_Main(QMainWindow, Main):
             self.TELA_CLIENTE_VER_FILMES_ui.listView.setModel(model)
             
     def botao_selecionar(self):
-        horarios = QtWidgets.QMessageBox.question(self, 'Seleção', 'selecione o horario?',
-                                           QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
-        if horarios == QtWidgets.QMessageBox.Yes:
+        # Obtenha os horários disponíveis para o filme
+        horarios_disponiveis = self.obter_horarios_disponiveis()  # Substitua por sua lógica real
+
+        # Converta a lista de horários em uma lista de strings
+        horarios_str = [f"{horario} - {tipo}" for horario, tipo in horarios_disponiveis.items()]
+
+        # Exiba os horários para o usuário escolher usando um QInputDialog
+        horario, ok = QInputDialog.getItem(self, 'Seleção de Horário', 'Selecione o horário:', horarios_str, 0, False)
+
+        if ok:
+            # O usuário selecionou um horário
             reply = QtWidgets.QMessageBox.question(self, 'Seleção', 'Deseja comprar o ingresso para esse filme?',
-                                            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                                                QtWidgets.QMessageBox.No)
             # Verifique a resposta do usuário
             if reply == QtWidgets.QMessageBox.Yes:
                 self.QtStack.setCurrentIndex(10)
             else:
                 self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
         else:
-            QtWidgets.QMessageBox.information(self, 'Seleção', 'compra cancelada.')
-                
+            QtWidgets.QMessageBox.information(self, 'Seleção', 'Compra cancelada.')
+
+    # ...
+
+    def obter_horarios_disponiveis(self):
+        # Substitua este método com a lógica real para obter os horários disponíveis para o filme
+        # Este método deve retornar um dicionário de horários disponíveis, semelhante ao que você usa
+        # em outras partes do seu código.
+        horarios_disponiveis = {"10:00": "Manhã", "15:00": "Tarde", "20:00": "Noite"}
+        return horarios_disponiveis
+                    
 
     def mudar_cor_red(self):
         op = QtWidgets.QMessageBox.question(self, 'Seleção', 'Finalizar escolha?',
