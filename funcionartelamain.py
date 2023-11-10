@@ -449,13 +449,18 @@ class Ui_Main(QMainWindow, Main):
             self.TELA_CLIENTE_VER_FILMES_ui.listView.setModel(model)
             
     def botao_selecionar(self):
-        reply = QtWidgets.QMessageBox.question(self, 'Seleção', 'Deseja comprar o ingresso para esse filme?',
+        horarios = QtWidgets.QMessageBox.question(self, 'Seleção', 'selecione o horario?',
                                            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
-        # Verifique a resposta do usuário
-        if reply == QtWidgets.QMessageBox.Yes:
-            self.QtStack.setCurrentIndex(10)
+        if horarios == QtWidgets.QMessageBox.Yes:
+            reply = QtWidgets.QMessageBox.question(self, 'Seleção', 'Deseja comprar o ingresso para esse filme?',
+                                            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+            # Verifique a resposta do usuário
+            if reply == QtWidgets.QMessageBox.Yes:
+                self.QtStack.setCurrentIndex(10)
+            else:
+                self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
         else:
-            self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
+            QtWidgets.QMessageBox.information(self, 'Seleção', 'compra cancelada.')
                 
 
     def mudar_cor_red(self):
