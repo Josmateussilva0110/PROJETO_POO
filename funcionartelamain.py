@@ -459,5 +459,8 @@ class Ui_Main(QMainWindow, Main):
                 
 
     def mudar_cor_red(self):
-        self.TELA_LAYOUT.pushButton_3.setStyleSheet("background-color: red;")
-        self.QtStack.setCurrentIndex(11)
+        op = QtWidgets.QMessageBox.question(self, 'Seleção', 'Finalizar escolha?',
+        QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+        if op == QtWidgets.QMessageBox.Yes:
+            self.TELA_LAYOUT.pushButton_3.setStyleSheet("background-color: red;")
+            self.QtStack.setCurrentIndex(11)
