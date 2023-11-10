@@ -81,7 +81,19 @@ class Tela_layout(object):
         self.label_2.setFont(font)
         self.label_2.setObjectName("label_2")
         MainWindow.setCentralWidget(self.centralwidget)
-
+        
+        self.pushButton_3.setStyleSheet("background-color: green;")
+        self.pushButton_4.setStyleSheet("background-color: green;")
+        self.pushButton_5.setStyleSheet("background-color: green;")
+        self.pushButton_6.setStyleSheet("background-color: green;")
+        self.pushButton_7.setStyleSheet("background-color: green;")
+        self.pushButton_8.setStyleSheet("background-color: green;")
+        self.pushButton_9.setStyleSheet("background-color: green;")
+        self.pushButton_10.setStyleSheet("background-color: green;")
+        self.pushButton_11.setStyleSheet("background-color: green;")
+        self.pushButton_12.setStyleSheet("background-color: green;")
+        self.pushButton_13.setStyleSheet("background-color: green;")
+        self.pushButton_14.setStyleSheet("background-color: green;")
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 

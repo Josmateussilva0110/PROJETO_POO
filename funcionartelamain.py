@@ -14,6 +14,7 @@ from TELA_EXCLUIR_FILME_ui import *#
 from TELA_LISTA_FILMES_ui import *#
 from TELA_CLIENTE_VER_FILMES_ui import *
 from TELA_LAYOUT import *
+from TELA_HORARIOS import *
 from classes.class_armazenar import *
 from classes.class_pessoa import *
 from classes.funcoes_aux import *
@@ -45,6 +46,7 @@ class Main(QtWidgets.QWidget):
         self.stack8 = QtWidgets.QMainWindow()
         self.stack9 = QtWidgets.QMainWindow()
         self.stack10 = QtWidgets.QMainWindow()
+        self.stack11 = QtWidgets.QMainWindow()
 
         self.tela_main_ui = Ui_Dialog()
         self.tela_main_ui.setupUi(self.stack0)
@@ -80,6 +82,9 @@ class Main(QtWidgets.QWidget):
         self.TELA_LAYOUT = Tela_layout()
         self.TELA_LAYOUT.setupUi(self.stack10)
 
+        self.TELA_HORARIO = Tela_horario()
+        self.TELA_HORARIO.setupUi(self.stack11)
+
 
         self.QtStack.addWidget(self.stack0)
         self.QtStack.addWidget(self.stack1)
@@ -92,6 +97,7 @@ class Main(QtWidgets.QWidget):
         self.QtStack.addWidget(self.stack8)
         self.QtStack.addWidget(self.stack9)
         self.QtStack.addWidget(self.stack10)
+        self.QtStack.addWidget(self.stack11)
 
 class Ui_Main(QMainWindow, Main):
     def __init__(self):
@@ -149,7 +155,11 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_CLIENTE_VER_FILMES_ui.pushButton_4.clicked.connect(self.Tela_Cliente_carregar_lista_completa_filmes)
         
         #TELA_ESCOLHE_LUGAR
-        self.TELA_LAYOUT.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes) 
+        self.TELA_LAYOUT.pushButton_3.clicked.connect(self.mudar_cor_red)
+        self.TELA_LAYOUT.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
+
+        #TELA HORARIO
+        self.TELA_HORARIO.pushButton_2.clicked.connect(self.escolhe_lugar)
 
 
     def botao_Cadastra(self):
@@ -225,6 +235,12 @@ class Ui_Main(QMainWindow, Main):
         
     def TelaCadastraFilme(self):
         self.QtStack.setCurrentIndex(6)
+    
+    def escolhe_lugar(self):
+        self.QtStack.setCurrentIndex(10)
+    
+    def escolher_horarios(self):
+        self.QtStack.setCurrentIndex(11)
         
     def TelaExcluiFilme(self):
         # Obtenha a lista de filmes do banco de dados
@@ -440,7 +456,8 @@ class Ui_Main(QMainWindow, Main):
             self.QtStack.setCurrentIndex(10)
         else:
             self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
-            
-    def escolhe_lugar(self):
-        self.QtStack.setCurrentIndex(10)
-        
+                
+
+    def mudar_cor_red(self):
+        self.TELA_LAYOUT.pushButton_3.setStyleSheet("background-color: red;")
+        self.QtStack.setCurrentIndex(11)
