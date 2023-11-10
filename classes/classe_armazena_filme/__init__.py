@@ -140,10 +140,13 @@ class Armazenar_filmes:
             cursor.execute(select_query, (filme_id,))
             result = cursor.fetchone()
             if result:
-                # Film with the provided ID found, format its information as a string
-                filme_info = f"Horário: {result[5]}\n"
+                # Film with the provided ID found, extract horário information
+                horario_info = result[5]  # Assuming result[5] contains the horário information
                 cursor.close()
-                return filme_info
+
+                # Split horario_info into a list of dates and horários
+                horarios_list = horario_info.split(', ')
+                return horarios_list
             else:
                 # No film with the provided ID was found
                 cursor.close()
@@ -151,6 +154,7 @@ class Armazenar_filmes:
         except mysql.connector.Error as err:
             cursor.close()
             return None
+
         
 
     def obter_todos_filmes(self):

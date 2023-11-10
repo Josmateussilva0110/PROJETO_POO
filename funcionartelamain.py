@@ -449,12 +449,17 @@ class Ui_Main(QMainWindow, Main):
             self.TELA_CLIENTE_VER_FILMES_ui.listView.setModel(model)
             
     def botao_selecionar(self):
+        filme_id = self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.text()
+        if not filme_id.isdigit():
+            QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'ID do filme deve ser um número inteiro.')
+            return
+        retorno_horarios = dados_filme.buscar_horarios_id(filme_id)
         # Obtenha os horários disponíveis para o filme
-        horarios_disponiveis = self.obter_horarios_disponiveis()  # Substitua por sua lógica real
+        horarios_disponiveis = retorno_horarios  # Substitua por sua lógica real
 
         # Converta a lista de horários em uma lista de strings
-        horarios_str = [f"{horario} - {tipo}" for horario, tipo in horarios_disponiveis.items()]
-
+        horarios_str = [f"{horario} " for horario in horarios_disponiveis]
+        print(horarios_str)
         # Exiba os horários para o usuário escolher usando um QInputDialog
         horario, ok = QInputDialog.getItem(self, 'Seleção de Horário', 'Selecione o horário:', horarios_str, 0, False)
 
