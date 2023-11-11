@@ -8,9 +8,9 @@ from TELA_CADASTRO_ui import *#
 from TELA_USUARIO import *#
 from TELA_GERENCIAMENTO import *#
 from TELA_ESTATISTICA_ui import *#
+from TELA_EXCLUIR_FILME_ui import *
 from TELA_GESTAO_FILMES_ui import *#
 from TELA_CADASTRO_FILMES import *#
-from TELA_EXCLUIR_FILME_ui import *#
 from TELA_LISTA_FILMES_ui import *#
 from TELA_CLIENTE_VER_FILMES_ui import *
 from TELA_LAYOUT import *
@@ -128,19 +128,23 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_GESTAO_FILMES_ui.pushButton_2.clicked.connect(self.TelaExcluiFilme)
         self.TELA_GESTAO_FILMES_ui.pushButton.clicked.connect(self.TelaVerTodosFilmes)
         
+        
         #Tela_Cadastrar_Filmes
         self.TELA_CADASTRO_FILMES.pushButton_3.clicked.connect(self.TelaGestao)
         self.TELA_CADASTRO_FILMES.pushButton.clicked.connect(self.botao_cadastrar_filme)
         self.TELA_CADASTRO_FILMES.pushButton_2.clicked.connect(self.adicionar_horarios)
         
         #Tela_Excluir_Filmes
-        self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.TelaGestao)
-        self.TELA_EXCUIR_FILME_ui.pushButton_2.clicked.connect(self.botao_buscar)
-        self.TELA_EXCUIR_FILME_ui.pushButton.clicked.connect(self.botao_excluir)
-        self.TELA_EXCUIR_FILME_ui.pushButton_4.clicked.connect(self.carregar_lista_completa_filmes_quando_exclui)
+        self.TELA_EXCUIR_FILME_ui.pushButton_4.clicked.connect(self.TelaGestao)
+        self.TELA_EXCUIR_FILME_ui.listView.clicked.connect(self.item_selecionado_Excluir_filmes)
+        self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.botao_buscar_tela_ecluir)
+        self.TELA_EXCUIR_FILME_ui.pushButton_9.clicked.connect(self.carregar_lista_completa_filmes)
         
         #Tela_Listar_Filmes
         self.TELA_LISTA_FILMES_ui.pushButton_4.clicked.connect(self.TelaGestao)
+        self.TELA_LISTA_FILMES_ui.listView.clicked.connect(self.item_selecionado_lista_filmes)
+        self.TELA_LISTA_FILMES_ui.pushButton_2.clicked.connect(self.botao_buscar)
+        self.TELA_LISTA_FILMES_ui.pushButton_5.clicked.connect(self.carregar_lista_completa_filmes)
         
         
         ##TELA_CLIENTES
@@ -150,9 +154,10 @@ class Ui_Main(QMainWindow, Main):
         
         ##TELA_USER_VER_FILMES
         self.TELA_CLIENTE_VER_FILMES_ui.pushButton.clicked.connect(self.abrirTelaDPSLoginCli)
-        self.TELA_CLIENTE_VER_FILMES_ui.pushButton_3.clicked.connect(self.botao_selecionar)
         self.TELA_CLIENTE_VER_FILMES_ui.pushButton_2.clicked.connect(self.Tela_Cliente_botao_buscar)
         self.TELA_CLIENTE_VER_FILMES_ui.pushButton_4.clicked.connect(self.Tela_Cliente_carregar_lista_completa_filmes)
+        self.TELA_CLIENTE_VER_FILMES_ui.listView.clicked.connect(self.item_selecionado_lista_filmes_cliente)
+
         
         #TELA_ESCOLHE_LUGAR
         self.TELA_LAYOUT.pushButton_3.clicked.connect(self.mudar_cor_red)
@@ -256,9 +261,88 @@ class Ui_Main(QMainWindow, Main):
             self.QtStack.setCurrentIndex(7)
         else:
             QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
-        
+            
+    def item_selecionado_Excluir_filmes(self, index):
+        if index.isValid():
+            item_selecionado = index.data()
 
-     #tela de cadastro de filmes
+            # Se o item for válido, você pode acessar o texto (nome do filme, neste caso)
+            if item_selecionado:
+                # Divida a string do item selecionado para extrair o ID
+                partes = item_selecionado.split()
+
+                # O ID do filme é a última parte da string
+                filme_id = partes[1]
+
+                # Verificar se o filme com o ID especificado está em cartaz
+                if dados_filme.verificar_filme_em_cartaz(filme_id):
+                    # Exiba um QMessageBox para confirmar a retirada do filme do cartaz
+                    reply = QMessageBox.question(
+                        self,
+                        'Cartaz',
+                        f'Deseja retirar o filme com ID {filme_id} do cartaz?',
+                        QMessageBox.Yes | QMessageBox.No,
+                        QMessageBox.No
+                    )
+
+                    filme_id = int(filme_id)
+
+                    if reply == QMessageBox.Yes:
+                        if dados_filme.marcar_filme_em_cartaz(filme_id, 0):
+                            QtWidgets.QMessageBox.information(self, 'Filmes', f'Filme com ID {filme_id} retirado como em cartaz.')
+                        else:
+                            QtWidgets.QMessageBox.information(self, 'Filmes', f'Erro ao retirar o filme com ID {filme_id} como em cartaz.')
+
+                        filmes_atualizados = dados_filme.obter_todos_filmes()
+                        model = QStringListModel()
+                        model.setStringList(filmes_atualizados)
+                        self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
+                else:
+                    QtWidgets.QMessageBox.information(self, 'Filme Fora de Cartaz', 'Este filme não está mais em cartaz.')
+        else:
+            QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')
+                
+                
+    def botao_buscar_tela_ecluir(self):
+        filme_id = self.TELA_EXCUIR_FILME_ui.lineEdit_4.text()
+
+        # Verificar se o ID do filme é válido (deve ser um número inteiro)
+        if not filme_id.isdigit():
+            QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'ID do filme deve ser um número inteiro.')
+            return
+        
+        # Chamar a função para buscar o filme no banco de dados
+        filme_nome = dados_filme.buscar_filme_por_id_exeto_cartaz(filme_id)
+
+        # Verificar se o filme foi encontrado
+        if filme_nome:
+            # Criar um modelo de lista
+            model = QStringListModel()
+
+            # Adicionar o nome do filme ao modelo
+            model.setStringList([filme_nome])
+
+            # Associar o modelo ao QListView
+            self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
+        else:
+            QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
+            
+    def TelaVerTodosFilmes_Tela_excluir(self):   
+        # Obtenha a lista de filmes do banco de dados
+        filmes = dados_filme.obter_todos_filmes()
+
+        if filmes:
+            # Crie um modelo de lista para armazenar os nomes dos filmes
+            model = QStringListModel()
+            model.setStringList(filmes)
+
+            # Associe o modelo ao QListView
+            self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
+            
+            self.QtStack.setCurrentIndex(7)
+        else:
+            QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
+
     def botao_cadastrar_filme(self):
         horarios_escolhidos = list()
         valid = False
@@ -304,7 +388,6 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_CADASTRO_FILMES.lineEdit_5.setText('')
         self.TELA_CADASTRO_FILMES.dateTimeEdit.setDateTime(zero_datetime)
         self.TELA_CADASTRO_FILMES.listView.setModel(QStandardItemModel())
-
     
     def adicionar_horarios(self):
         horario = self.TELA_CADASTRO_FILMES.dateTimeEdit.text()
@@ -327,6 +410,49 @@ class Ui_Main(QMainWindow, Main):
         else:
             QtWidgets.QMessageBox.information(self, 'Horário', 'Selecione um horário antes de adicionar.')
             
+    def item_selecionado_lista_filmes(self, index):
+        if index.isValid():
+            item_selecionado = index.data()
+
+            # Se o item for válido, você pode acessar o texto (nome do filme, neste caso)
+            if item_selecionado:
+                # Divida a string do item selecionado para extrair o ID
+                partes = item_selecionado.split()
+
+                # O ID do filme é a última parte da string
+                filme_id = partes[1]
+
+                # Verificar se o filme com o ID especificado já está em cartaz
+                if not dados_filme.verificar_filme_em_cartaz(filme_id):
+                    # Exiba um QMessageBox para confirmar a marcação do filme como "Em Cartaz"
+                    reply = QMessageBox.question(
+                        self,
+                        'Cartaz',
+                        f'Deseja colocar o filme com ID {filme_id} em cartaz?',
+                        QMessageBox.Yes | QMessageBox.No,
+                        QMessageBox.No
+                    )
+
+                    filme_id = int(filme_id)
+
+                    if reply == QMessageBox.Yes:
+                        if dados_filme.marcar_filme_em_cartaz(filme_id, 1):
+                            QtWidgets.QMessageBox.information(self, 'Filmes', f'Filme com ID {filme_id} marcado como em cartaz.')
+                        else:
+                            QtWidgets.QMessageBox.information(self, 'Filmes', f'Erro ao marcar o filme com ID {filme_id} como em cartaz.')
+
+                        filmes_atualizados = dados_filme.obter_todos_filmes()
+                        model = QStringListModel()
+                        model.setStringList(filmes_atualizados)
+                        self.TELA_LISTA_FILMES_ui.listView.setModel(model)
+                else:
+                    QtWidgets.QMessageBox.information(self, 'Filme em Cartaz', 'Este filme já está em cartaz.')
+        else:
+            QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')
+
+
+
+            
     def TelaVerTodosFilmes(self):   
         # Obtenha a lista de filmes do banco de dados
         filmes = dados_filme.obter_todos_filmes()
@@ -344,16 +470,16 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
     
      
-    def carregar_lista_completa_filmes_quando_exclui(self):
+    def carregar_lista_completa_filmes(self):
         filmes = dados_filme.obter_todos_filmes()
         if filmes:
             model = QStringListModel()
             model.setStringList(filmes)
-            self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
+            self.TELA_LISTA_FILMES_ui.listView.setModel(model)
         
         
     def botao_buscar(self):
-        filme_id = self.TELA_EXCUIR_FILME_ui.lineEdit_2.text()
+        filme_id = self.TELA_LISTA_FILMES_ui.lineEdit_2.text()
 
         # Verificar se o ID do filme é válido (deve ser um número inteiro)
         if not filme_id.isdigit():
@@ -372,51 +498,77 @@ class Ui_Main(QMainWindow, Main):
             model.setStringList([filme_nome])
 
             # Associar o modelo ao QListView
-            self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
+            self.TELA_LISTA_FILMES_ui.listView.setModel(model)
         else:
             QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
-        
-    def botao_excluir(self):    
             
-        filme_id = self.TELA_EXCUIR_FILME_ui.lineEdit_2.text()
-        if filme_id:
-            # Verificar se o filme com o ID especificado existe no banco de dados
-            if dados_filme.verificar_filme(filme_id):
-                # O filme foi encontrado, agora você pode removê-lo do banco de dados
-                if dados_filme.excluir_filmes(filme_id):
-                    model = QStringListModel()
-                    # Atualize a lista de filmes após a exclusão
-                    filmes_atualizados = dados_filme.obter_todos_filmes()
-                    model.setStringList(filmes_atualizados)
-                    self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
-                    self.QtStack.setCurrentIndex(7)
-                    QtWidgets.QMessageBox.information(self, 'Excluir Filme', 'Filme removido com sucesso.')
-                else:
+    def item_selecionado_lista_filmes_cliente(self, index):
+        # Obtenha o item selecionado na QListView
+        if index.isValid():
+            item_selecionado = index.data()
 
-                    QtWidgets.QMessageBox.information(self, 'Erro', 'Erro ao excluir o filme.')
+            # Se o item for válido, você pode acessar o texto (nome do filme, neste caso)
+            if item_selecionado:
+                # Divida a string do item selecionado para extrair o ID
+                partes = item_selecionado.split()
+
+                # O ID do filme é a última parte da string
+                filme_id = partes[1]
+
+
+                # Exiba um QMessageBox ou lógica específica do cliente aqui
+                reply = QMessageBox.question(
+                    self,
+                    'Detalhes do Filme',
+                    f'Deseja selecionar o filme com ID {filme_id}?',
+                    QMessageBox.Yes | QMessageBox.No,
+                    QMessageBox.No
+                )
+                if reply == QMessageBox.Yes:
+                    # Obtenha os horários disponíveis para o filme
+                    retorno_horarios = dados_filme.buscar_horarios_id(filme_id)
+                    # Converta a lista de horários em uma lista de strings
+                    horarios_str = [f"{horario} " for horario in retorno_horarios]
+                    # Exiba os horários para o usuário escolher usando um QInputDialog
+                    ok = QInputDialog.getItem(self, 'Seleção de Horário', 'Selecione o horário:', horarios_str, 0, False)
+
+                    if ok:
+                        # O usuário selecionou um horário
+                        reply = QtWidgets.QMessageBox.question(
+                            self, 'Seleção', 'Deseja comprar o ingresso para esse filme?',
+                            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                            QtWidgets.QMessageBox.No
+                        )
+                        # Verifique a resposta do usuário
+                        if reply == QtWidgets.QMessageBox.Yes:
+                            self.QtStack.setCurrentIndex(10)
+                        else:
+                            self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
+                    else:
+                        QtWidgets.QMessageBox.information(self, 'Seleção', 'Compra cancelada.')
             else:
-
-                QtWidgets.QMessageBox.information(self, 'Excluir Filme', 'Nenhum filme com o ID especificado foi encontrado.')
+                QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')
                 
-            # Limpar o campo de entrada do ID
-            self.TELA_EXCUIR_FILME_ui.lineEdit_2.setText('')
-
-            
     def Tela_Cliente_Ver_Filmes(self):
-        # Obtenha a lista de filmes do banco de dados
+    # Obtenha a lista de filmes do banco de dados
         filmes = dados_filme.obter_todos_filmes()
 
         if filmes:
-            # Crie um modelo de lista para armazenar os nomes dos filmes
-            model = QStringListModel()
-            model.setStringList(filmes)
+            # Filtra apenas os filmes em cartaz
+            filmes_em_cartaz = [filme for filme in filmes if 'Em Cartaz: 1' in filme]
+            if not filmes_em_cartaz:
+                QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes em cartaz no momento.')
+            else:
+                # Crie um modelo de lista para armazenar os nomes dos filmes em cartaz
+                model = QStringListModel()
+                model.setStringList(filmes_em_cartaz)
 
-            # Associe o modelo ao QListView na tela do cliente
-            self.TELA_CLIENTE_VER_FILMES_ui.listView.setModel(model)
-            
-            self.QtStack.setCurrentIndex(9)  # Altere o índice para a tela do cliente
+                # Associe o modelo ao QListView na tela do cliente
+                self.TELA_CLIENTE_VER_FILMES_ui.listView.setModel(model)
+
+                self.QtStack.setCurrentIndex(9)  # Altere o índice para a tela do cliente
         else:
-            QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
+            QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes em cartaz.')
             
     def Tela_Cliente_botao_buscar(self):
         filme_id = self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.text()
@@ -425,63 +577,33 @@ class Ui_Main(QMainWindow, Main):
         if not filme_id.isdigit():
             QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'ID do filme deve ser um número inteiro.')
             return
-        # Chamar a função para buscar o filme no banco de dados
-        filme_nome = dados_filme.buscar_filme_por_id(filme_id)
 
-        # Verificar se o filme foi encontrado
-        if filme_nome:
-            # Criar um modelo de lista
-            model = QStringListModel()
+        # Verificar se o filme com o ID especificado está em cartaz
+        if dados_filme.verificar_filme_em_cartaz(filme_id):
+            # Chamar a função para buscar o filme no banco de dados
+            filme_nome = dados_filme.buscar_filme_por_id(filme_id)
 
-            # Adicionar o nome do filme ao modelo
-            model.setStringList([filme_nome])
+            # Verificar se o filme foi encontrado
+            if filme_nome:
+                # Criar um modelo de lista
+                model = QStringListModel()
 
-            # Associar o modelo ao QListView
-            self.TELA_CLIENTE_VER_FILMES_ui.listView.setModel(model)
+                # Adicionar o nome do filme ao modelo
+                model.setStringList([filme_nome])
+
+                # Associar o modelo ao QListView
+                self.TELA_CLIENTE_VER_FILMES_ui.listView.setModel(model)
         else:
-            QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
+            QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado está em cartaz.')
             
     def Tela_Cliente_carregar_lista_completa_filmes(self):
-        filmes = dados_filme.obter_todos_filmes()
+        filmes = dados_filme.obter_todos_filmes_em_cartaz()
         if filmes:
             model = QStringListModel()
             model.setStringList(filmes)
             self.TELA_CLIENTE_VER_FILMES_ui.listView.setModel(model)
             
-    def botao_selecionar(self):
-        filme_id = self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.text()
-        if not filme_id.isdigit():
-            QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'ID do filme deve ser um número inteiro.')
-            return
-        retorno_horarios = dados_filme.buscar_horarios_id(filme_id)
-        # Obtenha os horários disponíveis para o filme
-        horarios_disponiveis = retorno_horarios  # Substitua por sua lógica real
-
-        # Converta a lista de horários em uma lista de strings
-        horarios_str = [f"{horario} " for horario in horarios_disponiveis]
-        print(horarios_str)
-        # Exiba os horários para o usuário escolher usando um QInputDialog
-        horario, ok = QInputDialog.getItem(self, 'Seleção de Horário', 'Selecione o horário:', horarios_str, 0, False)
-
-        if ok:
-            # O usuário selecionou um horário
-            reply = QtWidgets.QMessageBox.question(self, 'Seleção', 'Deseja comprar o ingresso para esse filme?',
-                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-                                                QtWidgets.QMessageBox.No)
-            # Verifique a resposta do usuário
-            if reply == QtWidgets.QMessageBox.Yes:
-                self.QtStack.setCurrentIndex(10)
-            else:
-                self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
-        else:
-            QtWidgets.QMessageBox.information(self, 'Seleção', 'Compra cancelada.')
-
-    # ...
-
     def obter_horarios_disponiveis(self):
-        # Substitua este método com a lógica real para obter os horários disponíveis para o filme
-        # Este método deve retornar um dicionário de horários disponíveis, semelhante ao que você usa
-        # em outras partes do seu código.
         horarios_disponiveis = {"10:00": "Manhã", "15:00": "Tarde", "20:00": "Noite"}
         return horarios_disponiveis
                     

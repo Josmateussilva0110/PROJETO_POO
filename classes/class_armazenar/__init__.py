@@ -79,12 +79,12 @@ class Armazenar:
 
         # Verifica se o CPF já existe nos usuários
         check_user_query = "SELECT cpf FROM Usuarios WHERE cpf = %s"
-        cursor.execute(check_user_query, (pessoa.cpf,))
+        cursor.execute(check_user_query, (pessoa._cpf,))
         existing_user_cpf = cursor.fetchone()
 
         # Verifica se o CPF já existe na gerência
         check_gerencia_query = "SELECT cpf FROM Gerencia WHERE cpf = %s"
-        cursor.execute(check_gerencia_query, (pessoa.cpf,))
+        cursor.execute(check_gerencia_query, (pessoa._cpf,))
         existing_gerencia_cpf = cursor.fetchone()
 
         if existing_user_cpf or existing_gerencia_cpf:
@@ -99,7 +99,6 @@ class Armazenar:
                 cursor.close()
                 return True
             except mysql.connector.Error as err:
-                print("Erro ao inserir dados no banco de dados:", err)
                 self.db_connection.rollback()
                 cursor.close()
                 return False

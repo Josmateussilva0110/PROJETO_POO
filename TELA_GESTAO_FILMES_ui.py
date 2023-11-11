@@ -42,7 +42,6 @@ class GESTAO_FILMES(object):
         self.pushButton_3.setObjectName("pushButton_3")
         self.verticalLayout.addWidget(self.pushButton_3)
         self.pushButton_2 = QtWidgets.QPushButton(self.frame)
-        self.pushButton_2.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.pushButton_2.setObjectName("pushButton_2")
         self.verticalLayout.addWidget(self.pushButton_2)
         self.pushButton_4 = QtWidgets.QPushButton(Dialog)

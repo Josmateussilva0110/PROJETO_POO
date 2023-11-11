@@ -44,6 +44,3 @@ class Pessoa():
     def cpf(self, valor):
         self._senha = valor
 
-
-    def ver_pessoa(self):
-        print(f'cpf: {self._cpf}\nnome: {self._nome}\nemail: {self._email}')

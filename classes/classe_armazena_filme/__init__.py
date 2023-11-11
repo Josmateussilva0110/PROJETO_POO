@@ -17,33 +17,12 @@ class Armazenar_filmes:
             ano INT NOT NULL,
             preco FLOAT NOT NULL,
             classificacao VARCHAR(100) NOT NULL,
-            horario VARCHAR(255) NOT NULL
+            horario VARCHAR(255) NOT NULL,
+            em_cartaz TINYINT(1) NOT NULL DEFAULT 0
         )
         """
+
         cursor.execute(criar_tabela_filmes)
-        self.db_connection.commit()
-        cursor.close()
-
-    def obter_ultimo_id(self):
-        cursor = self.db_connection.cursor()
-        cursor.execute("SELECT MAX(id) FROM Filmes")
-        max_id = cursor.fetchone()[0]
-        cursor.close()
-        return max_id if max_id is not None else 0  # Retorna 0 se não houver registros na tabela
-
-    def recalcular_ids(self):
-        cursor = self.db_connection.cursor()
-
-        # Recupere todos os IDs atuais na ordem original
-        cursor.execute("SELECT id FROM Filmes")
-        ids_atuais = cursor.fetchall()
-
-        # Recalcule os IDs na ordem crescente
-        novo_id = 1
-        for id_atual in ids_atuais:
-            cursor.execute("UPDATE Filmes SET id = %s WHERE id = %s", (novo_id, id_atual[0]))
-            novo_id += 1
-
         self.db_connection.commit()
         cursor.close()
 
@@ -65,47 +44,7 @@ class Armazenar_filmes:
             self.db_connection.rollback()
             cursor.close()
         return valid
-
-    def excluir_filmes(self, filme_id):
-        cursor = self.db_connection.cursor()
-        # Consulta para excluir o filme com base no ID
-        delete_query = "DELETE FROM Filmes WHERE id = %s"
-
-        try:
-            cursor.execute(delete_query, (filme_id,))
-            self.db_connection.commit()
-            cursor.close()
-
-            # Recalcular IDs após a exclusão
-            self.recalcular_ids()
-
-            return True
-        except mysql.connector.Error as err:
-            self.db_connection.rollback()
-            cursor.close()
-            return False
-
-    def verificar_filme(self, filme_id):
-        cursor = self.db_connection.cursor()
-
-        # Consulta para verificar se o filme com o ID fornecido existe
-        select_query = "SELECT * FROM Filmes WHERE id = %s"
-
-        try:
-            cursor.execute(select_query, (filme_id,))
-            result = cursor.fetchone()
-
-            if result:
-                # O filme com o ID fornecido foi encontrado, imprima suas informações
-                cursor.close()
-                return True
-            else:
-                # Nenhum filme com o ID fornecido foi encontrado
-                cursor.close()
-                return False
-        except mysql.connector.Error as err:
-            cursor.close()
-            return False
+    
 
     def buscar_filme_por_id(self, filme_id):
         cursor = self.db_connection.cursor()
@@ -118,7 +57,7 @@ class Armazenar_filmes:
             result = cursor.fetchone()
             if result:
                 # Film with the provided ID found, format its information as a string
-                filme_info = f"ID: {result[0]}\nNome: {result[1]}\nAno: {result[2]}\nPreço: {result[3]}\nClassificação: {result[4]}\nHorário: {result[5]}\n"
+                filme_info = f"ID: {result[0]}\nNome: {result[1]}\nAno: {result[2]}\nPreço: {result[3]}\nClassificação: {result[4]}\nHorário: {result[5]}\nEm Cartaz: {result[6]}"
                 cursor.close()
                 return filme_info
             else:
@@ -128,7 +67,6 @@ class Armazenar_filmes:
         except mysql.connector.Error as err:
             cursor.close()
             return None
-
 
     def buscar_horarios_id(self, filme_id):
         cursor = self.db_connection.cursor()
@@ -156,7 +94,61 @@ class Armazenar_filmes:
             cursor = self.db_connection.cursor()
             cursor.execute("SELECT * FROM Filmes")
             filmes = cursor.fetchall()
-            filme_strings = [f"ID: {filme[0]}\nNome: {filme[1]}\nAno: {filme[2]}\nPreço: {filme[3]}\nClassificação: {filme[4]}\nHorário: {filme[5]}\n" for filme in filmes]
+            filme_strings = [f"ID: {filme[0]}\nNome: {filme[1]}\nAno: {filme[2]}\nPreço: {filme[3]}\nClassificação: {filme[4]}\nHorário: {filme[5]}\nEm Cartaz: {filme[6]}" for filme in filmes]
             return filme_strings
         except mysql.connector.Error as err:
             return []
+
+    def marcar_filme_em_cartaz(self, filme_id,cartaz):
+        try:
+            cursor = self.db_connection.cursor()
+            # Atualize o banco de dados para marcar o filme como "em cartaz"
+            if cartaz == 1:
+                sql = f"UPDATE Filmes SET em_cartaz = 1 WHERE id = {filme_id}"
+                cursor.execute(sql)
+                self.db_connection.commit()
+            else:
+                sql = f"UPDATE Filmes SET em_cartaz = 0 WHERE id = {filme_id}"
+                cursor.execute(sql)
+                self.db_connection.commit()
+            cursor.close()
+            return True
+        except mysql.connector.Error as e:
+            return False
+        
+    def verificar_filme_em_cartaz(self, filme_id):
+        try:
+            cursor = self.db_connection.cursor()
+
+            # Consulta para verificar se o filme está em cartaz
+            query = "SELECT em_cartaz FROM Filmes WHERE id = %s"
+            cursor.execute(query, (filme_id,))
+
+            resultado = cursor.fetchone()
+
+            # Se o resultado for encontrado e em_cartaz for 1, o filme está em cartaz
+            if resultado and resultado[0] == 1:
+                return True
+            else:
+                return False
+
+        except mysql.connector.Error as err:
+            return False
+
+        finally:
+            cursor.close()
+            
+    def obter_todos_filmes_em_cartaz(self):
+        try:
+            cursor = self.db_connection.cursor()
+            cursor.execute("SELECT * FROM filmes WHERE em_cartaz = 1")
+            filmes = cursor.fetchall()
+            filme_strings = [f"ID: {filme[0]}\nNome: {filme[1]}\nAno: {filme[2]}\nPreço: {filme[3]}\nClassificação: {filme[4]}\nHorário: {filme[5]}\nEm Cartaz: {filme[6]}" for filme in filmes]
+            return filme_strings
+        except Exception as e:
+            return []
+
+
+            
+            
+
