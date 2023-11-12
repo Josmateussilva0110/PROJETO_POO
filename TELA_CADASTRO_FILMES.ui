@@ -149,28 +149,6 @@
     <string>CADASTRAR</string>
    </property>
   </widget>
-  <widget class="QWidget" name="horizontalLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>330</y>
-     <width>411</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_5">
-    <item>
-     <widget class="QLineEdit" name="lineEdit_5">
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-      <property name="placeholderText">
-       <string>Classificação</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
   <widget class="QComboBox" name="comboBox">
    <property name="enabled">
     <bool>true</bool>
@@ -232,6 +210,29 @@
      <y>440</y>
      <width>411</width>
      <height>91</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_4">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>330</y>
+     <width>201</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>selecione a classificação</string>
+   </property>
+  </widget>
+  <widget class="QListView" name="listView_2">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>330</y>
+     <width>191</width>
+     <height>31</height>
     </rect>
    </property>
   </widget>

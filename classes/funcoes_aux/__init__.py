@@ -50,3 +50,8 @@ def lista_botoes_red(self):
         (getattr(self.TELA_LAYOUT, f"pushButton_{i}"), self.mudar_cor_red) for i in range(3, 43)
     ]
     return botao_and_funcao
+
+
+def lista_de_classificacao_filme():
+    lista = ['livre', '10', '12', '14', '16', '18']
+    return lista

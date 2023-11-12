@@ -104,6 +104,7 @@ class Ui_Main(QMainWindow, Main):
         super(Main, self).__init__(None)
         self.setupUi(self)
         self.horarios_selecionados = dict()
+        self.classificacao = ''
         
 
         #Tela_Main(Inicio)
@@ -133,6 +134,7 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_CADASTRO_FILMES.pushButton_3.clicked.connect(self.TelaGestao)
         self.TELA_CADASTRO_FILMES.pushButton.clicked.connect(self.botao_cadastrar_filme)
         self.TELA_CADASTRO_FILMES.pushButton_2.clicked.connect(self.adicionar_horarios)
+        self.TELA_CADASTRO_FILMES.pushButton_4.clicked.connect(self.abrir_classificacao)
         
         #Tela_Excluir_Filmes
         self.TELA_EXCUIR_FILME_ui.pushButton_4.clicked.connect(self.TelaGestao)
@@ -356,7 +358,6 @@ class Ui_Main(QMainWindow, Main):
         nome_filme = self.TELA_CADASTRO_FILMES.lineEdit_2.text()
         ano_filme = self.TELA_CADASTRO_FILMES.lineEdit_3.text()
         preco_str = self.TELA_CADASTRO_FILMES.lineEdit_4.text()
-        classificacao = self.TELA_CADASTRO_FILMES.lineEdit_5.text()
 
         #converter o dicionario de horários em string
         horarios_escolhidos.extend(self.horarios_selecionados)
@@ -364,7 +365,7 @@ class Ui_Main(QMainWindow, Main):
         #limpar a lista de horarios
         self.horarios_selecionados.clear()
         
-        if verificar_espacos(nome_filme, ano_filme, preco_str, classificacao):
+        if verificar_espacos(nome_filme, ano_filme, preco_str, self.classificacao):
             QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
         elif not horarios_escolhidos:
             QtWidgets.QMessageBox.information(self, 'erro', 'Selecione pelo menos um horário.')
@@ -375,7 +376,7 @@ class Ui_Main(QMainWindow, Main):
             if preco < 0.0:
                 QtWidgets.QMessageBox.information(self, 'erro', 'O preço deve ser maior que zero.')
             else:
-                filme = Filme(nome_filme, ano_filme, preco, classificacao, horarios_str)
+                filme = Filme(nome_filme, ano_filme, preco, self.classificacao, horarios_str)
                 aux = dados_filme.armazenar_filmes(filme)
                 if aux:
                     QtWidgets.QMessageBox.information(self, 'Cadastro Filme', 'Filme cadastrado com sucesso.')
@@ -388,7 +389,6 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_CADASTRO_FILMES.lineEdit_2.setText('')
         self.TELA_CADASTRO_FILMES.lineEdit_3.setText('')
         self.TELA_CADASTRO_FILMES.lineEdit_4.setText('')
-        self.TELA_CADASTRO_FILMES.lineEdit_5.setText('')
         self.TELA_CADASTRO_FILMES.dateTimeEdit.setDateTime(zero_datetime)
         self.TELA_CADASTRO_FILMES.listView.setModel(QStandardItemModel())
     
@@ -412,6 +412,7 @@ class Ui_Main(QMainWindow, Main):
             horario_usar.setModel(modelo_horario)
         else:
             QtWidgets.QMessageBox.information(self, 'Horário', 'Selecione um horário antes de adicionar.')
+
             
     def item_selecionado_lista_filmes(self, index):
         if index.isValid():
@@ -523,7 +524,7 @@ class Ui_Main(QMainWindow, Main):
                 reply = QMessageBox.question(
                     self,
                     'Detalhes do Filme',
-                    f'Deseja selecionar o filme com ID {filme_id}?',
+                    f'Deseja selecionar esse filme?',
                     QMessageBox.Yes | QMessageBox.No,
                     QMessageBox.No
                 )
@@ -533,7 +534,7 @@ class Ui_Main(QMainWindow, Main):
                     # Converta a lista de horários em uma lista de strings
                     horarios_str = [f"{horario} " for horario in retorno_horarios]
                     # Exiba os horários para o usuário escolher usando um QInputDialog
-                    ok = QInputDialog.getItem(self, 'Seleção de Horário', 'Selecione o horário:', horarios_str, 0, False)
+                    ok = QInputDialog.getItem(self, 'Seleção', 'Selecione o horário:', horarios_str, 0, False)
 
                     if ok:
                         # O usuário selecionou um horário
@@ -615,3 +616,9 @@ class Ui_Main(QMainWindow, Main):
         if op == QtWidgets.QMessageBox.Yes:
             button.setStyleSheet("background-color: red;")
             self.QtStack.setCurrentIndex(11)
+
+
+    def abrir_classificacao(self):
+        lista_classificao = lista_de_classificacao_filme()
+        classificacao = QInputDialog.getItem(self, 'Seleção', 'Selecione a classificação:', lista_classificao, 0, False)
+        self.classificacao = classificacao[0]
