@@ -160,7 +160,10 @@ class Ui_Main(QMainWindow, Main):
 
         
         #TELA_ESCOLHE_LUGAR
-        self.TELA_LAYOUT.pushButton_3.clicked.connect(self.mudar_cor_red)
+        buttons_and_functions = lista_botoes_red(self)
+        for button, function in buttons_and_functions:
+            button.clicked.connect(lambda _, btn=button: function(btn))
+        
         self.TELA_LAYOUT.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
 
         #TELA HORARIO
@@ -602,15 +605,13 @@ class Ui_Main(QMainWindow, Main):
             model = QStringListModel()
             model.setStringList(filmes)
             self.TELA_CLIENTE_VER_FILMES_ui.listView.setModel(model)
-            
-    def obter_horarios_disponiveis(self):
-        horarios_disponiveis = {"10:00": "Manhã", "15:00": "Tarde", "20:00": "Noite"}
-        return horarios_disponiveis
-                    
+                                
 
-    def mudar_cor_red(self):
-        op = QtWidgets.QMessageBox.question(self, 'Seleção', 'Finalizar escolha?',
-        QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+    def mudar_cor_red(self, button):
+        op = QtWidgets.QMessageBox.question(
+            self, 'Seleção', 'Finalizar escolha?',
+            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
+        )
         if op == QtWidgets.QMessageBox.Yes:
-            self.TELA_LAYOUT.pushButton_3.setStyleSheet("background-color: red;")
+            button.setStyleSheet("background-color: red;")
             self.QtStack.setCurrentIndex(11)

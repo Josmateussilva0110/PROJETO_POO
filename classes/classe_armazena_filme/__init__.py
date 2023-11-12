@@ -25,6 +25,30 @@ class Armazenar_filmes:
         cursor.execute(criar_tabela_filmes)
         self.db_connection.commit()
         cursor.close()
+    
+
+    def obter_ultimo_id(self):
+        cursor = self.db_connection.cursor()
+        cursor.execute("SELECT MAX(id) FROM Filmes")
+        max_id = cursor.fetchone()[0]
+        cursor.close()
+        return max_id if max_id is not None else 0  # Retorna 0 se não houver registros na tabela
+
+    def recalcular_ids(self):
+        cursor = self.db_connection.cursor()
+
+        # Recupere todos os IDs atuais na ordem original
+        cursor.execute("SELECT id FROM Filmes")
+        ids_atuais = cursor.fetchall()
+
+        # Recalcule os IDs na ordem crescente
+        novo_id = 1
+        for id_atual in ids_atuais:
+            cursor.execute("UPDATE Filmes SET id = %s WHERE id = %s", (novo_id, id_atual[0]))
+            novo_id += 1
+
+        self.db_connection.commit()
+        cursor.close()
 
     def armazenar_filmes(self, filme):
         cursor = self.db_connection.cursor()
@@ -147,8 +171,3 @@ class Armazenar_filmes:
             return filme_strings
         except Exception as e:
             return []
-
-
-            
-            
-
