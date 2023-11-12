@@ -134,7 +134,7 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_CADASTRO_FILMES.pushButton_3.clicked.connect(self.TelaGestao)
         self.TELA_CADASTRO_FILMES.pushButton.clicked.connect(self.botao_cadastrar_filme)
         self.TELA_CADASTRO_FILMES.pushButton_2.clicked.connect(self.adicionar_horarios)
-        self.TELA_CADASTRO_FILMES.pushButton_4.clicked.connect(self.abrir_classificacao)
+        self.TELA_CADASTRO_FILMES.pushButton_4.clicked.connect(self.adicionar_classificacao)
         
         #Tela_Excluir_Filmes
         self.TELA_EXCUIR_FILME_ui.pushButton_4.clicked.connect(self.TelaGestao)
@@ -412,6 +412,34 @@ class Ui_Main(QMainWindow, Main):
             horario_usar.setModel(modelo_horario)
         else:
             QtWidgets.QMessageBox.information(self, 'Horário', 'Selecione um horário antes de adicionar.')
+    
+
+    def adicionar_classificacao(self):
+        # Obtenha a classificação selecionada
+        classificacao_selecionada = QInputDialog.getItem(
+            self, 'Seleção', 'Selecione a classificação:', lista_de_classificacao_filme(), 0, False
+        )
+
+        if classificacao_selecionada[1]:
+            # Se o usuário selecionou uma classificação, adicione-a ao QListView
+            classificacoes_strings = [classificacao_selecionada[0]]
+
+            # Crie um modelo para a lista de classificações
+            modelo_classificacoes = QStandardItemModel()
+
+            for classificacao_str in classificacoes_strings:
+                item_classificacao = QStandardItem(classificacao_str)
+                item_classificacao.setEditable(False)
+                modelo_classificacoes.appendRow(item_classificacao)
+
+            # Associe o modelo ao QListView
+            classificacao_usar = self.TELA_CADASTRO_FILMES.listView_2
+            classificacao_usar.setModel(modelo_classificacoes)
+
+            # Armazene a classificação atual para uso posterior
+            self.classificacao = classificacao_selecionada[0]
+
+
 
             
     def item_selecionado_lista_filmes(self, index):
@@ -616,9 +644,3 @@ class Ui_Main(QMainWindow, Main):
         if op == QtWidgets.QMessageBox.Yes:
             button.setStyleSheet("background-color: red;")
             self.QtStack.setCurrentIndex(11)
-
-
-    def abrir_classificacao(self):
-        lista_classificao = lista_de_classificacao_filme()
-        classificacao = QInputDialog.getItem(self, 'Seleção', 'Selecione a classificação:', lista_classificao, 0, False)
-        self.classificacao = classificacao[0]
