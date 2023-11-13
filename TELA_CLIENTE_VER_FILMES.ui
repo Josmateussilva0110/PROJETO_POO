@@ -116,19 +116,6 @@
     <string>Voltar</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_3">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>520</y>
-     <width>93</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Selecionar</string>
-   </property>
-  </widget>
  </widget>
  <resources/>
  <connections/>

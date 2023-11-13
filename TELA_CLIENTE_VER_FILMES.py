@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\ESCOLA\QUARTO_PERIODO\PROGRAMAÇÃO ORIENTADA A OBJETOS II\Projetos\Projeto\PROJETO_POO\PROJETO_POO\TELA_CLIENTE_VER_FILMES.ui'
+# Form implementation generated from reading ui file '.\TELA_CLIENTE_VER_FILMES.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -50,9 +50,6 @@ class TELA_VER_FILMES(object):
         self.pushButton = QtWidgets.QPushButton(Dialog)
         self.pushButton.setGeometry(QtCore.QRect(10, 560, 93, 28))
         self.pushButton.setObjectName("pushButton")
-        self.pushButton_3 = QtWidgets.QPushButton(Dialog)
-        self.pushButton_3.setGeometry(QtCore.QRect(350, 520, 93, 28))
-        self.pushButton_3.setObjectName("pushButton_3")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -66,4 +63,3 @@ class TELA_VER_FILMES(object):
         self.pushButton_2.setText(_translate("Dialog", "Buscar"))
         self.pushButton_4.setText(_translate("Dialog", "Mostrar Filmes"))
         self.pushButton.setText(_translate("Dialog", "Voltar"))
-        self.pushButton_3.setText(_translate("Dialog", "Selecionar"))

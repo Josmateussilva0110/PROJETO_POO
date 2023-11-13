@@ -12,7 +12,7 @@ from TELA_EXCLUIR_FILME_ui import *
 from TELA_GESTAO_FILMES_ui import *#
 from TELA_CADASTRO_FILMES import *#
 from TELA_LISTA_FILMES_ui import *#
-from TELA_CLIENTE_VER_FILMES_ui import *
+from TELA_CLIENTE_VER_FILMES import *
 from TELA_LAYOUT import *
 from TELA_HORARIOS import *
 from classes.class_armazenar import *
@@ -391,6 +391,7 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_CADASTRO_FILMES.lineEdit_4.setText('')
         self.TELA_CADASTRO_FILMES.dateTimeEdit.setDateTime(zero_datetime)
         self.TELA_CADASTRO_FILMES.listView.setModel(QStandardItemModel())
+        self.TELA_CADASTRO_FILMES.listView_2.setModel(QStandardItemModel())
     
     def adicionar_horarios(self):
         horario = self.TELA_CADASTRO_FILMES.dateTimeEdit.text()
