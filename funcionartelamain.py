@@ -169,7 +169,7 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_LAYOUT.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
 
         #TELA HORARIO
-        self.TELA_HORARIO.pushButton_2.clicked.connect(self.escolhe_lugar)
+        self.TELA_HORARIO.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
 
 
     def botao_Cadastra(self):
