@@ -122,3 +122,14 @@ class Armazenar:
         result = cursor.fetchone()
         #self.db_connection.close()
         return result is not None
+
+
+    def buscar_cliente_cpf(self, cpf):
+        cursor = self.db_connection.cursor()
+        select_query = "SELECT nome FROM Usuarios WHERE cpf = %s"
+        values = (cpf,)
+        cursor.execute(select_query, values)
+        result = cursor.fetchone()
+        cursor.close()
+        return result[0] if result else None
+

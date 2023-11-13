@@ -67,6 +67,29 @@ class Armazenar_filmes:
         except mysql.connector.Error as err:
             cursor.close()
             return None
+    
+
+    def buscar_dados_filmes(self, filme_id):
+        cursor = self.db_connection.cursor()
+
+        # Query to fetch the film with the given ID
+        select_query = "SELECT * FROM Filmes WHERE id = %s"
+
+        try:
+            cursor.execute(select_query, (filme_id,))
+            result = cursor.fetchone()
+            if result:
+                # Film with the provided ID found, format its information as a string
+                filme_info = f"ID: {result[0]} Nome: {result[1]} Ano: {result[2]} Preço: {result[3]} Classificação: {result[4]}"
+                cursor.close()
+                return filme_info
+            else:
+                # No film with the provided ID was found
+                cursor.close()
+                return None
+        except mysql.connector.Error as err:
+            cursor.close()
+            return None
 
     def buscar_horarios_id(self, filme_id):
         cursor = self.db_connection.cursor()

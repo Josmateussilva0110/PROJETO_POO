@@ -104,6 +104,9 @@ class Ui_Main(QMainWindow, Main):
         self.setupUi(self)
         self.horarios_selecionados = list()
         self.classificacao = ''
+        self.dados_clienete = list()
+        self.dados_cliente_final = list()
+        self.saida = None
         
 
         #Tela_Main(Inicio)
@@ -172,6 +175,7 @@ class Ui_Main(QMainWindow, Main):
 
 
     def botao_Cadastra(self):
+        self.dados_clienete = list()
         valid = False
         nome = self.TELA_CADASTRO_ui.lineEdit.text()
         cpf = self.TELA_CADASTRO_ui.lineEdit_2.text()
@@ -208,6 +212,8 @@ class Ui_Main(QMainWindow, Main):
         if cpf == '' or senha == '':
             QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
         elif dados.verificar_login_Cliente(cpf, senha):
+                self.saida = dados.buscar_cliente_cpf(cpf)
+                print(self.saida)
                 QtWidgets.QMessageBox.information(self, 'login', 'login cliente realizado com sucesso.')
                 self.QtStack.setCurrentIndex(2)##Aqui vai mudar só para poder entre cliente e funcionario
                 
@@ -362,7 +368,6 @@ class Ui_Main(QMainWindow, Main):
         horarios_escolhidos.extend(self.horarios_selecionados)
         horarios_str = ', '.join([f'{horario} - {tipo}' for horario, tipo in self.horarios_selecionados])
         #limpar a lista de horarios
-        print(horarios_str)
         self.horarios_selecionados.clear()
         
         if verificar_espacos(nome_filme, ano_filme, preco_str, self.classificacao):
@@ -457,7 +462,6 @@ class Ui_Main(QMainWindow, Main):
 
                 # O ID do filme é a última parte da string
                 filme_id = partes[1]
-                print(filme_id)
 
                 # Verificar se o filme com o ID especificado já está em cartaz
                 if not dados_filme.verificar_filme_em_cartaz(filme_id):
@@ -562,14 +566,18 @@ class Ui_Main(QMainWindow, Main):
                     QMessageBox.No
                 )
                 if reply == QMessageBox.Yes:
+                    self.dados_clienete = []
                     # Obtenha os horários disponíveis para o filme
                     retorno_horarios = dados_filme.buscar_horarios_id(filme_id)
+                    filme_selecionado = dados_filme.buscar_dados_filmes(filme_id)
+                    self.dados_clienete.append(filme_selecionado)
                     # Converta a lista de horários em uma lista de strings
                     horarios_str = [f"{horario} " for horario in retorno_horarios]
                     # Exiba os horários para o usuário escolher usando um QInputDialog
                     ok = QInputDialog.getItem(self, 'Seleção', 'Selecione o horário:', horarios_str, 0, False)
 
                     if ok:
+                        self.dados_clienete.append(ok[0])
                         # O usuário selecionou um horário
                         reply = QtWidgets.QMessageBox.question(
                             self, 'Seleção', 'Deseja comprar o ingresso para esse filme?',
@@ -578,6 +586,9 @@ class Ui_Main(QMainWindow, Main):
                         )
                         # Verifique a resposta do usuário
                         if reply == QtWidgets.QMessageBox.Yes:
+                            self.dados_clienete.append(self.saida)
+                            self.dados_cliente_final.append(self.dados_clienete)
+                            print(self.dados_cliente_final)
                             self.QtStack.setCurrentIndex(10)
                         else:
                             self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
