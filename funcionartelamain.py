@@ -1,5 +1,4 @@
 import sys
-import mysql.connector
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox, QInputDialog
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QStringListModel
@@ -12,7 +11,7 @@ from TELA_EXCLUIR_FILME_ui import *
 from TELA_GESTAO_FILMES_ui import *#
 from TELA_CADASTRO_FILMES import *#
 from TELA_LISTA_FILMES_ui import *#
-from TELA_CLIENTE_VER_FILMES import *
+from TELA_CLIENTE_VER_FILMES_ui import *
 from TELA_LAYOUT import *
 from TELA_HORARIOS import *
 from classes.class_armazenar import *
@@ -140,7 +139,7 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_EXCUIR_FILME_ui.pushButton_4.clicked.connect(self.TelaGestao)
         self.TELA_EXCUIR_FILME_ui.listView.clicked.connect(self.item_selecionado_Excluir_filmes)
         self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.botao_buscar_tela_ecluir)
-        self.TELA_EXCUIR_FILME_ui.pushButton_9.clicked.connect(self.carregar_lista_completa_filmes)
+        self.TELA_EXCUIR_FILME_ui.pushButton_9.clicked.connect(self.TelaVerTodosFilmes_Tela_excluir)
         
         #Tela_Listar_Filmes
         self.TELA_LISTA_FILMES_ui.pushButton_4.clicked.connect(self.TelaGestao)
@@ -157,7 +156,7 @@ class Ui_Main(QMainWindow, Main):
         ##TELA_USER_VER_FILMES
         self.TELA_CLIENTE_VER_FILMES_ui.pushButton.clicked.connect(self.abrirTelaDPSLoginCli)
         self.TELA_CLIENTE_VER_FILMES_ui.pushButton_2.clicked.connect(self.Tela_Cliente_botao_buscar)
-        self.TELA_CLIENTE_VER_FILMES_ui.pushButton_4.clicked.connect(self.Tela_Cliente_carregar_lista_completa_filmes)
+        self.TELA_CLIENTE_VER_FILMES_ui.pushButton_4.clicked.connect(self.Tela_Cliente_carregar_lista_completa_filmes_em_cartaz)
         self.TELA_CLIENTE_VER_FILMES_ui.listView.clicked.connect(self.item_selecionado_lista_filmes_cliente)
 
         
@@ -317,7 +316,7 @@ class Ui_Main(QMainWindow, Main):
             return
         
         # Chamar a função para buscar o filme no banco de dados
-        filme_nome = dados_filme.buscar_filme_por_id_exeto_cartaz(filme_id)
+        filme_nome = dados_filme.buscar_filme_por_id(filme_id)
 
         # Verificar se o filme foi encontrado
         if filme_nome:
@@ -629,7 +628,7 @@ class Ui_Main(QMainWindow, Main):
         else:
             QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado está em cartaz.')
             
-    def Tela_Cliente_carregar_lista_completa_filmes(self):
+    def Tela_Cliente_carregar_lista_completa_filmes_em_cartaz(self):
         filmes = dados_filme.obter_todos_filmes_em_cartaz()
         if filmes:
             model = QStringListModel()

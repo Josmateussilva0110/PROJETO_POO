@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\TELA_CLIENTE_VER_FILMES.ui'
+# Form implementation generated from reading ui file 'd:\ESCOLA\QUARTO_PERIODO\PROGRAMAÇÃO ORIENTADA A OBJETOS II\Projetos\Projeto\PROJETO_POO\PROJETO_POO\TELA_CLIENTE_VER_FILMES.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -14,25 +14,25 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class TELA_VER_FILMES(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(800, 600)
+        Dialog.resize(1000, 800)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Dialog.sizePolicy().hasHeightForWidth())
         Dialog.setSizePolicy(sizePolicy)
-        Dialog.setMinimumSize(QtCore.QSize(800, 600))
-        Dialog.setMaximumSize(QtCore.QSize(800, 600))
+        Dialog.setMinimumSize(QtCore.QSize(1000, 800))
+        Dialog.setMaximumSize(QtCore.QSize(1000, 800))
         self.label_2 = QtWidgets.QLabel(Dialog)
-        self.label_2.setGeometry(QtCore.QRect(340, 100, 117, 16))
+        self.label_2.setGeometry(QtCore.QRect(440, 100, 117, 16))
         self.label_2.setObjectName("label_2")
         self.label = QtWidgets.QLabel(Dialog)
-        self.label.setGeometry(QtCore.QRect(310, 20, 178, 48))
+        self.label.setGeometry(QtCore.QRect(410, 20, 178, 48))
         self.label.setObjectName("label")
         self.listView = QtWidgets.QListView(Dialog)
-        self.listView.setGeometry(QtCore.QRect(5, 130, 791, 331))
+        self.listView.setGeometry(QtCore.QRect(5, 130, 991, 561))
         self.listView.setObjectName("listView")
         self.layoutWidget = QtWidgets.QWidget(Dialog)
-        self.layoutWidget.setGeometry(QtCore.QRect(180, 470, 411, 30))
+        self.layoutWidget.setGeometry(QtCore.QRect(280, 700, 411, 30))
         self.layoutWidget.setObjectName("layoutWidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.layoutWidget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
@@ -48,7 +48,7 @@ class TELA_VER_FILMES(object):
         self.pushButton_4.setObjectName("pushButton_4")
         self.horizontalLayout.addWidget(self.pushButton_4)
         self.pushButton = QtWidgets.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(10, 560, 93, 28))
+        self.pushButton.setGeometry(QtCore.QRect(10, 760, 93, 28))
         self.pushButton.setObjectName("pushButton")
 
         self.retranslateUi(Dialog)
