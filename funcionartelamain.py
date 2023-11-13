@@ -213,7 +213,6 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
         elif dados.verificar_login_Cliente(cpf, senha):
                 self.saida = dados.buscar_cliente_cpf(cpf)
-                print(self.saida)
                 QtWidgets.QMessageBox.information(self, 'login', 'login cliente realizado com sucesso.')
                 self.QtStack.setCurrentIndex(2)##Aqui vai mudar só para poder entre cliente e funcionario
                 
@@ -556,7 +555,6 @@ class Ui_Main(QMainWindow, Main):
                 # O ID do filme é a última parte da string
                 filme_id = partes[1]
 
-
                 # Exiba um QMessageBox ou lógica específica do cliente aqui
                 reply = QMessageBox.question(
                     self,
@@ -574,28 +572,30 @@ class Ui_Main(QMainWindow, Main):
                     # Converta a lista de horários em uma lista de strings
                     horarios_str = [f"{horario} " for horario in retorno_horarios]
                     # Exiba os horários para o usuário escolher usando um QInputDialog
-                    ok = QInputDialog.getItem(self, 'Seleção', 'Selecione o horário:', horarios_str, 0, False)
+                    horario_selecionado, ok = QInputDialog.getItem(self, 'Seleção', 'Selecione o horário:', horarios_str, 0, False)
 
-                    if ok:
-                        self.dados_clienete.append(ok[0])
-                        # O usuário selecionou um horário
-                        reply = QtWidgets.QMessageBox.question(
-                            self, 'Seleção', 'Deseja comprar o ingresso para esse filme?',
-                            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-                            QtWidgets.QMessageBox.No
-                        )
-                        # Verifique a resposta do usuário
-                        if reply == QtWidgets.QMessageBox.Yes:
-                            self.dados_clienete.append(self.saida)
-                            self.dados_cliente_final.append(self.dados_clienete)
-                            print(self.dados_cliente_final)
-                            self.QtStack.setCurrentIndex(10)
-                        else:
-                            self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
-                    else:
+                    if not ok:
                         QtWidgets.QMessageBox.information(self, 'Seleção', 'Compra cancelada.')
-            else:
-                QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')
+                        return
+
+                    self.dados_clienete.append(horario_selecionado)
+                    # O usuário selecionou um horário
+                    reply = QtWidgets.QMessageBox.question(
+                        self, 'Seleção', 'Deseja comprar o ingresso para esse filme?',
+                        QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                        QtWidgets.QMessageBox.No
+                    )
+                    # Verifique a resposta do usuário
+                    if reply == QtWidgets.QMessageBox.Yes:
+                        self.dados_clienete.append(self.saida)
+                        self.dados_cliente_final.append(self.dados_clienete)
+                        self.QtStack.setCurrentIndex(10)
+                    else:
+                        self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
+                else:
+                    QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')
+
+
                 
     def Tela_Cliente_Ver_Filmes(self):
     # Obtenha a lista de filmes do banco de dados
