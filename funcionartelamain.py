@@ -13,7 +13,7 @@ from TELA_CADASTRO_FILMES import *#
 from TELA_LISTA_FILMES_ui import *#
 from TELA_CLIENTE_VER_FILMES_ui import *
 from TELA_LAYOUT import *
-from TELA_HORARIOS import *
+from TELA_PAGAMENTO import *
 from classes.class_armazenar import *
 from classes.class_pessoa import *
 from classes.funcoes_aux import *
@@ -81,8 +81,8 @@ class Main(QtWidgets.QWidget):
         self.TELA_LAYOUT = Tela_layout()
         self.TELA_LAYOUT.setupUi(self.stack10)
 
-        self.TELA_HORARIO = Tela_horario()
-        self.TELA_HORARIO.setupUi(self.stack11)
+        self.TELA_PAGAMENTO = Tela_pagamento()
+        self.TELA_PAGAMENTO.setupUi(self.stack11)
 
 
         self.QtStack.addWidget(self.stack0)
@@ -171,7 +171,7 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_LAYOUT.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
 
         #TELA HORARIO
-        self.TELA_HORARIO.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
+        self.TELA_PAGAMENTO.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
 
 
     def botao_Cadastra(self):

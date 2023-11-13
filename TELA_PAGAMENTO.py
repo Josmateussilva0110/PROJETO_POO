@@ -11,14 +11,14 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Tela_horario(object):
+class Tela_pagamento(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(320, 70, 131, 16))
+        self.label.setGeometry(QtCore.QRect(280, 60, 231, 16))
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(True)
@@ -36,5 +36,5 @@ class Tela_horario(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label.setText(_translate("MainWindow", "HORÁRIOS:"))
+        self.label.setText(_translate("MainWindow", "TELA DE PAGAMENTO:"))
         self.pushButton_2.setText(_translate("MainWindow", "Voltar"))
