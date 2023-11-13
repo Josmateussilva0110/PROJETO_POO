@@ -102,7 +102,7 @@ class Ui_Main(QMainWindow, Main):
     def __init__(self):
         super(Main, self).__init__(None)
         self.setupUi(self)
-        self.horarios_selecionados = dict()
+        self.horarios_selecionados = list()
         self.classificacao = ''
         
 
@@ -360,8 +360,9 @@ class Ui_Main(QMainWindow, Main):
 
         #converter o dicionario de horários em string
         horarios_escolhidos.extend(self.horarios_selecionados)
-        horarios_str = ', '.join([f'{horario} - {tipo}' for horario, tipo in self.horarios_selecionados.items()])
+        horarios_str = ', '.join([f'{horario} - {tipo}' for horario, tipo in self.horarios_selecionados])
         #limpar a lista de horarios
+        print(horarios_str)
         self.horarios_selecionados.clear()
         
         if verificar_espacos(nome_filme, ano_filme, preco_str, self.classificacao):
@@ -395,13 +396,15 @@ class Ui_Main(QMainWindow, Main):
     def adicionar_horarios(self):
         horario = self.TELA_CADASTRO_FILMES.dateTimeEdit.text()
         tipo_filme = self.TELA_CADASTRO_FILMES.comboBox.currentText()
-        
+
         if horario:
-            # Adicione o par horário-tipo ao dicionário
-            self.horarios_selecionados[horario] = tipo_filme
+            # Adicione o par horário-tipo à lista de tuplas
+            horario_tipo_tuple = (horario, tipo_filme)
+            self.horarios_selecionados.append(horario_tipo_tuple)
 
             # Crie uma lista de strings para representar os pares horário-tipo
-            horarios_strings = [f'{horario} - {tipo_filme}' for horario, tipo_filme in self.horarios_selecionados.items()]
+            horarios_strings = [f'{h} - {t}' for h, t in self.horarios_selecionados]
+
             # Atualize o QListView com a lista de strings
             horario_usar = self.TELA_CADASTRO_FILMES.listView
             modelo_horario = QStandardItemModel()
@@ -412,6 +415,7 @@ class Ui_Main(QMainWindow, Main):
             horario_usar.setModel(modelo_horario)
         else:
             QtWidgets.QMessageBox.information(self, 'Horário', 'Selecione um horário antes de adicionar.')
+
     
 
     def adicionar_classificacao(self):
@@ -453,6 +457,7 @@ class Ui_Main(QMainWindow, Main):
 
                 # O ID do filme é a última parte da string
                 filme_id = partes[1]
+                print(filme_id)
 
                 # Verificar se o filme com o ID especificado já está em cartaz
                 if not dados_filme.verificar_filme_em_cartaz(filme_id):
