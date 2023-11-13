@@ -31,10 +31,10 @@ class Armazenar_filmes:
         valid = False
         
         # Obtém o próximo ID automaticamente
-        novo_id = self.obter_ultimo_id() + 1
+        #novo_id = self.obter_ultimo_id() + 1
 
-        insert_query = "INSERT INTO Filmes(id, nome_filme, ano, preco, classificacao, horario) VALUES (%s,%s, %s, %s, %s, %s)"
-        values = (novo_id, filme._nome, filme._ano, filme._preco, filme._classificacao, filme._horarios)
+        insert_query = "INSERT INTO Filmes(nome_filme, ano, preco, classificacao, horario) VALUES (%s, %s, %s, %s, %s)"
+        values = (filme._nome, filme._ano, filme._preco, filme._classificacao, filme._horarios)
         try:
             cursor.execute(insert_query, values)
             self.db_connection.commit()
