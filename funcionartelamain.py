@@ -660,3 +660,4 @@ class Ui_Main(QMainWindow, Main):
         if op == QtWidgets.QMessageBox.Yes:
             button.setStyleSheet("background-color: red;")
             self.QtStack.setCurrentIndex(11)
+
