@@ -3,6 +3,8 @@ import socket
 from classes.class_armazenar import *
 from classes.class_conexao_bd import *
 from classes.class_pessoa import *
+from classes.classe_armazena_filme import *
+from classes.class_filme import *
 
 # ip = 192.168.1.6
 
@@ -14,6 +16,7 @@ mydb = configure_mysql_connection()
 db = create_database()
 
 dados_usuarios = Armazenar(mydb)
+dados_filme = Armazenar_filmes(mydb)
 
 def menu(con, cliente):
     nome_cliente = con.recv(1024).decode()
@@ -29,16 +32,16 @@ def menu(con, cliente):
         elif mensagem == '1':
             dados = con.recv(4096).decode()
             lista = dados.split(',')
-            print(lista)
             pessoa = Pessoa(lista[1], lista[0], lista[2], lista[3])
             if dados_usuarios.armazenar(pessoa):
                 con.send('1'.encode())
             else:
                 con.send('0'.encode())
+
+
         elif mensagem == '2':
             dados = con.recv(4096).decode()
             lista = dados.split(',')
-            print(lista)
             if dados_usuarios.verificar_login_Cliente(lista[0], lista[1]):
                 con.send('1'.encode())
             elif dados_usuarios.verificar_login_Ger(lista[0], lista[1]):
@@ -46,8 +49,35 @@ def menu(con, cliente):
             else:
                 con.send('0'.encode())
 
+
+        elif mensagem == '3':
+            data = con.recv(4096).decode()
+            print(f'date: {data}')
+            
+            # Separar os dados
+            partes = data.split(",")  # Dividir a string usando a vírgula como delimitador
+            
+            # Encontrar o índice da palavra 'livre'
+            index_livre = 4
+            print(f'index: {index_livre}')
+            
+            # Juntar os elementos a partir do índice 'livre' usando vírgula como delimitador
+            nova_string = ",".join(partes[index_livre:])
+            
+            print(nova_string)
+            
+            filme = Filme(partes[0], partes[1], partes[2], partes[3], nova_string)
+            
+            aux = dados_filme.armazenar_filmes(filme)
+            if aux:
+                con.send('1'.encode())
+            else:
+                con.send('0'.encode())
+
+
     print(f"[DESCONECTADO] Cliente: {nome_cliente}")
     con.close()
+    print("[INICIADO] Aguardando conexão...")
 
 def main():
     print("[INICIADO] Aguardando conexão...")
