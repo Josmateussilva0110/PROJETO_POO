@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class AposLogin(object):
+class Tela_usuario(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(800, 600)

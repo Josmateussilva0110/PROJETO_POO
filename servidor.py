@@ -40,11 +40,12 @@ def menu(con, cliente):
             lista = dados.split(',')
             print(lista)
             if dados_usuarios.verificar_login_Cliente(lista[0], lista[1]):
-                #self.saida = dados.buscar_cliente_cpf(cpf)
                 con.send('1'.encode())
+            elif dados_usuarios.verificar_login_Ger(lista[0], lista[1]):
+                con.send('3'.encode())
             else:
                 con.send('0'.encode())
-            dados_usuarios.db_connection.consume_results()
+
     print(f"[DESCONECTADO] Cliente: {nome_cliente}")
     con.close()
 

@@ -6,6 +6,8 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QStringListModel
 from tela_main_ui import *#
 from TELA_CADASTRO_ui import *#
+from TELA_USUARIO import *#
+from TELA_GERENCIAMENTO import *#
 from classes.funcoes_aux import *
 
 ip = '192.168.1.6'
@@ -29,6 +31,8 @@ class Main(QtWidgets.QWidget):
         self.QtStack = QtWidgets.QStackedLayout()
         self.stack0 = QtWidgets.QMainWindow()
         self.stack1 = QtWidgets.QMainWindow()
+        self.stack2 = QtWidgets.QMainWindow()
+        self.stack3 = QtWidgets.QMainWindow()
 
 
         self.tela_main_ui = Ui_Dialog()
@@ -38,8 +42,19 @@ class Main(QtWidgets.QWidget):
         self.TELA_CADASTRO_ui.setupUi(self.stack1)
 
 
+        self.TELA_USUARIO = Tela_usuario()
+        self.TELA_USUARIO.setupUi(self.stack2)
+
+
+        #Usa-se só para ajustar essa tela
+        self.TELA_DPS_LOGIN_FUNC_ui = LOGIN_FUNC()
+        self.TELA_DPS_LOGIN_FUNC_ui.setupUi(self.stack3)
+
+
         self.QtStack.addWidget(self.stack0)
         self.QtStack.addWidget(self.stack1)
+        self.QtStack.addWidget(self.stack2)
+        self.QtStack.addWidget(self.stack3)
 
 
 class Ui_Main(QMainWindow, Main):
@@ -60,6 +75,15 @@ class Ui_Main(QMainWindow, Main):
         #tela cadastro cliente
         self.TELA_CADASTRO_ui.pushButton_3.clicked.connect(self.VoltarMain)
         self.TELA_CADASTRO_ui.pushButton.clicked.connect(self.botao_Cadastra)
+
+        ##TELA_CLIENTES
+        #Tela dps de login (TELA CLIENTE)
+        self.TELA_USUARIO.pushButton_4.clicked.connect(self.VoltarMain)
+        #self.TELA_USUARIO.pushButton.clicked.connect(self.Tela_Cliente_Ver_Filmes)
+
+        self.TELA_DPS_LOGIN_FUNC_ui.pushButton_4.clicked.connect(self.VoltarMain)
+        #self.TELA_DPS_LOGIN_FUNC_ui.pushButton.clicked.connect(self.Tela_Estatistica)
+        #self.TELA_DPS_LOGIN_FUNC_ui.pushButton_2.clicked.connect(self.TelaGestao)
     
     def VoltarMain(self):
         self.QtStack.setCurrentIndex(0)
@@ -79,24 +103,28 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
         else:
             client_socket.send('2'.encode())
-            lista_dados = list()
-            lista_dados.append(cpf)
-            lista_dados.append(senha)
-            dados = ",".join(lista_dados) # converte os valores para uma string
-            client_socket.send(dados.encode()) # envia para o servidor 
+            lista_dados = [cpf, senha]
+            dados = ",".join(lista_dados)
+            client_socket.send(dados.encode())
             try:
                 retorno = client_socket.recv(4096).decode()
             except:
-                print("\nNao foi possivel permanecer conectado!\n")
+                print("\nNão foi possível permanecer conectado!\n")
                 client_socket.close()
+
+            print(retorno)
             if retorno == '1':
-                QtWidgets.QMessageBox.information(self, 'login', 'login cliente realizado com sucesso.')
-                #self.QtStack.setCurrentIndex(2)##Aqui vai mudar só para poder entre cliente e funcionario
+                QtWidgets.QMessageBox.information(self, 'login', 'Login cliente realizado com sucesso.')
+                self.QtStack.setCurrentIndex(2)
+            elif retorno == '3':
+                QtWidgets.QMessageBox.information(self, 'login', 'Login gerente realizado com sucesso.')
+                self.QtStack.setCurrentIndex(3)
             else:
                 QMessageBox.information(self, 'erro', 'Preencha os dados corretamente.!')
-                
+            
         self.tela_main_ui.lineEdit_2.setText('')
-        self.tela_main_ui.lineEdit.setText('')        
+        self.tela_main_ui.lineEdit.setText('')
+     
         
     
     def botao_Cadastra(self):

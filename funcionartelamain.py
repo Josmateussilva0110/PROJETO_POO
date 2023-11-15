@@ -53,7 +53,7 @@ class Main(QtWidgets.QWidget):
         self.TELA_CADASTRO_ui = Cadastrar()
         self.TELA_CADASTRO_ui.setupUi(self.stack1)
 
-        self.TELA_USUARIO = AposLogin()
+        self.TELA_USUARIO = Tela_usuario()
         self.TELA_USUARIO.setupUi(self.stack2)
         
         #Usa-se só para ajustar essa tela
