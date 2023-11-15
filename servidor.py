@@ -52,25 +52,21 @@ def menu(con, cliente):
 
         elif mensagem == '3':
             data = con.recv(4096).decode()
-            print(f'date: {data}')
-            
-            # Separar os dados
-            partes = data.split(",")  # Dividir a string usando a vírgula como delimitador
-            
-            # Encontrar o índice da palavra 'livre'
+            partes = data.split(",") 
             index_livre = 4
-            print(f'index: {index_livre}')
-            
-            # Juntar os elementos a partir do índice 'livre' usando vírgula como delimitador
             nova_string = ",".join(partes[index_livre:])
-            
-            print(nova_string)
-            
             filme = Filme(partes[0], partes[1], partes[2], partes[3], nova_string)
-            
             aux = dados_filme.armazenar_filmes(filme)
             if aux:
                 con.send('1'.encode())
+            else:
+                con.send('0'.encode())
+        
+        elif mensagem == '4':
+            result = dados_filme.obter_todos_filmes()
+            if result:
+                filmes_str = '\n'.join(result)
+                con.send(filmes_str.encode())
             else:
                 con.send('0'.encode())
 

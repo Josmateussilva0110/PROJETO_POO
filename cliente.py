@@ -12,6 +12,7 @@ from TELA_ESTATISTICA_ui import *#
 from TELA_GERENCIAMENTO import *#
 from TELA_GESTAO_FILMES_ui import *#
 from TELA_CADASTRO_FILMES import *#
+from TELA_LISTA_FILMES_ui import *#
 from classes.funcoes_aux import *
 
 ip = '192.168.1.6'
@@ -40,6 +41,7 @@ class Main(QtWidgets.QWidget):
         self.stack4 = QtWidgets.QMainWindow()
         self.stack5 = QtWidgets.QMainWindow()
         self.stack6 = QtWidgets.QMainWindow()
+        self.stack7 = QtWidgets.QMainWindow()
 
 
         self.tela_main_ui = Ui_Dialog()
@@ -70,6 +72,10 @@ class Main(QtWidgets.QWidget):
         self.TELA_CADASTRO_FILMES.setupUi(self.stack6)
 
 
+        self.TELA_LISTA_FILMES_ui = Tela_Lista_Filmes()
+        self.TELA_LISTA_FILMES_ui.setupUi(self.stack7)
+
+
         self.QtStack.addWidget(self.stack0)
         self.QtStack.addWidget(self.stack1)
         self.QtStack.addWidget(self.stack2)
@@ -77,6 +83,7 @@ class Main(QtWidgets.QWidget):
         self.QtStack.addWidget(self.stack4)
         self.QtStack.addWidget(self.stack5)
         self.QtStack.addWidget(self.stack6)
+        self.QtStack.addWidget(self.stack7)
 
 
 class Ui_Main(QMainWindow, Main):
@@ -99,7 +106,6 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_CADASTRO_ui.pushButton.clicked.connect(self.botao_Cadastra)
 
         ##TELA_CLIENTES
-        #Tela dps de login (TELA CLIENTE)
         self.TELA_USUARIO.pushButton_4.clicked.connect(self.VoltarMain)
         #self.TELA_USUARIO.pushButton.clicked.connect(self.Tela_Cliente_Ver_Filmes)
 
@@ -115,7 +121,7 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_GESTAO_FILMES_ui.pushButton_4.clicked.connect(self.abrirLoginFunc)
         self.TELA_GESTAO_FILMES_ui.pushButton_3.clicked.connect(self.TelaCadastraFilme)
         #self.TELA_GESTAO_FILMES_ui.pushButton_2.clicked.connect(self.TelaExcluiFilme)
-        #self.TELA_GESTAO_FILMES_ui.pushButton.clicked.connect(self.TelaVerTodosFilmes)
+        self.TELA_GESTAO_FILMES_ui.pushButton.clicked.connect(self.TelaVerTodosFilmes)
 
 
         #Tela_Cadastrar_Filmes
@@ -123,6 +129,13 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_CADASTRO_FILMES.pushButton.clicked.connect(self.botao_cadastrar_filme)
         self.TELA_CADASTRO_FILMES.pushButton_2.clicked.connect(self.adicionar_horarios)
         self.TELA_CADASTRO_FILMES.pushButton_4.clicked.connect(self.adicionar_classificacao)
+
+
+        #Tela_Listar_Filmes
+        self.TELA_LISTA_FILMES_ui.pushButton_4.clicked.connect(self.TelaGestao)
+        #self.TELA_LISTA_FILMES_ui.listView.clicked.connect(self.item_selecionado_lista_filmes)
+        #self.TELA_LISTA_FILMES_ui.pushButton_2.clicked.connect(self.botao_buscar)
+        #self.TELA_LISTA_FILMES_ui.pushButton_5.clicked.connect(self.carregar_lista_completa_filmes)
     
     def VoltarMain(self):
         self.QtStack.setCurrentIndex(0)
@@ -330,6 +343,28 @@ class Ui_Main(QMainWindow, Main):
 
             # Armazene a classificação atual para uso posterior
             self.classificacao = classificacao_selecionada[0]
+    
+
+    def TelaVerTodosFilmes(self): 
+        client_socket.send('4'.encode())  
+        try:
+            filmes = client_socket.recv(4096).decode()
+        except:
+            print("\nNão foi possível permanecer conectado!\n")
+            client_socket.close()
+
+        if filmes:
+            lista_filmes = filmes.splitlines()
+
+            model = QStringListModel()
+            model.setStringList(lista_filmes)
+
+            self.TELA_LISTA_FILMES_ui.listView.setModel(model)
+
+            self.QtStack.setCurrentIndex(7)
+        else:
+            QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
+
 
 
 if __name__ == '__main__':
