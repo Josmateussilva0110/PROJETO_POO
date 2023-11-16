@@ -13,6 +13,7 @@ from TELA_GERENCIAMENTO import *#
 from TELA_GESTAO_FILMES_ui import *#
 from TELA_CADASTRO_FILMES import *#
 from TELA_LISTA_FILMES_ui import *#
+from TELA_EXCLUIR_FILME_ui import *
 from classes.funcoes_aux import *
 
 ip = '192.168.1.6'
@@ -42,6 +43,7 @@ class Main(QtWidgets.QWidget):
         self.stack5 = QtWidgets.QMainWindow()
         self.stack6 = QtWidgets.QMainWindow()
         self.stack7 = QtWidgets.QMainWindow()
+        self.stack8 = QtWidgets.QMainWindow()
 
 
         self.tela_main_ui = Ui_Dialog()
@@ -75,6 +77,9 @@ class Main(QtWidgets.QWidget):
         self.TELA_LISTA_FILMES_ui = Tela_Lista_Filmes()
         self.TELA_LISTA_FILMES_ui.setupUi(self.stack7)
 
+        self.TELA_EXCUIR_FILME_ui = Excluir_Filme()
+        self.TELA_EXCUIR_FILME_ui.setupUi(self.stack8)
+
 
         self.QtStack.addWidget(self.stack0)
         self.QtStack.addWidget(self.stack1)
@@ -84,6 +89,7 @@ class Main(QtWidgets.QWidget):
         self.QtStack.addWidget(self.stack5)
         self.QtStack.addWidget(self.stack6)
         self.QtStack.addWidget(self.stack7)
+        self.QtStack.addWidget(self.stack8)
 
 
 class Ui_Main(QMainWindow, Main):
@@ -120,7 +126,7 @@ class Ui_Main(QMainWindow, Main):
         #Tela_Gestao
         self.TELA_GESTAO_FILMES_ui.pushButton_4.clicked.connect(self.abrirLoginFunc)
         self.TELA_GESTAO_FILMES_ui.pushButton_3.clicked.connect(self.TelaCadastraFilme)
-        #self.TELA_GESTAO_FILMES_ui.pushButton_2.clicked.connect(self.TelaExcluiFilme)
+        self.TELA_GESTAO_FILMES_ui.pushButton_2.clicked.connect(self.TelaExcluiFilme)
         self.TELA_GESTAO_FILMES_ui.pushButton.clicked.connect(self.TelaVerTodosFilmes)
 
 
@@ -136,6 +142,12 @@ class Ui_Main(QMainWindow, Main):
         #self.TELA_LISTA_FILMES_ui.listView.clicked.connect(self.item_selecionado_lista_filmes)
         #self.TELA_LISTA_FILMES_ui.pushButton_2.clicked.connect(self.botao_buscar)
         #self.TELA_LISTA_FILMES_ui.pushButton_5.clicked.connect(self.carregar_lista_completa_filmes)
+
+        #Tela_Excluir_Filmes
+        self.TELA_EXCUIR_FILME_ui.pushButton_4.clicked.connect(self.TelaGestao)
+        self.TELA_EXCUIR_FILME_ui.listView.clicked.connect(self.item_selecionado_Excluir_filmes)
+        #self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.botao_buscar_tela_ecluir)
+        #self.TELA_EXCUIR_FILME_ui.pushButton_9.clicked.connect(self.TelaVerTodosFilmes_Tela_excluir)
     
     def VoltarMain(self):
         self.QtStack.setCurrentIndex(0)
@@ -376,6 +388,70 @@ class Ui_Main(QMainWindow, Main):
             self.QtStack.setCurrentIndex(7)
         else:
             QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
+        
+
+    def TelaExcluiFilme(self):
+        client_socket.send('4'.encode())  
+        try:
+            filmes = client_socket.recv(4096).decode()
+        except:
+            print("\nNão foi possível permanecer conectado!\n")
+            client_socket.close()
+        
+        if filmes:
+            # Divida a string em elementos com base em duas quebras de linha
+            lista_filmes_str = filmes.split('\n\n')
+            # Processa cada elemento da lista
+            lista_filmes = [extrair_informacoes_filme(filme_str) for filme_str in lista_filmes_str]
+
+            model = QStringListModel()
+
+            # Converte a lista de dicionários em uma lista de strings formatadas
+            lista_filmes_formatada = [
+                f"ID: {filme['ID']}\nNome: {filme['Nome']}\nAno: {filme['Ano']}\nPreço: {filme['Preço']}\nClassificação: {filme['Classificação']}\nHorário: {filme['Horário']}\nEm Cartaz: {filme['Em Cartaz']}"
+                for filme in lista_filmes
+            ]
+
+            model.setStringList(lista_filmes_formatada)
+
+            self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
+
+            self.QtStack.setCurrentIndex(8)
+        else:
+            QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
+    
+
+    def item_selecionado_Excluir_filmes(self, index):
+        if index.isValid():
+            item_selecionado = index.data()
+
+            # Se o item for válido, você pode acessar o texto (nome do filme, neste caso)
+            if item_selecionado:
+                client_socket.send('5'.encode())
+                # Divida a string do item selecionado para extrair o ID
+                partes = item_selecionado.split()
+                filme_id = partes[1]
+                print(f'id enviado: {filme_id}')
+                client_socket.send(f'{filme_id}'.encode())
+                try:
+                    resposta = client_socket.recv(4096).decode()
+                except:
+                    print("\nNão foi possível permanecer conectado!\n")
+                    client_socket.close()
+                print(f'resposta do servidor: {resposta}')
+                if resposta == 1:
+                    reply = QMessageBox.question(
+                        self,
+                        'Cartaz',
+                        f'Deseja retirar o filme com ID {filme_id} do cartaz?',
+                        QMessageBox.Yes | QMessageBox.No,
+                        QMessageBox.No
+                    )
+
+                else:
+                    QtWidgets.QMessageBox.information(self, 'Filme Fora de Cartaz', 'Este filme não está mais em cartaz.')
+        else:
+            QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')
 
 
 
