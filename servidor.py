@@ -35,9 +35,9 @@ def menu(con, cliente):
             print(f"Mensagem 1 Servidor: {mensagem}")
             dados = con.recv(4096).decode()
             lista = dados.split(',')
-            print(f"lista Servidor: {lista}") 
+            #print(f"lista Servidor: {lista}") 
             pessoa = Pessoa(lista[1], lista[0], lista[2], lista[3])
-            print(f"Pessoa Servidor: {pessoa}") 
+            #print(f"Pessoa Servidor: {pessoa}") 
             if dados_usuarios.armazenar(pessoa):
                 con.send('1'.encode())
             else:
@@ -48,7 +48,7 @@ def menu(con, cliente):
             print(f"Login Gerente") 
             dados = con.recv(4096).decode()
             lista = dados.split(',')
-            print(f"lista Servidor: {lista}") 
+            #print(f"lista Servidor: {lista}") 
             if dados_usuarios.verificar_login_Cliente(lista[0], lista[1]):
                 con.send('1'.encode())
             elif dados_usuarios.verificar_login_Ger(lista[0], lista[1]):
@@ -58,10 +58,10 @@ def menu(con, cliente):
 
 
         elif mensagem == '3':
-            print(f"Mensagem 3 Servidor: {mensagem}") 
+            #print(f"Mensagem 3 Servidor: {mensagem}") 
             data = con.recv(4096).decode()
             partes = data.split(",")
-            print(f"Partes Servidor: {partes}") 
+            #print(f"Partes Servidor: {partes}") 
             index_livre = 4
             nova_string = ",".join(partes[index_livre:])
             filme = Filme(partes[0], partes[1], partes[2], partes[3], nova_string)
@@ -74,7 +74,7 @@ def menu(con, cliente):
         elif mensagem == '4':
             print("EXIBIR TODOS OS FILMES EM CARTAZ OU NÃO")
             result = dados_filme.obter_todos_filmes()
-            print(f"Result Servidor: {result}") 
+            #print(f"Result Servidor: {result}") 
             if result:
                 elementos = [filme for filme in result]
                 print(f"Elementos Servidor: {elementos}") 
@@ -134,7 +134,27 @@ def menu(con, cliente):
             else:
                 print("entrou aqui Erro")
                 con.send('0'.encode())
-
+        
+        elif mensagem == '9': #EXIBIR TODOS OS FILMES EM CARTAZ
+            result = dados_filme.obter_todos_filmes_em_cartaz()
+            if result:
+                elementos = [filme for filme in result]
+                filmes_str = '\n\n'.join(elementos)
+                con.send(filmes_str.encode())
+            else:
+                con.send('0'.encode())
+    
+        # buscar horarios do filme
+        elif mensagem == '10':
+            dados_filme_id = con.recv(4096).decode()
+            result = dados_filme.buscar_horarios_id(dados_filme_id)
+            if result:
+                horarios = [horario for horario in result]
+                horarios_str = ','.join(horarios)
+                print(f'retorno servidor: {horarios_str}')
+                con.send(horarios_str.encode())
+            else:
+                con.send('0'.encode())
 
     print(f"[DESCONECTADO] Cliente: {nome_cliente}")
     con.close()

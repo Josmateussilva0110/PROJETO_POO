@@ -77,5 +77,5 @@ def tratar_retorno_filmes(filmes):
         f"ID: {filme['ID']}\nNome: {filme['Nome']}\nAno: {filme['Ano']}\nPreço: {filme['Preço']}\nClassificação: {filme['Classificação']}\nHorário: {filme['Horário']}\nEm Cartaz: {filme['Em Cartaz']}"
         for filme in lista_filmes
     ]
-    print(f"Tratar retorno: {lista_filmes_formatada}")
+    #print(f"Tratar retorno: {lista_filmes_formatada}")
     return lista_filmes_formatada
