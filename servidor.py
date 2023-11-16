@@ -134,9 +134,6 @@ def menu(con, cliente):
             else:
                 print("entrou aqui Erro")
                 con.send('0'.encode())
-                
-        elif mensagem == '9':
-            print("Função que Busca um filme")
 
 
     print(f"[DESCONECTADO] Cliente: {nome_cliente}")
