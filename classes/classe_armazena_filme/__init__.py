@@ -117,7 +117,10 @@ class Armazenar_filmes:
             cursor = self.db_connection.cursor()
             cursor.execute("SELECT * FROM Filmes")
             filmes = cursor.fetchall()
-            filme_strings = [f"ID: {filme[0]}\nNome: {filme[1]}\nAno: {filme[2]}\nPreço: {filme[3]}\nClassificação: {filme[4]}\nHorário: {filme[5]}\nEm Cartaz: {filme[6]}" for filme in filmes]
+            filme_strings = [
+                f"ID: {filme[0]}\nNome: {filme[1]}\nAno: {filme[2]}\nPreço: {filme[3]}\nClassificação: {filme[4]}\nHorário: {filme[5]}\nEm Cartaz: {filme[6]}"
+                for filme in filmes
+            ]
             return filme_strings
         except mysql.connector.Error as err:
             return []

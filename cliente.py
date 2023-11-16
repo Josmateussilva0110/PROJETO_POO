@@ -345,6 +345,7 @@ class Ui_Main(QMainWindow, Main):
             self.classificacao = classificacao_selecionada[0]
     
 
+        # Cliente
     def TelaVerTodosFilmes(self): 
         client_socket.send('4'.encode())  
         try:
@@ -354,16 +355,28 @@ class Ui_Main(QMainWindow, Main):
             client_socket.close()
 
         if filmes:
-            lista_filmes = filmes.splitlines()
+            # Divida a string em elementos com base em duas quebras de linha
+            lista_filmes_str = filmes.split('\n\n')
+
+            # Processa cada elemento da lista
+            lista_filmes = [extrair_informacoes_filme(filme_str) for filme_str in lista_filmes_str]
 
             model = QStringListModel()
-            model.setStringList(lista_filmes)
+
+            # Converte a lista de dicionários em uma lista de strings formatadas
+            lista_filmes_formatada = [
+                f"ID: {filme['ID']}\nNome: {filme['Nome']}\nAno: {filme['Ano']}\nPreço: {filme['Preço']}\nClassificação: {filme['Classificação']}\nHorário: {filme['Horário']}\nEm Cartaz: {filme['Em Cartaz']}"
+                for filme in lista_filmes
+            ]
+
+            model.setStringList(lista_filmes_formatada)
 
             self.TELA_LISTA_FILMES_ui.listView.setModel(model)
 
             self.QtStack.setCurrentIndex(7)
         else:
             QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
+
 
 
 

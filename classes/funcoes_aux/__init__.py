@@ -55,3 +55,15 @@ def lista_botoes_red(self):
 def lista_de_classificacao_filme():
     lista = ['livre', '10', '12', '14', '16', '18']
     return lista
+
+
+def extrair_informacoes_filme(filme_str):
+    info = {}
+    # Divide a string em linhas
+    linhas = filme_str.split('\n')
+    for linha in linhas:
+        # Verifica se a linha contém o separador ':'
+        if ':' in linha:
+            chave, valor = linha.split(': ', 1)
+            info[chave] = valor
+    return info

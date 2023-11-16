@@ -65,10 +65,14 @@ def menu(con, cliente):
         elif mensagem == '4':
             result = dados_filme.obter_todos_filmes()
             if result:
-                filmes_str = '\n'.join(result)
+                elementos = [filme for filme in result]
+                filmes_str = '\n\n'.join(elementos)  # Adiciona duas quebras de linha entre cada filme
                 con.send(filmes_str.encode())
             else:
                 con.send('0'.encode())
+
+
+
 
 
     print(f"[DESCONECTADO] Cliente: {nome_cliente}")

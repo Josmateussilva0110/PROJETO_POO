@@ -602,6 +602,7 @@ class Ui_Main(QMainWindow, Main):
         filmes = dados_filme.obter_todos_filmes()
 
         if filmes:
+            print(filmes)
             # Filtra apenas os filmes em cartaz
             filmes_em_cartaz = [filme for filme in filmes if 'Em Cartaz: 1' in filme]
             if not filmes_em_cartaz:
