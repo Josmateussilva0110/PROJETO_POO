@@ -17,7 +17,7 @@ from TELA_EXCLUIR_FILME_ui import *
 from TELA_CLIENTE_VER_FILMES_ui import *
 from classes.funcoes_aux import *
 
-ip = '10.180.42.115'
+ip = '192.168.1.6'
 porta = 8007
 nome ='Mateus'
 addr = ((ip,porta))
