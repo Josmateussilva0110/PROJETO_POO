@@ -73,8 +73,19 @@ def menu(con, cliente):
 
         elif mensagem == '5':
             dados_filme_id = con.recv(4096).decode()
-            print(f"ID do filme recebido: {dados_filme_id}")
             if dados_filme.verificar_filme_em_cartaz(dados_filme_id):
+                con.send('1'.encode())
+            else:
+                con.send('0'.encode())
+        
+        elif mensagem == '6':
+            dados_filme_id = con.recv(4096).decode()
+            print(dados_filme_id)
+            partes = dados_filme_id.split()
+            print(partes[0])
+            print(partes[1])
+            id = int(partes[0])
+            if dados_filme.marcar_filme_em_cartaz(partes[1], id):
                 con.send('1'.encode())
             else:
                 con.send('0'.encode())

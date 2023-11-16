@@ -67,3 +67,15 @@ def extrair_informacoes_filme(filme_str):
             chave, valor = linha.split(': ', 1)
             info[chave] = valor
     return info
+
+
+def tratar_retorno_filmes(filmes):
+    lista_filmes_str = filmes.split('\n\n')
+    lista_filmes = [extrair_informacoes_filme(filme_str) for filme_str in lista_filmes_str]
+
+    lista_filmes_formatada = [
+        f"ID: {filme['ID']}\nNome: {filme['Nome']}\nAno: {filme['Ano']}\nPreço: {filme['Preço']}\nClassificação: {filme['Classificação']}\nHorário: {filme['Horário']}\nEm Cartaz: {filme['Em Cartaz']}"
+        for filme in lista_filmes
+    ]
+
+    return lista_filmes_formatada
