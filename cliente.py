@@ -16,9 +16,9 @@ from TELA_LISTA_FILMES_ui import *#
 from TELA_EXCLUIR_FILME_ui import *
 from classes.funcoes_aux import *
 
-ip = '192.168.1.6'
+ip = '192.168.2.109'
 porta = 8007
-nome ='Mateus'
+nome ='Rai'
 addr = ((ip,porta))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
@@ -146,8 +146,8 @@ class Ui_Main(QMainWindow, Main):
         #Tela_Excluir_Filmes
         self.TELA_EXCUIR_FILME_ui.pushButton_4.clicked.connect(self.TelaGestao)
         self.TELA_EXCUIR_FILME_ui.listView.clicked.connect(self.item_selecionado_Excluir_filmes)
-        #self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.botao_buscar_tela_ecluir)
-        #self.TELA_EXCUIR_FILME_ui.pushButton_9.clicked.connect(self.TelaVerTodosFilmes_Tela_excluir)
+        self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.botao_buscar_tela_ecluir)
+        self.TELA_EXCUIR_FILME_ui.pushButton_9.clicked.connect(self.TelaVerTodosFilmes_Tela_excluir)
     
     def VoltarMain(self):
         self.QtStack.setCurrentIndex(0)
@@ -384,22 +384,25 @@ class Ui_Main(QMainWindow, Main):
         client_socket.send('7'.encode())  
         try:
             filmes = client_socket.recv(4096).decode()
+            print('TELA CLI: ',filmes)
         except:
             print("\nNão foi possível permanecer conectado!\n")
             client_socket.close()
-        
-        if filmes:
-            model = QStringListModel()
-
-            lista_filmes_formatada = tratar_retorno_filmes(filmes)
-
-            model.setStringList(lista_filmes_formatada)
-
-            self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
-
-            self.QtStack.setCurrentIndex(8)
-        else:
+        if filmes == '0':
             QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
+        else:
+            if filmes:
+                model = QStringListModel()
+
+                lista_filmes_formatada = tratar_retorno_filmes(filmes)
+
+                model.setStringList(lista_filmes_formatada)
+
+                self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
+
+                self.QtStack.setCurrentIndex(8)
+            else:
+                QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
     
 
     def item_selecionado_Excluir_filmes(self, index):
@@ -453,11 +456,59 @@ class Ui_Main(QMainWindow, Main):
                             lista_filmes_formatada = tratar_retorno_filmes(filmes)
                             model.setStringList(lista_filmes_formatada)
                             self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
+                            
+                        self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
 
                 else:
                     QtWidgets.QMessageBox.information(self, 'Filme Fora de Cartaz', 'Este filme não está mais em cartaz.')
         else:
             QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')
+            
+    def botao_buscar_tela_ecluir(self):
+        client_socket.send('8'.encode())
+        filme_id = self.TELA_EXCUIR_FILME_ui.lineEdit_4.text()
+        client_socket.send(filme_id.encode())
+
+        try:
+            resposta = client_socket.recv(4096).decode()
+        except:
+            print("\nNão foi possível permanecer conectado!\n")
+            client_socket.close()
+            
+        if resposta == '1':
+            print('Achou algo')
+            filme_achado = client_socket.recv(4096).decode()
+            print(f"Achei esse oh: {filme_achado}")
+            # Verificar se o filme foi encontrado
+            if filme_achado:
+                # Criar um modelo de lista
+                model = QStringListModel()
+
+                # Adicionar o nome do filme ao modelo
+                model.setStringList([filme_achado])
+
+                # Associar o modelo ao QListView
+                self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
+            else:
+                QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
+                
+    def TelaVerTodosFilmes_Tela_excluir(self):
+        client_socket.send('4'.encode())
+        # Obtenha a lista de filmes do banco de dados
+        filmes = client_socket.recv(4096).decode()
+        print('Achei isso',filmes)
+        if filmes:
+            model = QStringListModel()
+
+            lista_filmes_formatada = tratar_retorno_filmes(filmes)
+
+            model.setStringList(lista_filmes_formatada)
+
+            self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
+
+            self.QtStack.setCurrentIndex(8)
+        else:
+            QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
 
 
     def item_selecionado_lista_filmes(self, index):
