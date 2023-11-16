@@ -367,19 +367,9 @@ class Ui_Main(QMainWindow, Main):
             client_socket.close()
 
         if filmes:
-            # Divida a string em elementos com base em duas quebras de linha
-            lista_filmes_str = filmes.split('\n\n')
-
-            # Processa cada elemento da lista
-            lista_filmes = [extrair_informacoes_filme(filme_str) for filme_str in lista_filmes_str]
-
             model = QStringListModel()
 
-            # Converte a lista de dicionários em uma lista de strings formatadas
-            lista_filmes_formatada = [
-                f"ID: {filme['ID']}\nNome: {filme['Nome']}\nAno: {filme['Ano']}\nPreço: {filme['Preço']}\nClassificação: {filme['Classificação']}\nHorário: {filme['Horário']}\nEm Cartaz: {filme['Em Cartaz']}"
-                for filme in lista_filmes
-            ]
+            lista_filmes_formatada = tratar_retorno_filmes(filmes)
 
             model.setStringList(lista_filmes_formatada)
 
@@ -391,7 +381,7 @@ class Ui_Main(QMainWindow, Main):
         
 
     def TelaExcluiFilme(self):
-        client_socket.send('4'.encode())  
+        client_socket.send('7'.encode())  
         try:
             filmes = client_socket.recv(4096).decode()
         except:
@@ -450,7 +440,7 @@ class Ui_Main(QMainWindow, Main):
                         else:
                             QtWidgets.QMessageBox.information(self, 'Filmes', f'Erro ao retirar o filme com ID {filme_id} como em cartaz.')
                         
-                        client_socket.send('4'.encode())
+                        client_socket.send('7'.encode())
                         try:
                             filmes = client_socket.recv(4096).decode()
                         except:

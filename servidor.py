@@ -89,6 +89,15 @@ def menu(con, cliente):
                 con.send('1'.encode())
             else:
                 con.send('0'.encode())
+        
+        elif mensagem == '7':
+            result = dados_filme.obter_todos_filmes_em_cartaz()
+            if result:
+                elementos = [filme for filme in result]
+                filmes_str = '\n\n'.join(elementos)  # Adiciona duas quebras de linha entre cada filme
+                con.send(filmes_str.encode())
+            else:
+                con.send('0'.encode())
 
 
 
