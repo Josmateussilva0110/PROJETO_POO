@@ -15,6 +15,8 @@ from TELA_CADASTRO_FILMES import *#
 from TELA_LISTA_FILMES_ui import *#
 from TELA_EXCLUIR_FILME_ui import *
 from TELA_CLIENTE_VER_FILMES_ui import *
+from TELA_LAYOUT import *
+from TELA_PAGAMENTO import *
 from classes.funcoes_aux import *
 
 ip = '192.168.1.6'
@@ -46,6 +48,8 @@ class Main(QtWidgets.QWidget):
         self.stack7 = QtWidgets.QMainWindow()
         self.stack8 = QtWidgets.QMainWindow()
         self.stack9 = QtWidgets.QMainWindow()
+        self.stack10 = QtWidgets.QMainWindow()
+        self.stack11 = QtWidgets.QMainWindow()
 
 
         self.tela_main_ui = Ui_Dialog()
@@ -86,6 +90,12 @@ class Main(QtWidgets.QWidget):
         self.TELA_CLIENTE_VER_FILMES_ui.setupUi(self.stack9)
 
 
+        self.TELA_LAYOUT = Tela_layout()
+        self.TELA_LAYOUT.setupUi(self.stack10)
+
+        self.TELA_PAGAMENTO = Tela_pagamento()
+        self.TELA_PAGAMENTO.setupUi(self.stack11)
+
         self.QtStack.addWidget(self.stack0)
         self.QtStack.addWidget(self.stack1)
         self.QtStack.addWidget(self.stack2)
@@ -96,6 +106,8 @@ class Main(QtWidgets.QWidget):
         self.QtStack.addWidget(self.stack7)
         self.QtStack.addWidget(self.stack8)
         self.QtStack.addWidget(self.stack9)
+        self.QtStack.addWidget(self.stack10)
+        self.QtStack.addWidget(self.stack11)
 
 
 class Ui_Main(QMainWindow, Main):
@@ -161,6 +173,18 @@ class Ui_Main(QMainWindow, Main):
         #self.TELA_CLIENTE_VER_FILMES_ui.pushButton_2.clicked.connect(self.Tela_Cliente_botao_buscar)
         self.TELA_CLIENTE_VER_FILMES_ui.pushButton_4.clicked.connect(self.Tela_Cliente_Ver_Filmes)
         self.TELA_CLIENTE_VER_FILMES_ui.listView.clicked.connect(self.item_selecionado_lista_filmes_cliente)
+
+
+        #TELA_ESCOLHE_LUGAR
+        buttons_and_functions = lista_botoes_red(self)
+        for button, function in buttons_and_functions:
+            button.clicked.connect(lambda _, btn=button: function(btn))
+
+        #tela layout
+        self.TELA_LAYOUT.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
+
+        #TELA pagamento
+        self.TELA_PAGAMENTO.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
     
     def VoltarMain(self):
         self.QtStack.setCurrentIndex(0)
@@ -504,7 +528,7 @@ class Ui_Main(QMainWindow, Main):
         client_socket.send('7'.encode())  
         try:
             filmes = client_socket.recv(4096).decode()
-            print('TELA CLI: ',filmes)
+           # print('TELA CLI: ',filmes)
         except:
             print("\nNão foi possível permanecer conectado!\n")
             client_socket.close()
@@ -685,6 +709,7 @@ class Ui_Main(QMainWindow, Main):
                     if not ok:
                         QtWidgets.QMessageBox.information(self, 'Seleção', 'Compra cancelada.')
                         return
+                    self.QtStack.setCurrentIndex(10)
 
                     '''self.dados_clienete.append(horario_selecionado)
                     # O usuário selecionou um horário
@@ -704,6 +729,17 @@ class Ui_Main(QMainWindow, Main):
                     QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')'''
             else:
                 QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Nenhum filme selecionado.')
+    
+
+    def mudar_cor_red(self, button):
+        op = QtWidgets.QMessageBox.question(
+            self, 'Seleção', 'Finalizar escolha?',
+            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
+        )
+        if op == QtWidgets.QMessageBox.Yes:
+            button.setStyleSheet("background-color: red;")
+            self.QtStack.setCurrentIndex(11)
+
 
 
 if __name__ == '__main__':
