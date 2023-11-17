@@ -31,6 +31,7 @@ def menu(con, cliente):
             print(f"Mensagem 0 Servidor: {mensagem}") 
             conectado = False
 
+        #sinal para armazenar clientes 
         elif mensagem == '1':
             print(f"Mensagem 1 Servidor: {mensagem}")
             dados = con.recv(4096).decode()
@@ -44,6 +45,7 @@ def menu(con, cliente):
                 con.send('0'.encode())
 
 
+        #sinal para verificar o login
         elif mensagem == '2':
             print(f"Login Gerente") 
             dados = con.recv(4096).decode()
@@ -56,12 +58,10 @@ def menu(con, cliente):
             else:
                 con.send('0'.encode())
 
-
+        #sinal para armazenar filmes 
         elif mensagem == '3':
-            #print(f"Mensagem 3 Servidor: {mensagem}") 
             data = con.recv(4096).decode()
             partes = data.split(",")
-            #print(f"Partes Servidor: {partes}") 
             index_livre = 4
             nova_string = ",".join(partes[index_livre:])
             filme = Filme(partes[0], partes[1], partes[2], partes[3], nova_string)
@@ -71,52 +71,41 @@ def menu(con, cliente):
             else:
                 con.send('0'.encode())
         
+        #exibe todos os filmes 
         elif mensagem == '4':
-            print("EXIBIR TODOS OS FILMES EM CARTAZ OU NÃO")
             result = dados_filme.obter_todos_filmes()
-            #print(f"Result Servidor: {result}") 
             if result:
                 elementos = [filme for filme in result]
-                print(f"Elementos Servidor: {elementos}") 
                 filmes_str = '\n\n'.join(elementos)
-                print(f"filmes_str Servidor: {filmes_str}") 
                 con.send(filmes_str.encode())
             else:
                 con.send('0'.encode())
 
         elif mensagem == '5':
-            print("VERIFICAR FILME EM CARTAZ clique")
             dados_filme_id = con.recv(4096).decode()
             if dados_filme.verificar_filme_em_cartaz(dados_filme_id):
                 con.send('1'.encode())
             else:
                 con.send('0'.encode())
         
+        #marca o filme como em cartaz
         elif mensagem == '6':
-            print('Função que marca em Cartaz')
             dados_filme_id = con.recv(4096).decode()
-            print(f"Dados_filme_id: {dados_filme_id}")
             partes = dados_filme_id.split()
-            print(partes[0])
-            print(partes[1])
             id = int(partes[0])
             if dados_filme.marcar_filme_em_cartaz(partes[1], id):
                 con.send('1'.encode())
             else:
                 con.send('0'.encode())
         
+        #exibe todos os filmes em cartaz
         elif mensagem == '7':
-            print("Função que EXCLUI do cartaz")
-            result = dados_filme.obter_todos_filmes()
-            print(f"Result Servidor: {result}")
+            result = dados_filme.obter_todos_filmes_em_cartaz()
             if result:
-                print('Entrou result')
                 elementos = [filme for filme in result]
                 filmes_str = '\n\n'.join(elementos)
-                print(f"Filmess_str Servidor: {filmes_str}") 
                 con.send(filmes_str.encode())
             else:
-                print("Nao entrou no result")
                 con.send('0'.encode())
                 
         elif mensagem == '8':
@@ -135,14 +124,6 @@ def menu(con, cliente):
                 print("entrou aqui Erro")
                 con.send('0'.encode())
         
-        elif mensagem == '9': #EXIBIR TODOS OS FILMES EM CARTAZ
-            result = dados_filme.obter_todos_filmes_em_cartaz()
-            if result:
-                elementos = [filme for filme in result]
-                filmes_str = '\n\n'.join(elementos)
-                con.send(filmes_str.encode())
-            else:
-                con.send('0'.encode())
     
         # buscar horarios do filme
         elif mensagem == '10':

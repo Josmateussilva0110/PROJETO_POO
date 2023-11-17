@@ -58,24 +58,30 @@ def lista_de_classificacao_filme():
 
 
 def extrair_informacoes_filme(filme_str):
-    info = {}
-    # Divide a string em linhas
-    linhas = filme_str.split('\n')
-    for linha in linhas:
-        # Verifica se a linha contém o separador ':'
-        if ':' in linha:
-            chave, valor = linha.split(': ', 1)
-            info[chave] = valor
-    return info
+    if not filme_str:
+        return None
+    else:
+        info = {}
+        # Divide a string em linhas
+        linhas = filme_str.split('\n')
+        for linha in linhas:
+            # Verifica se a linha contém o separador ':'
+            if ':' in linha:
+                chave, valor = linha.split(': ', 1)
+                info[chave] = valor
+        return info
 
 
-def tratar_retorno_filmes(filmes):
+def tratar_retorno_filmes(filmes): 
     lista_filmes_str = filmes.split('\n\n')
     lista_filmes = [extrair_informacoes_filme(filme_str) for filme_str in lista_filmes_str]
+    if lista_filmes:
 
-    lista_filmes_formatada = [
-        f"ID: {filme['ID']}\nNome: {filme['Nome']}\nAno: {filme['Ano']}\nPreço: {filme['Preço']}\nClassificação: {filme['Classificação']}\nHorário: {filme['Horário']}\nEm Cartaz: {filme['Em Cartaz']}"
-        for filme in lista_filmes
-    ]
-    #print(f"Tratar retorno: {lista_filmes_formatada}")
-    return lista_filmes_formatada
+        lista_filmes_formatada = [
+            f"ID: {filme['ID']}\nNome: {filme['Nome']}\nAno: {filme['Ano']}\nPreço: {filme['Preço']}\nClassificação: {filme['Classificação']}\nHorário: {filme['Horário']}\nEm Cartaz: {filme['Em Cartaz']}"
+            for filme in lista_filmes
+        ]
+        #print(f"Tratar retorno: {lista_filmes_formatada}")
+        return lista_filmes_formatada
+    else:
+        return None
