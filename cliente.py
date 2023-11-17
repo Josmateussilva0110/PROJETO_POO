@@ -709,7 +709,7 @@ class Ui_Main(QMainWindow, Main):
                     if not ok:
                         QtWidgets.QMessageBox.information(self, 'Seleção', 'Compra cancelada.')
                         return
-                    self.QtStack.setCurrentIndex(10)
+                    #self.QtStack.setCurrentIndex(10)
 
                     '''self.dados_clienete.append(horario_selecionado)
                     # O usuário selecionou um horário
