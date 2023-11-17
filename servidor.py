@@ -80,7 +80,8 @@ def menu(con, cliente):
                 con.send(filmes_str.encode())
             else:
                 con.send('0'.encode())
-
+        
+        #verifica se o filme esta em cartaz
         elif mensagem == '5':
             dados_filme_id = con.recv(4096).decode()
             if dados_filme.verificar_filme_em_cartaz(dados_filme_id):
@@ -141,7 +142,6 @@ def menu(con, cliente):
             if result:
                 horarios = [horario for horario in result]
                 horarios_str = ','.join(horarios)
-                print(f'retorno servidor: {horarios_str}')
                 con.send(horarios_str.encode())
             else:
                 con.send('0'.encode())

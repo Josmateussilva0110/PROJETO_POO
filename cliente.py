@@ -164,7 +164,7 @@ class Ui_Main(QMainWindow, Main):
         #Tela_Excluir_Filmes
         self.TELA_EXCUIR_FILME_ui.pushButton_4.clicked.connect(self.TelaGestao)
         self.TELA_EXCUIR_FILME_ui.listView.clicked.connect(self.item_selecionado_Excluir_filmes)
-        self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.botao_buscar_tela_ecluir)
+        self.TELA_EXCUIR_FILME_ui.pushButton_3.clicked.connect(self.botao_buscar_tela_excluir)
         self.TELA_EXCUIR_FILME_ui.pushButton_9.clicked.connect(self.carregar_filmes_em_cartaz)
 
 
@@ -605,7 +605,7 @@ class Ui_Main(QMainWindow, Main):
         else:
             QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')
             
-    def botao_buscar_tela_ecluir(self):
+    def botao_buscar_tela_excluir(self):
         client_socket.send('9'.encode())
         filme_id = self.TELA_EXCUIR_FILME_ui.lineEdit_4.text()
         client_socket.send(filme_id.encode())
@@ -633,7 +633,7 @@ class Ui_Main(QMainWindow, Main):
         except:
             print("\nNão foi possível permanecer conectado!\n")
             client_socket.close()
-        if filmes:
+        if filmes != '0':
             model = QStringListModel()
             lista_filmes_formatada = tratar_retorno_filmes(filmes)
             model.setStringList(lista_filmes_formatada)
@@ -701,10 +701,10 @@ class Ui_Main(QMainWindow, Main):
                 QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Nenhum filme selecionado.')
     
     def Tela_Cliente_botao_buscar(self):
-        client_socket.send('8'.encode())
+        client_socket.send('9'.encode())
         filme_id = self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.text()
-
         client_socket.send(filme_id.encode())
+
         try:
             resposta = client_socket.recv(4096).decode()
         except:
@@ -712,21 +712,12 @@ class Ui_Main(QMainWindow, Main):
             client_socket.close()
             
         if resposta == '1':
-            print('Achou algo')
             filme_achado = client_socket.recv(4096).decode()
-            #print(f"Achei esse oh: {filme_achado}")
-            # Verificar se o filme foi encontrado
-            if filme_achado:
-                # Criar um modelo de lista
-                model = QStringListModel()
-
-                # Adicionar o nome do filme ao modelo
-                model.setStringList([filme_achado])
-
-                # Associar o modelo ao QListView
-                self.TELA_CLIENTE_VER_FILMES_ui.listView.setModel(model)
-            else:
-                QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
+            model = QStringListModel()
+            model.setStringList([filme_achado])
+            self.TELA_CLIENTE_VER_FILMES_ui.listView.setModel(model)
+        else:
+            QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
     
 
     def mudar_cor_red(self, button):
