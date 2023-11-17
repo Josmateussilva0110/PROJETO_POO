@@ -406,7 +406,7 @@ class Ui_Main(QMainWindow, Main):
             print("\nNão foi possível permanecer conectado!\n")
             client_socket.close()
 
-        if filmes:
+        if filmes != '0':
             model = QStringListModel()
 
             lista_filmes_formatada = tratar_retorno_filmes(filmes)
