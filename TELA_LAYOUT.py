@@ -215,5 +215,5 @@ class Tela_layout(object):
         self.pushButton_41.setText(_translate("MainWindow", "13"))
         self.pushButton_42.setText(_translate("MainWindow", "11"))
         self.pushButton_2.setText(_translate("MainWindow", "Voltar"))
-        self.label_2.setText(_translate("MainWindow", "Selecione o lugar que deseja"))
+        self.label_2.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\">Selecione o lugar que deseja</p></body></html>"))
 import imagens_rc
