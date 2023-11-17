@@ -170,7 +170,7 @@ class Ui_Main(QMainWindow, Main):
 
         ##TELA_USER_VER_FILMES
         self.TELA_CLIENTE_VER_FILMES_ui.pushButton.clicked.connect(self.abrirTelaDPSLoginCli)
-        #self.TELA_CLIENTE_VER_FILMES_ui.pushButton_2.clicked.connect(self.Tela_Cliente_botao_buscar)
+        self.TELA_CLIENTE_VER_FILMES_ui.pushButton_2.clicked.connect(self.Tela_Cliente_botao_buscar)
         self.TELA_CLIENTE_VER_FILMES_ui.pushButton_4.clicked.connect(self.Tela_Cliente_Ver_Filmes)
         self.TELA_CLIENTE_VER_FILMES_ui.listView.clicked.connect(self.item_selecionado_lista_filmes_cliente)
 
@@ -709,9 +709,8 @@ class Ui_Main(QMainWindow, Main):
                     if not ok:
                         QtWidgets.QMessageBox.information(self, 'Seleção', 'Compra cancelada.')
                         return
-                    #self.QtStack.setCurrentIndex(10)
 
-                    '''self.dados_clienete.append(horario_selecionado)
+                    self.dados_clienete.append(horario_selecionado)
                     # O usuário selecionou um horário
                     reply = QtWidgets.QMessageBox.question(
                         self, 'Seleção', 'Deseja comprar o ingresso para esse filme?',
@@ -720,15 +719,44 @@ class Ui_Main(QMainWindow, Main):
                     )
                     # Verifique a resposta do usuário
                     if reply == QtWidgets.QMessageBox.Yes:
+                        print("Entrou aqui User")
                         self.dados_clienete.append(self.saida)
                         self.dados_cliente_final.append(self.dados_clienete)
                         self.QtStack.setCurrentIndex(10)
                     else:
                         self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
                 else:
-                    QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')'''
+                    QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')
             else:
                 QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Nenhum filme selecionado.')
+    
+    def Tela_Cliente_botao_buscar(self):
+        client_socket.send('8'.encode())
+        filme_id = self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.text()
+
+        client_socket.send(filme_id.encode())
+        try:
+            resposta = client_socket.recv(4096).decode()
+        except:
+            print("\nNão foi possível permanecer conectado!\n")
+            client_socket.close()
+            
+        if resposta == '1':
+            print('Achou algo')
+            filme_achado = client_socket.recv(4096).decode()
+            #print(f"Achei esse oh: {filme_achado}")
+            # Verificar se o filme foi encontrado
+            if filme_achado:
+                # Criar um modelo de lista
+                model = QStringListModel()
+
+                # Adicionar o nome do filme ao modelo
+                model.setStringList([filme_achado])
+
+                # Associar o modelo ao QListView
+                self.TELA_CLIENTE_VER_FILMES_ui.listView.setModel(model)
+            else:
+                QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
     
 
     def mudar_cor_red(self, button):
