@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Tela_pagamento(object):
+class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(800, 600)
@@ -21,7 +21,7 @@ class Tela_pagamento(object):
         self.label.setGeometry(QtCore.QRect(210, 130, 408, 28))
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(Dialog)
-        self.label_2.setGeometry(QtCore.QRect(350, 40, 147, 40))
+        self.label_2.setGeometry(QtCore.QRect(330, 40, 147, 40))
         self.label_2.setObjectName("label_2")
         self.frame = QtWidgets.QFrame(Dialog)
         self.frame.setGeometry(QtCore.QRect(240, 200, 341, 221))

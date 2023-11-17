@@ -1,5 +1,6 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox, QInputDialog
+import random
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QInputDialog
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QStringListModel
 from tela_main_ui import *#
@@ -14,6 +15,7 @@ from TELA_LISTA_FILMES_ui import *#
 from TELA_CLIENTE_VER_FILMES_ui import *
 from TELA_LAYOUT import *
 from TELA_PAGAMENTO import *
+from Cartao_ui import *
 from classes.class_armazenar import *
 from classes.class_pessoa import *
 from classes.funcoes_aux import *
@@ -46,6 +48,7 @@ class Main(QtWidgets.QWidget):
         self.stack9 = QtWidgets.QMainWindow()
         self.stack10 = QtWidgets.QMainWindow()
         self.stack11 = QtWidgets.QMainWindow()
+        self.stack12 = QtWidgets.QMainWindow()
 
         self.tela_main_ui = Ui_Dialog()
         self.tela_main_ui.setupUi(self.stack0)
@@ -83,6 +86,9 @@ class Main(QtWidgets.QWidget):
 
         self.TELA_PAGAMENTO = Tela_pagamento()
         self.TELA_PAGAMENTO.setupUi(self.stack11)
+        
+        self.Cartao_ui = EscolheuCartao()
+        self.Cartao_ui.setupUi(self.stack12)
 
 
         self.QtStack.addWidget(self.stack0)
@@ -97,6 +103,7 @@ class Main(QtWidgets.QWidget):
         self.QtStack.addWidget(self.stack9)
         self.QtStack.addWidget(self.stack10)
         self.QtStack.addWidget(self.stack11)
+        self.QtStack.addWidget(self.stack12)
 
 class Ui_Main(QMainWindow, Main):
     def __init__(self):
@@ -170,8 +177,16 @@ class Ui_Main(QMainWindow, Main):
         
         self.TELA_LAYOUT.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
 
-        #TELA HORARIO
-        self.TELA_PAGAMENTO.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
+        #TELA PAGAMENTO
+        self.TELA_PAGAMENTO.pushButton_4.clicked.connect(self.Tela_Cliente_Ver_Filmes)
+        self.TELA_PAGAMENTO.pushButton.clicked.connect(self.escolheuCartao)
+        self.TELA_PAGAMENTO.pushButton_3.clicked.connect(self.escolheuPix)
+        
+        #TELA_CARTAO
+        self.Cartao_ui.pushButton_2.clicked.connect(self.escolher_horarios)
+        self.Cartao_ui.comboBox.currentIndexChanged.connect(self.EscolherCouD)
+
+        
 
 
     def botao_Cadastra(self):
@@ -255,6 +270,9 @@ class Ui_Main(QMainWindow, Main):
     
     def escolher_horarios(self):
         self.QtStack.setCurrentIndex(11)
+    
+    def escolheuCartao(self):
+        self.QtStack.setCurrentIndex(12)
         
     def TelaExcluiFilme(self):
         # Obtenha a lista de filmes do banco de dados
@@ -660,5 +678,32 @@ class Ui_Main(QMainWindow, Main):
         )
         if op == QtWidgets.QMessageBox.Yes:
             button.setStyleSheet("background-color: red;")
-            self.QtStack.setCurrentIndex(11)
+            self.QtStack.setCurrentIndex(11)  
+        
+                  
+    def escolheuPix(self):
+        # Gerar um número aleatório de 10 dígitos para simular um número de Pix
+        numero_pix = str(random.randint(10**9, 10**10 - 1))
 
+        info_dialog = QMessageBox()
+        info_dialog.setIcon(QMessageBox.Information)
+        info_dialog.setText("Escolheu Pix!")
+        info_dialog.setInformativeText(f"Você escolheu a opção de pagamento Pix.\nNúmero Pix: {numero_pix}")
+        info_dialog.setWindowTitle("Pagamento Pix")
+        info_dialog.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+
+
+        # Exiba o QMessageBox
+        result = info_dialog.exec_()
+
+        # Após a confirmação, vá para a próxima tela
+        if result == QMessageBox.Ok:
+            pass
+        
+    def EscolherCouD(self):
+        opcao_selecionada = self.Cartao_ui.comboBox.currentText()
+        if opcao_selecionada == 'CREDITO':
+            QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Você escolheu ser Pobre')
+        # print(f"Você escolheu: {opcao_selecionada}")
+        
+        

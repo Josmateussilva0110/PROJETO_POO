@@ -19,9 +19,11 @@ from TELA_LAYOUT import *
 from TELA_PAGAMENTO import *
 from classes.funcoes_aux import *
 
-ip = '192.168.1.6'
+# ip = '192.168.1.6'
+ip = '192.168.2.109'
 porta = 8007
-nome ='Mateus'
+# nome ='Mateus'
+nome = 'RAI'
 addr = ((ip,porta))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
@@ -184,7 +186,7 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_LAYOUT.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
 
         #TELA pagamento
-        self.TELA_PAGAMENTO.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
+        self.TELA_PAGAMENTO.pushButton_4.clicked.connect(self.Tela_Cliente_Ver_Filmes)
     
     def VoltarMain(self):
         self.QtStack.setCurrentIndex(0)

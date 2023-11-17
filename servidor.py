@@ -47,7 +47,7 @@ def menu(con, cliente):
 
         #sinal para verificar o login
         elif mensagem == '2':
-            print(f"Login Gerente") 
+            print(f"Login") 
             dados = con.recv(4096).decode()
             lista = dados.split(',')
             #print(f"lista Servidor: {lista}") 
