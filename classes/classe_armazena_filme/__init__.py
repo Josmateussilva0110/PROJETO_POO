@@ -69,6 +69,29 @@ class Armazenar_filmes:
             return None
     
 
+    def buscar_filme_em_cartaz_por_id(self, filme_id):
+        cursor = self.db_connection.cursor()
+
+        # Query to fetch the film with the given ID
+        select_query = "SELECT * FROM Filmes WHERE id = %s AND em_cartaz = 1"
+
+        try:
+            cursor.execute(select_query, (filme_id,))
+            result = cursor.fetchone()
+            if result:
+                # Film with the provided ID found, format its information as a string
+                filme_info = f"ID: {result[0]}\nNome: {result[1]}\nAno: {result[2]}\nPreço: {result[3]}\nClassificação: {result[4]}\nHorário: {result[5]}\nEm Cartaz: {result[6]}"
+                cursor.close()
+                return filme_info
+            else:
+                # No film with the provided ID was found
+                cursor.close()
+                return None
+        except mysql.connector.Error as err:
+            cursor.close()
+            return None
+    
+
     def buscar_dados_filmes(self, filme_id):
         cursor = self.db_connection.cursor()
 

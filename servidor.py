@@ -107,21 +107,30 @@ def menu(con, cliente):
                 con.send(filmes_str.encode())
             else:
                 con.send('0'.encode())
-                
+
+        #busca todos os filmes por id     
         elif mensagem == '8':
-            print("Função que Busca um filme")
             dados_filme_id = con.recv(1024).decode()
-            print(f"Dados_filme_id: {dados_filme_id}")
             partes = int(dados_filme_id)
-            print(f"Partes: {type(partes)}")
             if dados_filme.buscar_filme_por_id(partes):
                 filme = dados_filme.buscar_filme_por_id(partes)
-                print("entrou aqui Correto")
-                print(f"achei o filme em: {filme}")
                 con.send('1'.encode())
                 con.send(filme.encode())
             else:
                 print("entrou aqui Erro")
+                con.send('0'.encode())
+        
+        #busca filmes em cartaz por id
+        elif mensagem == '9':
+            dados_filme_id = con.recv(1024).decode()
+            print(f"Dados_filme_id: {dados_filme_id}")
+            partes = int(dados_filme_id)
+            print(f"Partes: {type(partes)}")
+            if dados_filme.buscar_filme_em_cartaz_por_id(partes):
+                filme = dados_filme.buscar_filme_em_cartaz_por_id(partes)
+                con.send('1'.encode())
+                con.send(filme.encode())
+            else:
                 con.send('0'.encode())
         
     

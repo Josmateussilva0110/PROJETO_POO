@@ -606,7 +606,7 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')
             
     def botao_buscar_tela_ecluir(self):
-        client_socket.send('8'.encode())
+        client_socket.send('9'.encode())
         filme_id = self.TELA_EXCUIR_FILME_ui.lineEdit_4.text()
         client_socket.send(filme_id.encode())
 
@@ -617,21 +617,13 @@ class Ui_Main(QMainWindow, Main):
             client_socket.close()
             
         if resposta == '1':
-            print('Achou algo')
             filme_achado = client_socket.recv(4096).decode()
             #print(f"Achei esse oh: {filme_achado}")
-            # Verificar se o filme foi encontrado
-            if filme_achado:
-                # Criar um modelo de lista
-                model = QStringListModel()
-
-                # Adicionar o nome do filme ao modelo
-                model.setStringList([filme_achado])
-
-                # Associar o modelo ao QListView
-                self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
-            else:
-                QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
+            model = QStringListModel()
+            model.setStringList([filme_achado])
+            self.TELA_EXCUIR_FILME_ui.listView.setModel(model)
+        else:
+            QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
                 
     def Tela_Cliente_Ver_Filmes(self):
     # Obtenha a lista de filmes do banco de dados
