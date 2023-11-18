@@ -116,7 +116,8 @@ class Ui_Main(QMainWindow, Main):
         self.dados_clienete = list()
         self.dados_cliente_final = list()
         self.saida = None
-        self.cpf_do_usuario = None  # Variável para armazenar o cpf do usuário
+        self.cpf_do_usuario = None
+        self.opcao_selecionada = None
         
 
         #Tela_Main(Inicio)
@@ -711,15 +712,16 @@ class Ui_Main(QMainWindow, Main):
         
         
     def EscolherCouD(self):
-        opcao_selecionada = self.Cartao_ui.comboBox.currentText()
-        if opcao_selecionada == 'CREDITO':
+        self.opcao_selecionada = self.Cartao_ui.comboBox.currentText()
+        if self.opcao_selecionada == 'CREDITO':
             QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Você escolheu ser Pobre')
-            
-        return opcao_selecionada
+        elif self.opcao_selecionada == 'DEBITO':
+            QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Você escolheu Debito')
+
             
             
     def botaoconfirmartelacartao(self):
-        op = EscolheuCartao()
+        print(self.opcao_selecionada)
         print(self.cpf_do_usuario)
         if dados.buscar_email_cpf(self.cpf_do_usuario):
             retorno = dados.buscar_email_cpf(self.cpf_do_usuario)
@@ -729,7 +731,7 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
         )
         if op == QtWidgets.QMessageBox.Yes:
-            if op == 'DEBITO':
+            if self.opcao_selecionada == 'DEBITO':
                 mensagem = 'Compra no valor de um bocado feita no cartao por debito!'
             else:
                 mensagem = 'Compra no valor de um bocado feita no cartao por credito!'
