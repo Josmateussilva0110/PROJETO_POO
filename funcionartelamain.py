@@ -1,5 +1,7 @@
 import sys
 import random
+import smtplib
+from email.message import EmailMessage
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QInputDialog
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QStringListModel
@@ -114,6 +116,7 @@ class Ui_Main(QMainWindow, Main):
         self.dados_clienete = list()
         self.dados_cliente_final = list()
         self.saida = None
+        self.cpf_do_usuario = None  # Variável para armazenar o cpf do usuário
         
 
         #Tela_Main(Inicio)
@@ -185,10 +188,9 @@ class Ui_Main(QMainWindow, Main):
         #TELA_CARTAO
         self.Cartao_ui.pushButton_2.clicked.connect(self.escolher_horarios)
         self.Cartao_ui.comboBox.currentIndexChanged.connect(self.EscolherCouD)
+        self.Cartao_ui.pushButton.clicked.connect(self.botaoconfirmartelacartao)
 
         
-
-
     def botao_Cadastra(self):
         self.dados_clienete = list()
         valid = False
@@ -223,6 +225,7 @@ class Ui_Main(QMainWindow, Main):
 
     def botao_ok(self):
         cpf = self.tela_main_ui.lineEdit_2.text()
+        self.cpf_do_usuario = cpf
         senha = self.tela_main_ui.lineEdit.text()
         if cpf == '' or senha == '':
             QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
@@ -678,10 +681,13 @@ class Ui_Main(QMainWindow, Main):
         )
         if op == QtWidgets.QMessageBox.Yes:
             button.setStyleSheet("background-color: red;")
-            self.QtStack.setCurrentIndex(11)  
-        
+            self.QtStack.setCurrentIndex(11)
                   
     def escolheuPix(self):
+        print(self.cpf_do_usuario)
+        if dados.buscar_email_cpf(self.cpf_do_usuario):
+            retorno = dados.buscar_email_cpf(self.cpf_do_usuario)
+            print(retorno)
         # Gerar um número aleatório de 10 dígitos para simular um número de Pix
         numero_pix = str(random.randint(10**9, 10**10 - 1))
 
@@ -698,12 +704,54 @@ class Ui_Main(QMainWindow, Main):
 
         # Após a confirmação, vá para a próxima tela
         if result == QMessageBox.Ok:
-            pass
+            QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
+            mensagem = 'Compra feita avista no pix'
+            self.EnviaEmail(retorno,mensagem)
+            self.QtStack.setCurrentIndex(9)
+        
         
     def EscolherCouD(self):
         opcao_selecionada = self.Cartao_ui.comboBox.currentText()
         if opcao_selecionada == 'CREDITO':
             QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Você escolheu ser Pobre')
-        # print(f"Você escolheu: {opcao_selecionada}")
+            
+        return opcao_selecionada
+            
+            
+    def botaoconfirmartelacartao(self):
+        op = EscolheuCartao()
+        print(self.cpf_do_usuario)
+        if dados.buscar_email_cpf(self.cpf_do_usuario):
+            retorno = dados.buscar_email_cpf(self.cpf_do_usuario)
+            print(retorno)
+        op = QtWidgets.QMessageBox.question(
+            self, 'Seleção', 'Finalizar escolha?',
+            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
+        )
+        if op == QtWidgets.QMessageBox.Yes:
+            if op == 'DEBITO':
+                mensagem = 'Compra no valor de um bocado feita no cartao por debito!'
+            else:
+                mensagem = 'Compra no valor de um bocado feita no cartao por credito!'
+                
+            QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
+            self.EnviaEmail(retorno,mensagem)
+            self.QtStack.setCurrentIndex(9)
         
-        
+    
+    def EnviaEmail(self, destinatario,mensagem):
+        # Configurar email e senha
+        EMAIL_ADDRESS = 'cineplus.gerencia@gmail.com'
+        EMAIL_PASSWORD = 'qyskmjhoyapdvjay'
+
+        # Criar um email...
+        msg = EmailMessage()
+        msg['Subject'] = 'COMPROVANTE DE COMPRA'
+        msg['From'] = 'cineplus.gerencia@gmail.com'
+        msg['To'] = destinatario
+        msg.set_content(mensagem)
+
+        # Ecnviar email
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+            smtp.send_message(msg)    
