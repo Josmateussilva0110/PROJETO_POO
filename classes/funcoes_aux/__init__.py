@@ -115,20 +115,30 @@ def formatar_mensagem(dados_cliente):
     # Extrair os valores relevantes da lista
     print('dentro da função formatar:')
     print(f'dados cliente: {dados_cliente}')
+
     nome_cliente = dados_cliente[0]
-    print(nome_cliente)
+
+    print(f'nome cliente: {nome_cliente}')
+
     info_filme = dados_cliente[1].split()
+
     print(f'info filme = {info_filme}')
-    nome_filme = info_filme[1]
-    print(nome_filme)
-    ano = info_filme[3]
-    print(ano)
-    preco = info_filme[5]
-    print(preco)
+
+    nome_filme = info_filme[3]
+
+    print(f'nome filme: {nome_filme}')
+
+    ano = info_filme[5]
+    print(f'ano = {ano}')
+    preco = info_filme[9]
+
+    print(f'preco: {preco}')
+
     classificacao = info_filme[7]
-    print(classificacao)
+    print(f'classificacao: {classificacao}')
+
     horario = dados_cliente[2]
-    print(horario)
+    print(f'horario: {horario}')
     pagamento = "pix"
 
     # Criar a mensagem formatada

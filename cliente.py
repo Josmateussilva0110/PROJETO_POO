@@ -254,9 +254,12 @@ class Ui_Main(QMainWindow, Main):
             except:
                 print("\nNão foi possível permanecer conectado!\n")
                 client_socket.close()
-
-            print(retorno)
+            print(f'retorno do servidor: {retorno}')
             if retorno == '1':
+                nome_achado = client_socket.recv(4096).decode()
+                if nome_achado != None:
+                    self.dados_clienete.append(nome_achado)
+                print(f'lista com o nome: {self.dados_clienete}')
                 QtWidgets.QMessageBox.information(self, 'login', 'Login cliente realizado com sucesso.')
                 self.QtStack.setCurrentIndex(2)
             elif retorno == '3':
@@ -271,7 +274,6 @@ class Ui_Main(QMainWindow, Main):
         
     
     def botao_Cadastra(self):
-        self.dados_clienete = list()
         valid = False
         nome = self.TELA_CADASTRO_ui.lineEdit.text()
         cpf = self.TELA_CADASTRO_ui.lineEdit_2.text()
@@ -677,6 +679,8 @@ class Ui_Main(QMainWindow, Main):
 
             # Se o item for válido, você pode acessar o texto (nome do filme, neste caso)
             if item_selecionado:
+                self.dados_clienete.append(item_selecionado)
+                print(f'lista segundo estagiu: {self.dados_clienete}')
                 # Divida a string do item selecionado para extrair o ID
                 partes = item_selecionado.split()
 
@@ -792,7 +796,7 @@ class Ui_Main(QMainWindow, Main):
         # Após a confirmação, vá para a próxima tela
         if result == QMessageBox.Ok:
             QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
-            mensagem = 'Compra feita avista no pix'
+            mensagem = formatar_mensagem(self.dados_clienete)
             EnviaEmail(email,mensagem)
             self.QtStack.setCurrentIndex(9)
         
