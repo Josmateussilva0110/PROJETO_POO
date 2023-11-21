@@ -3,20 +3,29 @@ import mysql.connector
 class Armazenar_botoes():
     def __init__(self, db_connection):
         self.db_connection = db_connection
-        self.criar_tabela_botoes()
-    
-    def __del__(self):
         self.drop_tabela_botoes()
+        self.criar_tabela_botoes()
+        # self.drop_tabela_botoes()
 
     def drop_tabela_botoes(self):
         cursor = self.db_connection.cursor()
 
-        drop_query = "DROP TABLE IF EXISTS Botoes"
-
         try:
-            cursor.execute(drop_query)
-            self.db_connection.commit()
-        except mysql.connector.Error:
+            # Verifica se a tabela Botoes existe antes de tentar excluí-la
+            cursor.execute("SHOW TABLES LIKE 'Botoes'")
+            table_exists = cursor.fetchone()
+
+            if table_exists:
+                # A tabela existe, então podemos tentar excluir
+                drop_query = "DROP TABLE Botoes"
+                cursor.execute(drop_query)
+                self.db_connection.commit()
+                # print("Tabela Botoes excluída com sucesso.")
+            else:
+                print("A tabela Botoes não existe.")
+
+        except mysql.connector.Error as err:
+            print(f"Erro ao tentar excluir a tabela Botoes: {err}")
             self.db_connection.rollback()
         finally:
             cursor.close()

@@ -43,7 +43,6 @@ def verificar_espacos(valor1='', valor2='', valor3='', valor4=''):
 
 def lista_botoes(self):
     list_botoes = [getattr(self, f"pushButton_{i}") for i in range(3, 43)]
-    print('Ou daqui',list_botoes)
     return list_botoes
 
 
@@ -52,7 +51,6 @@ def lista_botoes_red(self):
     botao_and_funcao = [
         (getattr(self.TELA_LAYOUT, f"pushButton_{i}"), self.mudar_cor_red) for i in range(3, 43)
     ]
-    print('Veio daqui',botao_and_funcao)
     return botao_and_funcao
 
 
