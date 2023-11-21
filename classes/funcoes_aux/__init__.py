@@ -108,3 +108,32 @@ def EnviaEmail(destinatario,mensagem):
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
         smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
         smtp.send_message(msg)    
+
+
+def formatar_mensagem(dados_cliente):
+    # Formatar a lista de dados_cliente em uma string organizada
+    formato_mensagem = "Nome cliente: {}\nNome filme: {}\nAno: {}\nPreço: {}\nClassificação: {}\nHorario: {}\nPagamento: {}"
+
+    # Extrair os valores relevantes da lista
+    print('dentro da função formatar:')
+    print(f'dados cliente: {dados_cliente}')
+    nome_cliente = dados_cliente[0]
+    print(nome_cliente)
+    info_filme = dados_cliente[1].split()
+    print(f'info filme = {info_filme}')
+    nome_filme = info_filme[1]
+    print(nome_filme)
+    ano = info_filme[3]
+    print(ano)
+    preco = info_filme[5]
+    print(preco)
+    classificacao = info_filme[7]
+    print(classificacao)
+    horario = dados_cliente[2]
+    print(horario)
+    pagamento = "pix"
+
+    # Criar a mensagem formatada
+    mensagem_formatada = formato_mensagem.format(nome_cliente, nome_filme, ano, preco, classificacao, horario, pagamento)
+
+    return mensagem_formatada

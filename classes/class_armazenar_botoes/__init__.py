@@ -4,6 +4,22 @@ class Armazenar_botoes():
     def __init__(self, db_connection):
         self.db_connection = db_connection
         self.criar_tabela_botoes()
+    
+    def __del__(self):
+        self.drop_tabela_botoes()
+
+    def drop_tabela_botoes(self):
+        cursor = self.db_connection.cursor()
+
+        drop_query = "DROP TABLE IF EXISTS Botoes"
+
+        try:
+            cursor.execute(drop_query)
+            self.db_connection.commit()
+        except mysql.connector.Error:
+            self.db_connection.rollback()
+        finally:
+            cursor.close()
 
     def criar_tabela_botoes(self):
         # Use o banco de dados 'Cineplus'
