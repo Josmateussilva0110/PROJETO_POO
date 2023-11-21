@@ -22,7 +22,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 # ip = '192.168.1.6'
-ip = '192.168.2.101'
+ip = '192.168.1.7'
 porta = 8007
 # nome ='Mateus'
 nome = 'RAI'
@@ -748,16 +748,26 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
             
     def mudar_cor_red(self, button):
-        string_b = str(button)
-        client_socket.send(string_b.encode())
-        print(f'selecionou o botao: {button}')
-        op = QtWidgets.QMessageBox.question(
-            self, 'Seleção', 'Finalizar escolha?',
-            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
-        )
-        if op == QtWidgets.QMessageBox.Yes:
-            button.setStyleSheet("background-color: red;")
-            self.QtStack.setCurrentIndex(11)
+        botao_id = button.objectName() 
+        client_socket.send('12'.encode())
+        client_socket.send(botao_id.encode())
+        print(f'Selecionou o botao: {botao_id}')
+        try:
+            resposta = client_socket.recv(4096).decode()
+        except:
+            print("\nNão foi possível permanecer conectado!\n")
+            client_socket.close()
+        if resposta == '0':
+            QtWidgets.QMessageBox.information(self, 'Compra', 'Acento ja escolhido.')
+        else:
+            op = QtWidgets.QMessageBox.question(
+                self, 'Seleção', 'Finalizar escolha?',
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
+            )
+            if op == QtWidgets.QMessageBox.Yes:
+                button.setStyleSheet("background-color: red;")
+                self.QtStack.setCurrentIndex(11)
+
             
     def escolheuPix(self):
         cpf = self.cpf_do_usuario

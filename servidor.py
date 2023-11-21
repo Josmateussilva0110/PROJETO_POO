@@ -6,6 +6,7 @@ from classes.class_pessoa import *
 from classes.classe_armazena_filme import *
 from classes.class_filme import *
 from classes.funcoes_aux import *
+from classes.class_armazenar_botoes import *
 
 # ip = 192.168.1.6
 
@@ -18,6 +19,7 @@ db = create_database()
 
 dados_usuarios = Armazenar(mydb)
 dados_filme = Armazenar_filmes(mydb)
+dados_botoes = Armazenar_botoes(mydb)
 
 def menu(con, cliente):
     nome_cliente = con.recv(1024).decode()
@@ -156,8 +158,16 @@ def menu(con, cliente):
                 con.send(retorno.encode())
         
         elif mensagem == '12':
-            pass
-            
+            botao = con.recv(4096).decode()
+            print(f'recebido do servidor: {botao}')
+            saida = dados_botoes.buscar_botao(botao)
+            if saida == None:
+                dados_botoes.armazenar_botoes(botao)
+                con.send('1'.encode())
+            else:
+                con.send('0'.encode())
+        
+
 
     print(f"[DESCONECTADO] Cliente: {nome_cliente}")
     con.close()
