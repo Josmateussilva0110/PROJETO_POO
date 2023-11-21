@@ -1,7 +1,5 @@
 import sys
 import random
-import smtplib
-from email.message import EmailMessage
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QInputDialog
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QStringListModel
@@ -707,7 +705,7 @@ class Ui_Main(QMainWindow, Main):
         if result == QMessageBox.Ok:
             QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
             mensagem = 'Compra feita avista no pix'
-            self.EnviaEmail(retorno,mensagem)
+            EnviaEmail(retorno,mensagem)
             self.QtStack.setCurrentIndex(9)
         
         
@@ -737,23 +735,5 @@ class Ui_Main(QMainWindow, Main):
                 mensagem = 'Compra no valor de um bocado feita no cartao por credito!'
                 
             QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
-            self.EnviaEmail(retorno,mensagem)
+            EnviaEmail(retorno,mensagem)
             self.QtStack.setCurrentIndex(9)
-        
-    
-    def EnviaEmail(self, destinatario,mensagem):
-        # Configurar email e senha
-        EMAIL_ADDRESS = 'cineplus.gerencia@gmail.com'
-        EMAIL_PASSWORD = 'qyskmjhoyapdvjay'
-
-        # Criar um email...
-        msg = EmailMessage()
-        msg['Subject'] = 'COMPROVANTE DE COMPRA'
-        msg['From'] = 'cineplus.gerencia@gmail.com'
-        msg['To'] = destinatario
-        msg.set_content(mensagem)
-
-        # Ecnviar email
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-            smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-            smtp.send_message(msg)    

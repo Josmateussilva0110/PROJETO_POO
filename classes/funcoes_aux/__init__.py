@@ -1,4 +1,6 @@
 import re
+import smtplib
+from email.message import EmailMessage
 
 def verificar_valor_inteiro(arg):
     try:
@@ -41,6 +43,7 @@ def verificar_espacos(valor1='', valor2='', valor3='', valor4=''):
 
 def lista_botoes(self):
     list_botoes = [getattr(self, f"pushButton_{i}") for i in range(3, 43)]
+    print('Ou daqui',list_botoes)
     return list_botoes
 
 
@@ -49,6 +52,7 @@ def lista_botoes_red(self):
     botao_and_funcao = [
         (getattr(self.TELA_LAYOUT, f"pushButton_{i}"), self.mudar_cor_red) for i in range(3, 43)
     ]
+    print('Veio daqui',botao_and_funcao)
     return botao_and_funcao
 
 
@@ -85,3 +89,22 @@ def tratar_retorno_filmes(filmes):
         return lista_filmes_formatada
     else:
         return None
+
+        
+    
+def EnviaEmail(destinatario,mensagem):
+    # Configurar email e senha
+    EMAIL_ADDRESS = 'cineplus.gerencia@gmail.com'
+    EMAIL_PASSWORD = 'qyskmjhoyapdvjay'
+
+    # Criar um email...
+    msg = EmailMessage()
+    msg['Subject'] = 'COMPROVANTE DE COMPRA'
+    msg['From'] = 'cineplus.gerencia@gmail.com'
+    msg['To'] = destinatario
+    msg.set_content(mensagem)
+
+    # Ecnviar email
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+        smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+        smtp.send_message(msg)    

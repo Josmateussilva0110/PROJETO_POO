@@ -1,6 +1,7 @@
 import sys
 import socket
-import threading
+from functools import partial
+import random
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox, QInputDialog
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QStringListModel
@@ -17,10 +18,11 @@ from TELA_EXCLUIR_FILME_ui import *
 from TELA_CLIENTE_VER_FILMES_ui import *
 from TELA_LAYOUT import *
 from TELA_PAGAMENTO import *
+from Cartao_ui import *
 from classes.funcoes_aux import *
 
 # ip = '192.168.1.6'
-ip = '192.168.2.109'
+ip = '192.168.2.101'
 porta = 8007
 # nome ='Mateus'
 nome = 'RAI'
@@ -52,6 +54,7 @@ class Main(QtWidgets.QWidget):
         self.stack9 = QtWidgets.QMainWindow()
         self.stack10 = QtWidgets.QMainWindow()
         self.stack11 = QtWidgets.QMainWindow()
+        self.stack12 = QtWidgets.QMainWindow()
 
 
         self.tela_main_ui = Ui_Dialog()
@@ -97,6 +100,9 @@ class Main(QtWidgets.QWidget):
 
         self.TELA_PAGAMENTO = Tela_pagamento()
         self.TELA_PAGAMENTO.setupUi(self.stack11)
+        
+        self.Cartao_ui = EscolheuCartao()
+        self.Cartao_ui.setupUi(self.stack12)
 
         self.QtStack.addWidget(self.stack0)
         self.QtStack.addWidget(self.stack1)
@@ -110,6 +116,7 @@ class Main(QtWidgets.QWidget):
         self.QtStack.addWidget(self.stack9)
         self.QtStack.addWidget(self.stack10)
         self.QtStack.addWidget(self.stack11)
+        self.QtStack.addWidget(self.stack12)
 
 
 class Ui_Main(QMainWindow, Main):
@@ -121,6 +128,8 @@ class Ui_Main(QMainWindow, Main):
         self.dados_clienete = list()
         self.dados_cliente_final = list()
         self.saida = None
+        self.cpf_do_usuario = None
+        self.opcao_selecionada = None
     
         #tela principal
         self.tela_main_ui.pushButton_3.clicked.connect(self.fecharAplicacao)
@@ -177,16 +186,23 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_CLIENTE_VER_FILMES_ui.listView.clicked.connect(self.item_selecionado_lista_filmes_cliente)
 
 
-        #TELA_ESCOLHE_LUGAR
         buttons_and_functions = lista_botoes_red(self)
+
         for button, function in buttons_and_functions:
             button.clicked.connect(lambda _, btn=button: function(btn))
+            
 
         #tela layout
         self.TELA_LAYOUT.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
 
-        #TELA pagamento
+        #TELA PAGAMENTO
         self.TELA_PAGAMENTO.pushButton_4.clicked.connect(self.Tela_Cliente_Ver_Filmes)
+        self.TELA_PAGAMENTO.pushButton.clicked.connect(self.escolheuCartao)
+        self.TELA_PAGAMENTO.pushButton_3.clicked.connect(self.escolheuPix)
+        
+        #TELA_CARTAO
+        self.Cartao_ui.pushButton_2.clicked.connect(self.escolher_horarios)
+        self.Cartao_ui.pushButton.clicked.connect(self.botaoconfirmartelacartao)
     
     def VoltarMain(self):
         self.QtStack.setCurrentIndex(0)
@@ -212,10 +228,20 @@ class Ui_Main(QMainWindow, Main):
     
     def TelaCadastraFilme(self):
         self.QtStack.setCurrentIndex(6)
+        
+    def escolhe_lugar(self):
+        self.QtStack.setCurrentIndex(10)
+        
+    def escolher_horarios(self):
+        self.QtStack.setCurrentIndex(11)
+        
+    def escolheuCartao(self):
+        self.QtStack.setCurrentIndex(12)
     
 
     def botao_ok(self):
         cpf = self.tela_main_ui.lineEdit_2.text()
+        self.cpf_do_usuario = cpf
         senha = self.tela_main_ui.lineEdit.text()
         if cpf == '' or senha == '':
             QtWidgets.QMessageBox.information(self, 'erro', 'Digite valores válidos.')
@@ -720,9 +746,11 @@ class Ui_Main(QMainWindow, Main):
             self.TELA_CLIENTE_VER_FILMES_ui.listView.setModel(model)
         else:
             QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
-    
-
+            
     def mudar_cor_red(self, button):
+        string_b = str(button)
+        client_socket.send(string_b.encode())
+        print(f'selecionou o botao: {button}')
         op = QtWidgets.QMessageBox.question(
             self, 'Seleção', 'Finalizar escolha?',
             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
@@ -730,9 +758,65 @@ class Ui_Main(QMainWindow, Main):
         if op == QtWidgets.QMessageBox.Yes:
             button.setStyleSheet("background-color: red;")
             self.QtStack.setCurrentIndex(11)
+            
+    def escolheuPix(self):
+        cpf = self.cpf_do_usuario
+        print(cpf)
+        client_socket.send('11'.encode())
+        client_socket.send(cpf.encode())
+        email = client_socket.recv(4096).decode()
+        print(email)
+        # Gerar um número aleatório de 10 dígitos para simular um número de Pix
+        numero_pix = str(random.randint(10**9, 10**10 - 1))
+
+        info_dialog = QMessageBox()
+        info_dialog.setIcon(QMessageBox.Information)
+        info_dialog.setText("Escolheu Pix!")
+        info_dialog.setInformativeText(f"Você escolheu a opção de pagamento Pix.\nNúmero Pix: {numero_pix}")
+        info_dialog.setWindowTitle("Pagamento Pix")
+        info_dialog.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
 
 
+        # Exiba o QMessageBox
+        result = info_dialog.exec_()
 
+        # Após a confirmação, vá para a próxima tela
+        if result == QMessageBox.Ok:
+            QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
+            mensagem = 'Compra feita avista no pix'
+            EnviaEmail(email,mensagem)
+            self.QtStack.setCurrentIndex(9)
+        
+        
+    def botaoconfirmartelacartao(self):
+        cpf = self.cpf_do_usuario
+        print(cpf)
+        client_socket.send('11'.encode())
+        client_socket.send(cpf.encode())
+        email = client_socket.recv(4096).decode()
+        print(email)
+        op = QtWidgets.QMessageBox.question(
+            self, 'Seleção', 'Finalizar escolha?',
+            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
+        )
+        if op == QtWidgets.QMessageBox.Yes:
+            self.opcao_selecionada = self.Cartao_ui.comboBox.currentText()
+            op = self.opcao_selecionada
+            print('escolha: ',op)
+            if op == 'DEBITO':
+                mensagem = 'Compra no valor de um bocado feita no cartao por debito!'
+            else:
+                mensagem = 'Compra no valor de um bocado feita no cartao por credito!'
+            op1 = QtWidgets.QMessageBox.question(
+            self, 'Seleção', f'Tem Certeza que deseja fazr a compra no {op}?',
+            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
+            )
+            if op1 == QtWidgets.QMessageBox.Yes:    
+                QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
+                EnviaEmail(email,mensagem)
+                self.QtStack.setCurrentIndex(9)
+            
+            
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     show_main = Ui_Main()

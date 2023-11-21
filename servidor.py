@@ -5,6 +5,7 @@ from classes.class_conexao_bd import *
 from classes.class_pessoa import *
 from classes.classe_armazena_filme import *
 from classes.class_filme import *
+from classes.funcoes_aux import *
 
 # ip = 192.168.1.6
 
@@ -21,6 +22,7 @@ dados_filme = Armazenar_filmes(mydb)
 def menu(con, cliente):
     nome_cliente = con.recv(1024).decode()
     print(f"[CONECTADO] Cliente: {nome_cliente}")
+    
 
     conectado = True
 
@@ -145,6 +147,17 @@ def menu(con, cliente):
                 con.send(horarios_str.encode())
             else:
                 con.send('0'.encode())
+                
+        elif mensagem == '11':
+            cpf = con.recv(4096).decode()
+            if dados_usuarios.buscar_email_cpf(cpf):
+                retorno = dados_usuarios.buscar_email_cpf(cpf)
+                print(retorno)
+                con.send(retorno.encode())
+        
+        elif mensagem == '12':
+            pass
+            
 
     print(f"[DESCONECTADO] Cliente: {nome_cliente}")
     con.close()
