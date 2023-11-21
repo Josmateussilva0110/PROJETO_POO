@@ -22,10 +22,9 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 # ip = '192.168.1.6'
-ip = '10.180.43.248'
+ip = '10.180.45.177'
 porta = 8007
-# nome ='Mateus'
-nome = 'RAI'
+nome = 'mateus'
 addr = ((ip,porta))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:

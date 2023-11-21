@@ -5,7 +5,6 @@ class Armazenar_botoes():
         self.db_connection = db_connection
         self.drop_tabela_botoes()
         self.criar_tabela_botoes()
-        # self.drop_tabela_botoes()
 
     def drop_tabela_botoes(self):
         cursor = self.db_connection.cursor()
