@@ -54,6 +54,13 @@ def lista_botoes_red(self):
     ]
     return botao_and_funcao
 
+def lista_botoes_tela_layout(self):
+    botao_and_funcao = [
+        getattr(self.TELA_LAYOUT, f"pushButton_{i}") for i in range(3, 43)
+    ]
+    return botao_and_funcao
+
+
 
 def lista_de_classificacao_filme():
     lista = ['livre', '10', '12', '14', '16', '18']
@@ -127,3 +134,16 @@ def formatar_mensagem(dados_cliente):
     mensagem_formatada = formato_mensagem.format(nome_cliente, nome_filme, ano, preco, classificacao, horario, pagamento, emissao)
 
     return mensagem_formatada
+
+
+def mudar_cor_botao_vermelho(lista_botoes_achados, botoes_tela_lay):
+    print('entrou em função mudar cor:')
+    print(f'lista de botoes achados: {lista_botoes_achados}')
+    for button in botoes_tela_lay:
+        for bot in lista_botoes_achados:
+            print('entrou no for de comparação ?')
+            botao_id = button.objectName() 
+            if botao_id == bot:
+                print(f'button name: {botao_id} - bot name: {bot}')
+                button.setStyleSheet("background-color: red;")
+                print('pintou')

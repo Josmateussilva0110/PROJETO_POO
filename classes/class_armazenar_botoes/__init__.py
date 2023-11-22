@@ -79,3 +79,22 @@ class Armazenar_botoes():
         except mysql.connector.Error as err:
             cursor.close()
             return None
+
+
+    def obter_todos_botoes(self):
+        cursor = self.db_connection.cursor()
+
+        select_query = "SELECT * FROM Botoes"
+        try:
+            cursor.execute(select_query)
+            result = cursor.fetchall()
+            if result:
+                botoes = [row[0] for row in result]
+                cursor.close()
+                return botoes
+            else:
+                cursor.close()
+                return None
+        except mysql.connector.Error as err:
+            cursor.close()
+            return None

@@ -716,6 +716,18 @@ class Ui_Main(QMainWindow, Main):
                     )
                     # Verifique a resposta do usuário
                     if reply == QtWidgets.QMessageBox.Yes:
+                        print('enviou a mensagem 13')
+                        client_socket.send('13'.encode())
+                        try:
+                            mensagem = client_socket.recv(4096).decode()
+                        except:
+                            print("\nNão foi possível permanecer conectado!\n")
+                            client_socket.close()
+                        if mensagem == '1':
+                            botoa_achado = client_socket.recv(4096).decode()
+                            lista_botoes_achados = botoa_achado.split()
+                            botoes_tela_lay = lista_botoes_tela_layout(self)
+                            mudar_cor_botao_vermelho(lista_botoes_achados, botoes_tela_lay)
                         self.itens_filme = partes
                         self.horarios_cliente = horario_selecionado
                         self.QtStack.setCurrentIndex(10)

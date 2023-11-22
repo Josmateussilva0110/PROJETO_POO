@@ -164,6 +164,15 @@ def menu(con, cliente):
                 con.send('1'.encode())
             else:
                 con.send('0'.encode())
+        
+        elif mensagem == '13':
+            lista_botoes = dados_botoes.obter_todos_botoes()
+            if lista_botoes != None:
+                con.send('1'.encode())
+                lista_botoes_str = ','.join(lista_botoes)
+                con.send(lista_botoes_str.encode())
+            else:
+                con.send('0'.encode())
 
     print(f"[DESCONECTADO] Cliente: {nome_cliente}")
     con.close()
