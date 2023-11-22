@@ -22,9 +22,9 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.1.7'
+ip = '10.180.46.162'
 porta = 8007
-nome = 'mateus'
+nome = 'Rai'
 addr = ((ip,porta))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
@@ -720,16 +720,20 @@ class Ui_Main(QMainWindow, Main):
                         client_socket.send('13'.encode()) #sinal para pegar a lista de botoes que estão no servidor
                         try:
                             mensagem = client_socket.recv(4096).decode()
+                            print('Entrou aqui',mensagem)
                         except:
                             print("\nNão foi possível permanecer conectado!\n")
                             client_socket.close()
                         if mensagem == '1': # encontrei os botoes
+                            print('mensagem encontrada')
                             botoa_achado = client_socket.recv(4096).decode()
-                            lista_botoes_achados = botoa_achado.split()
+                            print('lista com os botoes cliente',botoa_achado)
+                            #lista_botoes_achados = botoa_achado.split(',')
                             botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
-                            mudar_cor_botao_vermelho(lista_botoes_achados, botoes_tela_lay) # esta em funções aux.py
-                        self.itens_filme = partes
-                        self.horarios_cliente = horario_selecionado
+                            print('botoes_tela_lay',botoes_tela_lay)
+                            mudar_cor_botao_vermelho(botoes_tela_lay, botoa_achado) # esta em funções aux.py
+                            self.itens_filme = partes
+                            self.horarios_cliente = horario_selecionado
                         self.QtStack.setCurrentIndex(10)
                     else:
                         self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
@@ -775,7 +779,7 @@ class Ui_Main(QMainWindow, Main):
                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
             )
             if op == QtWidgets.QMessageBox.Yes:
-                button.setStyleSheet("background-color: red;")
+                #button.setStyleSheet("background-color: red;")
                 self.QtStack.setCurrentIndex(11)
 
             

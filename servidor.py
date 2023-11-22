@@ -168,6 +168,7 @@ def menu(con, cliente):
         #sinal para retornar para o cliente a lista de todos os botoes que foram clicados
         elif mensagem == '13':
             lista_botoes = dados_botoes.obter_todos_botoes()
+            print('lista com todos os botões',lista_botoes)
             if lista_botoes != None:
                 con.send('1'.encode())
                 lista_botoes_str = ','.join(lista_botoes)

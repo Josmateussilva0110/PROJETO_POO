@@ -58,6 +58,7 @@ def lista_botoes_tela_layout(self): #retorno todos os botoes que preciso
     botao_and_funcao = [
         getattr(self.TELA_LAYOUT, f"pushButton_{i}") for i in range(3, 43)
     ]
+    print(botao_and_funcao)
     return botao_and_funcao
 
 
@@ -136,16 +137,32 @@ def formatar_mensagem(dados_cliente):
     return mensagem_formatada
 
 
-def mudar_cor_botao_vermelho(lista_botoes_achados, botoes_tela_lay): # função que muda de cor 
+# def mudar_cor_botao_vermelho(lista_botoes_achados, botoes_tela_lay): # função que muda de cor 
+#     print('entrou em função mudar cor:')
+#     print(f'lista de botoes achados: {lista_botoes_achados}')
+#     # vou comparar todos os botoes que estão na tela layout com os do banco de dados
+#     for button in botoes_tela_lay:
+#         for bot in lista_botoes_achados:
+#             print('entrou no for de comparação ?')
+#             botao_id = button.objectName() 
+#             #comparo o nome de cada um ja que no bd esta armazenado apenas os nomes 
+#             if botao_id == bot: # se achei troco a cor 
+#                 print(f'button name: {botao_id} - bot name: {bot}')
+#                 button.setStyleSheet("background-color: red;")
+#                 print('pintou')
+                
+def mudar_cor_botao_vermelho(lista_botoes_todos, lista_botoes_selecionados):
     print('entrou em função mudar cor:')
-    print(f'lista de botoes achados: {lista_botoes_achados}')
-    # vou comparar todos os botoes que estão na tela layout com os do banco de dados
-    for button in botoes_tela_lay:
-        for bot in lista_botoes_achados:
-            print('entrou no for de comparação ?')
-            botao_id = button.objectName() 
-            #comparo o nome de cada um ja que no bd esta armazenado apenas os nomes 
-            if botao_id == bot: # se achei troco a cor 
-                print(f'button name: {botao_id} - bot name: {bot}')
-                button.setStyleSheet("background-color: red;")
-                print('pintou')
+    print(f'lista de todos os botoes: {lista_botoes_todos}')
+    print(f'lista de botoes selecionados: {lista_botoes_selecionados}')
+
+    # Itera sobre todos os botões na lista de todos os botões
+    for button in lista_botoes_todos:
+        botao_id = button.objectName()
+        print('id do botão', botao_id)
+
+        # Verifica se o nome do botão está na lista de botões selecionados
+        if botao_id in lista_botoes_selecionados:
+            print(f'Um elemetno do button name: {botao_id} esta igual a {lista_botoes_selecionados}')
+            button.setStyleSheet("background-color: red;")
+            print('pintou')
