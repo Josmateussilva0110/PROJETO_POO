@@ -717,17 +717,17 @@ class Ui_Main(QMainWindow, Main):
                     # Verifique a resposta do usuário
                     if reply == QtWidgets.QMessageBox.Yes:
                         print('enviou a mensagem 13')
-                        client_socket.send('13'.encode())
+                        client_socket.send('13'.encode()) #sinal para pegar a lista de botoes que estão no servidor
                         try:
                             mensagem = client_socket.recv(4096).decode()
                         except:
                             print("\nNão foi possível permanecer conectado!\n")
                             client_socket.close()
-                        if mensagem == '1':
+                        if mensagem == '1': # encontrei os botoes
                             botoa_achado = client_socket.recv(4096).decode()
                             lista_botoes_achados = botoa_achado.split()
-                            botoes_tela_lay = lista_botoes_tela_layout(self)
-                            mudar_cor_botao_vermelho(lista_botoes_achados, botoes_tela_lay)
+                            botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
+                            mudar_cor_botao_vermelho(lista_botoes_achados, botoes_tela_lay) # esta em funções aux.py
                         self.itens_filme = partes
                         self.horarios_cliente = horario_selecionado
                         self.QtStack.setCurrentIndex(10)

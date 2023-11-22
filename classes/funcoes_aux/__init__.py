@@ -54,7 +54,7 @@ def lista_botoes_red(self):
     ]
     return botao_and_funcao
 
-def lista_botoes_tela_layout(self):
+def lista_botoes_tela_layout(self): #retorno todos os botoes que preciso
     botao_and_funcao = [
         getattr(self.TELA_LAYOUT, f"pushButton_{i}") for i in range(3, 43)
     ]
@@ -136,14 +136,16 @@ def formatar_mensagem(dados_cliente):
     return mensagem_formatada
 
 
-def mudar_cor_botao_vermelho(lista_botoes_achados, botoes_tela_lay):
+def mudar_cor_botao_vermelho(lista_botoes_achados, botoes_tela_lay): # função que muda de cor 
     print('entrou em função mudar cor:')
     print(f'lista de botoes achados: {lista_botoes_achados}')
+    # vou comparar todos os botoes que estão na tela layout com os do banco de dados
     for button in botoes_tela_lay:
         for bot in lista_botoes_achados:
             print('entrou no for de comparação ?')
             botao_id = button.objectName() 
-            if botao_id == bot:
+            #comparo o nome de cada um ja que no bd esta armazenado apenas os nomes 
+            if botao_id == bot: # se achei troco a cor 
                 print(f'button name: {botao_id} - bot name: {bot}')
                 button.setStyleSheet("background-color: red;")
                 print('pintou')
