@@ -22,7 +22,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 # ip = '192.168.1.6'
-ip = '10.180.45.177'
+ip = '10.180.43.248'
 porta = 8007
 nome = 'mateus'
 addr = ((ip,porta))
