@@ -40,9 +40,7 @@ def menu(con, cliente):
             print(f"Mensagem 1 Servidor: {mensagem}")
             dados = con.recv(4096).decode()
             lista = dados.split(',')
-            # print(f"lista Servidor: {lista}")
             pessoa = Pessoa(lista[1], lista[0], lista[2], lista[3])
-            # print(f"Pessoa Servidor: {pessoa}")
             if dados_usuarios.armazenar(pessoa):
                 con.send('1'.encode())
             else:
@@ -53,9 +51,10 @@ def menu(con, cliente):
             print(f"Login")
             dados = con.recv(4096).decode()
             lista = dados.split(',')
-            # print(f"lista Servidor: {lista}")
             if dados_usuarios.verificar_login_Cliente(lista[0], lista[1]):
+                nome = dados_usuarios.buscar_cliente_cpf(lista[0])
                 con.send('1'.encode())
+                con.send(nome.encode())
             elif dados_usuarios.verificar_login_Ger(lista[0], lista[1]):
                 con.send('3'.encode())
             else:

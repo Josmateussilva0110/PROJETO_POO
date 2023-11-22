@@ -22,7 +22,11 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 # ip = '192.168.1.6'
+<<<<<<< HEAD
 ip = '10.180.43.248'
+=======
+ip = '192.168.1.7'
+>>>>>>> main_3.0
 porta = 8007
 nome = 'mateus'
 addr = ((ip,porta))
@@ -125,10 +129,11 @@ class Ui_Main(QMainWindow, Main):
         self.horarios_selecionados = list()
         self.classificacao = ''
         self.dados_clienete = list()
-        self.dados_cliente_final = list()
         self.saida = None
         self.cpf_do_usuario = None
         self.opcao_selecionada = None
+        self.itens_filme = ''
+        self.horarios_cliente = ''
     
         #tela principal
         self.tela_main_ui.pushButton_3.clicked.connect(self.fecharAplicacao)
@@ -254,9 +259,11 @@ class Ui_Main(QMainWindow, Main):
             except:
                 print("\nNão foi possível permanecer conectado!\n")
                 client_socket.close()
-
-            print(retorno)
+            print(f'retorno do servidor: {retorno}')
             if retorno == '1':
+                nome_achado = client_socket.recv(4096).decode()
+                if nome_achado != None:
+                    self.saida = nome_achado
                 QtWidgets.QMessageBox.information(self, 'login', 'Login cliente realizado com sucesso.')
                 self.QtStack.setCurrentIndex(2)
             elif retorno == '3':
@@ -271,7 +278,6 @@ class Ui_Main(QMainWindow, Main):
         
     
     def botao_Cadastra(self):
-        self.dados_clienete = list()
         valid = False
         nome = self.TELA_CADASTRO_ui.lineEdit.text()
         cpf = self.TELA_CADASTRO_ui.lineEdit_2.text()
@@ -679,7 +685,6 @@ class Ui_Main(QMainWindow, Main):
             if item_selecionado:
                 # Divida a string do item selecionado para extrair o ID
                 partes = item_selecionado.split()
-
                 # O ID do filme é a última parte da string
                 filme_id = partes[1]
 
@@ -707,7 +712,6 @@ class Ui_Main(QMainWindow, Main):
                         QtWidgets.QMessageBox.information(self, 'Seleção', 'Compra cancelada.')
                         return
 
-                    self.dados_clienete.append(horario_selecionado)
                     # O usuário selecionou um horário
                     reply = QtWidgets.QMessageBox.question(
                         self, 'Seleção', 'Deseja comprar o ingresso para esse filme?',
@@ -716,9 +720,8 @@ class Ui_Main(QMainWindow, Main):
                     )
                     # Verifique a resposta do usuário
                     if reply == QtWidgets.QMessageBox.Yes:
-                        print("Entrou aqui User")
-                        self.dados_clienete.append(self.saida)
-                        self.dados_cliente_final.append(self.dados_clienete)
+                        self.itens_filme = partes
+                        self.horarios_cliente = horario_selecionado
                         self.QtStack.setCurrentIndex(10)
                     else:
                         self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
@@ -774,7 +777,6 @@ class Ui_Main(QMainWindow, Main):
         client_socket.send('11'.encode())
         client_socket.send(cpf.encode())
         email = client_socket.recv(4096).decode()
-        print(email)
         # Gerar um número aleatório de 10 dígitos para simular um número de Pix
         numero_pix = str(random.randint(10**9, 10**10 - 1))
 
@@ -791,9 +793,16 @@ class Ui_Main(QMainWindow, Main):
 
         # Após a confirmação, vá para a próxima tela
         if result == QMessageBox.Ok:
-            QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
-            mensagem = 'Compra feita avista no pix'
+            self.dados_clienete.append(self.saida)
+            self.dados_clienete.append(self.itens_filme[3])
+            self.dados_clienete.append(self.itens_filme[5])
+            self.dados_clienete.append(self.itens_filme[7])
+            self.dados_clienete.append(self.itens_filme[9])
+            self.dados_clienete.append(self.horarios_cliente)
+            mensagem = formatar_mensagem(self.dados_clienete)
             EnviaEmail(email,mensagem)
+            QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
+            self.dados_clienete.clear()
             self.QtStack.setCurrentIndex(9)
         
         

@@ -1,6 +1,7 @@
 import re
 import smtplib
 from email.message import EmailMessage
+from datetime import datetime
 
 def verificar_valor_inteiro(arg):
     try:
@@ -110,28 +111,19 @@ def EnviaEmail(destinatario,mensagem):
 
 def formatar_mensagem(dados_cliente):
     # Formatar a lista de dados_cliente em uma string organizada
-    formato_mensagem = "Nome cliente: {}\nNome filme: {}\nAno: {}\nPreço: {}\nClassificação: {}\nHorario: {}\nPagamento: {}"
-
+    formato_mensagem = "Nome cliente: {}\nNome filme: {}\nAno: {}\nPreço: {}\nClassificação: {}\nHorario: {}\nPagamento: {}\nEmitido: {}"
+    data_e_hora_atuais = datetime.now()
+    data_e_hora_em_texto = data_e_hora_atuais.strftime('%d/%m/%Y %H:%M')
     # Extrair os valores relevantes da lista
-    print('dentro da função formatar:')
-    print(f'dados cliente: {dados_cliente}')
     nome_cliente = dados_cliente[0]
-    print(nome_cliente)
-    info_filme = dados_cliente[1].split()
-    print(f'info filme = {info_filme}')
-    nome_filme = info_filme[1]
-    print(nome_filme)
-    ano = info_filme[3]
-    print(ano)
-    preco = info_filme[5]
-    print(preco)
-    classificacao = info_filme[7]
-    print(classificacao)
-    horario = dados_cliente[2]
-    print(horario)
+    nome_filme = dados_cliente[1]
+    ano = dados_cliente[2]
+    preco = dados_cliente[3]
+    classificacao = dados_cliente[4]
+    horario = dados_cliente[5]
     pagamento = "pix"
-
+    emissao = data_e_hora_em_texto
     # Criar a mensagem formatada
-    mensagem_formatada = formato_mensagem.format(nome_cliente, nome_filme, ano, preco, classificacao, horario, pagamento)
+    mensagem_formatada = formato_mensagem.format(nome_cliente, nome_filme, ano, preco, classificacao, horario, pagamento, emissao)
 
     return mensagem_formatada
