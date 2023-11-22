@@ -21,12 +21,8 @@ from TELA_PAGAMENTO import *
 from Cartao_ui import *
 from classes.funcoes_aux import *
 
-# ip = '192.168.1.6'
-<<<<<<< HEAD
-ip = '10.180.43.248'
-=======
+
 ip = '192.168.1.7'
->>>>>>> main_3.0
 porta = 8007
 nome = 'mateus'
 addr = ((ip,porta))
