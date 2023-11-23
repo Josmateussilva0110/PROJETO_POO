@@ -682,6 +682,7 @@ class Ui_Main(QMainWindow, Main):
             if item_selecionado:
                 # Divida a string do item selecionado para extrair o ID
                 partes = item_selecionado.split()
+                print(f'partes: {partes}')
                 # O ID do filme é a última parte da string
                 filme_id = partes[1]
 
@@ -803,7 +804,6 @@ class Ui_Main(QMainWindow, Main):
 
         # Exiba o QMessageBox
         result = info_dialog.exec_()
-
         # Após a confirmação, vá para a próxima tela
         if result == QMessageBox.Ok:
             self.dados_clienete.append(self.saida)
