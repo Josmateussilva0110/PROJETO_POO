@@ -734,8 +734,8 @@ class Ui_Main(QMainWindow, Main):
                             botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
                             print('botoes_tela_lay',botoes_tela_lay)
                             mudar_cor_botao_vermelho(botoes_tela_lay, botoa_achado) # esta em funções aux.py
-                            self.itens_filme = partes
-                            self.horarios_cliente = horario_selecionado
+                        self.itens_filme = partes
+                        self.horarios_cliente = horario_selecionado
                         self.QtStack.setCurrentIndex(10)
                     else:
                         self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
