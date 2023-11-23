@@ -64,10 +64,13 @@ def menu(con, cliente):
         elif mensagem == '3':
             data = con.recv(4096).decode()
             partes = data.split(",")
+            print(f'partes: {partes}')
             index_livre = 4
             nova_string = ",".join(partes[index_livre:])
+            print(f'nova string: {nova_string}')
+
             filme = Filme(partes[0], partes[1], partes[2],
-                          partes[3], nova_string)
+                          partes[3] ,nova_string)
             aux = dados_filme.armazenar_filmes(filme)
             if aux:
                 con.send('1'.encode())

@@ -1,6 +1,5 @@
 import sys
 import socket
-from functools import partial
 import random
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox, QInputDialog
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
@@ -328,9 +327,10 @@ class Ui_Main(QMainWindow, Main):
         ano_filme = self.TELA_CADASTRO_FILMES.lineEdit_3.text()
         preco_str = self.TELA_CADASTRO_FILMES.lineEdit_4.text()
 
+
         #converter o dicionario de horários em string
         horarios_escolhidos.extend(self.horarios_selecionados)
-        horarios_str = ', '.join([f'{horario} - {tipo}' for horario, tipo in self.horarios_selecionados])
+        horarios_str = ', '.join([f'{horario} - {tipo} - {lingua}' for horario, tipo, lingua in self.horarios_selecionados])
         #limpar a lista de horarios
         self.horarios_selecionados.clear()
         
@@ -378,14 +378,15 @@ class Ui_Main(QMainWindow, Main):
     def adicionar_horarios(self):
         horario = self.TELA_CADASTRO_FILMES.dateTimeEdit.text()
         tipo_filme = self.TELA_CADASTRO_FILMES.comboBox.currentText()
+        lingua = self.TELA_CADASTRO_FILMES.comboBox_2.currentText()
 
         if horario:
             # Adicione o par horário-tipo à lista de tuplas
-            horario_tipo_tuple = (horario, tipo_filme)
+            horario_tipo_tuple = (horario, tipo_filme, lingua)
             self.horarios_selecionados.append(horario_tipo_tuple)
 
             # Crie uma lista de strings para representar os pares horário-tipo
-            horarios_strings = [f'{h} - {t}' for h, t in self.horarios_selecionados]
+            horarios_strings = [f'{h} - {t} - {u}' for h, t, u in self.horarios_selecionados]
 
             # Atualize o QListView com a lista de strings
             horario_usar = self.TELA_CADASTRO_FILMES.listView

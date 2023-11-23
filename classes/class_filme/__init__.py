@@ -4,8 +4,7 @@ class Filme():
         self._ano = ano
         self._preco = preco
         self._classificacao = classificacao
-        self._horarios = str(horarios)  # Agora, horários são uma string
-
+        self._horarios = str(horarios)   # Agora, horários são uma string
     def ver_filme(self):
         pass
     
