@@ -168,10 +168,8 @@ def menu(con, cliente):
 
             if validar is None:
                 con.send('1'.encode())
-<<<<<<< HEAD
                 # Armazenar o botão no banco de dados
-=======
->>>>>>> 27957d94f25d41970cf9da10658ba8980634206b
+
                 if dados_botoes.armazenar_botao(botao):
                     print(f'Botão {botao} armazenado com sucesso no servidor.')
                 else:

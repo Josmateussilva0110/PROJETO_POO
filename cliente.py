@@ -22,7 +22,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.1.7'
+ip = '192.168.2.101'
 porta = 8007
 nome = 'mateus'
 addr = ((ip,porta))
@@ -129,11 +129,10 @@ class Ui_Main(QMainWindow, Main):
         self.cpf_do_usuario = None
         self.itens_filme = ''
         self.horarios_cliente = ''
-<<<<<<< HEAD
-=======
+
         self.resposta = None
         self.total_compra = None
->>>>>>> 27957d94f25d41970cf9da10658ba8980634206b
+
     
         #tela principal
         self.tela_main_ui.pushButton_3.clicked.connect(self.fecharAplicacao)
