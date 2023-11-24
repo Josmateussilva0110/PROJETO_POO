@@ -48,6 +48,6 @@ class Tela_pagamento(object):
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.label.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">ESCOLHA O METODO DE PAGAMENTO: </span></p></body></html>"))
         self.label_2.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-size:20pt;\">CINEPLUS</span></p></body></html>"))
-        self.pushButton.setText(_translate("Dialog", "CARTÃO DE CRÉDITO"))
+        self.pushButton.setText(_translate("Dialog", "CARTÃO"))
         self.pushButton_3.setText(_translate("Dialog", "PIX"))
         self.pushButton_4.setText(_translate("Dialog", "Voltar"))

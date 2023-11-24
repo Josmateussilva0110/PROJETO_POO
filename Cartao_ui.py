@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class EscolheuCartao(object):
+class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(600, 400)
@@ -54,15 +54,6 @@ class EscolheuCartao(object):
         self.dateEdit.setObjectName("dateEdit")
         self.horizontalLayout_5.addWidget(self.dateEdit)
         self.verticalLayout.addLayout(self.horizontalLayout_5)
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.label_2 = QtWidgets.QLabel(self.layoutWidget)
-        self.label_2.setObjectName("label_2")
-        self.horizontalLayout_3.addWidget(self.label_2)
-        self.lineEdit_2 = QtWidgets.QLineEdit(self.layoutWidget)
-        self.lineEdit_2.setObjectName("lineEdit_2")
-        self.horizontalLayout_3.addWidget(self.lineEdit_2)
-        self.verticalLayout.addLayout(self.horizontalLayout_3)
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
         self.label_6 = QtWidgets.QLabel(self.layoutWidget)
@@ -102,7 +93,6 @@ class EscolheuCartao(object):
         self.label.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600;\">Nome</span></p></body></html>"))
         self.label_3.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600;\">Numero do cartão</span></p></body></html>"))
         self.label_4.setText(_translate("Form", "<html><head/><body><p><span style=\" font-size:9pt; font-weight:600;\">Data de vencimento</span></p></body></html>"))
-        self.label_2.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600;\">Senha</span></p></body></html>"))
         self.label_6.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600;\">CVV</span></p></body></html>"))
         self.pushButton.setText(_translate("Form", "Confirmar"))
         self.pushButton_2.setText(_translate("Form", "Cancelar"))
