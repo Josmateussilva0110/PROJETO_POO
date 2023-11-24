@@ -22,7 +22,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.2.101'
+ip = '192.168.1.5'
 porta = 8007
 nome = 'mateus'
 addr = ((ip,porta))
@@ -773,14 +773,7 @@ class Ui_Main(QMainWindow, Main):
             model.setStringList([filme_achado])
             self.TELA_CLIENTE_VER_FILMES_ui.listView.setModel(model)
         else:
-            QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
-            
-            
-    # def ir_tela_pagamento(self, button):
-    #     botao_id = button.objectName() 
-    #     print(f'Selecionou o botao: {botao_id}')
-    #     self.QtStack.setCurrentIndex(11)#TELA PAGAMENTO
-    #     return botao_id        
+            QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')      
     
             
     def ir_tela_pagamento(self, button):
@@ -833,7 +826,7 @@ class Ui_Main(QMainWindow, Main):
             self.dados_clienete.append(self.itens_filme[7])
             self.dados_clienete.append(self.itens_filme[9])
             self.dados_clienete.append(self.horarios_cliente)
-            mensagem = formatar_mensagem(self.dados_clienete)
+            mensagem = formatar_mensagem(self.dados_clienete, self.total_compra)
                 
             EnviaEmail(email,mensagem)
             QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
@@ -881,20 +874,25 @@ class Ui_Main(QMainWindow, Main):
         
         
     def botaoconfirmartelacartao(self):
+        valid = cancelou = False
+        nome_cliente = self.Cartao_ui.lineEdit.text()
+        numero_cartao = self.Cartao_ui.lineEdit_5.text()
+        cvv = self.Cartao_ui.lineEdit_3.text()
         minimum_date = QtCore.QDate(1800, 9, 14)
-        opc_cartao = None
-        cpf = self.cpf_do_usuario
-        client_socket.send('11'.encode())
-        client_socket.send(cpf.encode())
-        email = client_socket.recv(4096).decode()
-        op = QtWidgets.QMessageBox.question(
-            self, 'Seleção', 'Finalizar escolha?',
-            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
-        )
-        if op == QtWidgets.QMessageBox.Yes:
+        if nome_cliente == '' or numero_cartao == '' or cvv == '':
+            QtWidgets.QMessageBox.information(self, 'Cartão', 'digite valores validos.')
+        elif not verificar_nome(nome_cliente):
+            QtWidgets.QMessageBox.information(self, 'Cartão', 'nome invalido.')
+        elif not verificar_valor_inteiro(numero_cartao) or not verificar_valor_inteiro(cvv):
+            QtWidgets.QMessageBox.information(self, 'Cartão', 'numero de cartão ou cvv invalido.')
+        else:
+            opc_cartao = None
+            cpf = self.cpf_do_usuario
+            client_socket.send('11'.encode())
+            client_socket.send(cpf.encode())
+            email = client_socket.recv(4096).decode()
             parcelas = 1
             op = self.Cartao_ui.comboBox.currentText()
-
             if op == 'DEBITO':
                 opc_cartao = 2
             if op == 'CREDITO':
@@ -904,50 +902,34 @@ class Ui_Main(QMainWindow, Main):
                 for parcela in range(1, min(max_parcelas, math.ceil(self.total_compra / 20)) + 1):
                     valores.append(parcela)
                 parcelas, ok = QInputDialog.getItem(self, 'Seleção', 'selecione a parcela', [str(valor) for valor in valores], 0, False)
-
-
-            op1 = QtWidgets.QMessageBox.question(
-            self, 'Seleção', f'Tem Certeza que deseja fazer a compra no {op}?',
-            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
-            )
-            if op1 == QtWidgets.QMessageBox.Yes:    
-                self.dados_clienete.append(self.saida)
-                self.dados_clienete.append(self.itens_filme[3])
-                self.dados_clienete.append(self.itens_filme[5])
-                self.dados_clienete.append(self.itens_filme[7])
-                self.dados_clienete.append(self.itens_filme[9])
-                self.dados_clienete.append(self.horarios_cliente)  
-                mensagem = formatar_mensagem(self.dados_clienete, opc_cartao, parcelas)
-                EnviaEmail(email,mensagem)  
-                self.dados_clienete.clear()
-                QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
-                self.Cartao_ui.lineEdit.setText('')
-                self.Cartao_ui.lineEdit_5.setText('')
-                self.Cartao_ui.lineEdit_3.setText('')
-                self.Cartao_ui.dateEdit.setDate(minimum_date)
-                client_socket.send('13'.encode()) #sinal para pegar a lista de botoes que estão no servidor
-                try:
-                    mensagem = client_socket.recv(4096).decode()
-                    print('Entrou aqui',mensagem)
-                except:
-                    print("\nNão foi possível permanecer conectado!\n")
-                    client_socket.close()
-                if mensagem == '1': # encontrei os botoes
-                    print('mensagem encontrada')
-                    botoa_achado = client_socket.recv(4096).decode()
-                    print('lista com os botoes cliente',botoa_achado)
-                    #lista_botoes_achados = botoa_achado.split(',')
-                    botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
-                    print('botoes_tela_lay',botoes_tela_lay)
-                    client_socket.send('14'.encode())
-                    client_socket.send(self.botao_id.encode())
-                    resposta = client_socket.recv(4096).decode()
-                    if resposta == '0':
-                        print(f'Erro ao atualizar "validar" para 1 para o botão {self.botao_id}.')
-                    else:
-                        print(f'Valor de "validar" atualizado para 1 para o botão {self.botao_id}.')
-                    
-                    client_socket.send('15'.encode()) #sinal para pegar a lista de botoes que estão no servidor
+                valor_parcelado = self.total_compra / float(parcelas)
+                escolha = QMessageBox.question(
+                self,
+                'Compra',
+                f'Compra dividido em {parcelas}X ficou {valor_parcelado:.2f} reais',
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No
+                )
+                if escolha == QtWidgets.QMessageBox.No: 
+                    cancelou = True
+            if not cancelou:
+                op1 = QtWidgets.QMessageBox.question(
+                self, 'Seleção', f'Tem Certeza que deseja fazer a compra no {op}?',
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
+                )
+                if op1 == QtWidgets.QMessageBox.Yes:    
+                    self.dados_clienete.append(self.saida)
+                    self.dados_clienete.append(self.itens_filme[3])
+                    self.dados_clienete.append(self.itens_filme[5])
+                    self.dados_clienete.append(self.itens_filme[7])
+                    self.dados_clienete.append(self.itens_filme[9])
+                    self.dados_clienete.append(self.horarios_cliente)  
+                    mensagem = formatar_mensagem(self.dados_clienete, self.total_compra, opc_cartao, parcelas)
+                    EnviaEmail(email,mensagem)  
+                    self.dados_clienete.clear()
+                    QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
+                    valid = True
+                    client_socket.send('13'.encode()) #sinal para pegar a lista de botoes que estão no servidor
                     try:
                         mensagem = client_socket.recv(4096).decode()
                         print('Entrou aqui',mensagem)
@@ -956,12 +938,38 @@ class Ui_Main(QMainWindow, Main):
                         client_socket.close()
                     if mensagem == '1': # encontrei os botoes
                         print('mensagem encontrada')
-                        botoa_achado_verificado = client_socket.recv(4096).decode()
-                        print('lista com os botoes cliente',botoa_achado_verificado)
+                        botoa_achado = client_socket.recv(4096).decode()
+                        print('lista com os botoes cliente',botoa_achado)
                         #lista_botoes_achados = botoa_achado.split(',')
-                        mudar_cor_botao_vermelho_valido(botoes_tela_lay, botoa_achado_verificado)
-                    
-                self.QtStack.setCurrentIndex(2)
+                        botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
+                        print('botoes_tela_lay',botoes_tela_lay)
+                        client_socket.send('14'.encode())
+                        client_socket.send(self.botao_id.encode())
+                        resposta = client_socket.recv(4096).decode()
+                        if resposta == '0':
+                            print(f'Erro ao atualizar "validar" para 1 para o botão {self.botao_id}.')
+                        else:
+                            print(f'Valor de "validar" atualizado para 1 para o botão {self.botao_id}.')
+                        
+                        client_socket.send('15'.encode()) #sinal para pegar a lista de botoes que estão no servidor
+                        try:
+                            mensagem = client_socket.recv(4096).decode()
+                            print('Entrou aqui',mensagem)
+                        except:
+                            print("\nNão foi possível permanecer conectado!\n")
+                            client_socket.close()
+                        if mensagem == '1': # encontrei os botoes
+                            print('mensagem encontrada')
+                            botoa_achado_verificado = client_socket.recv(4096).decode()
+                            print('lista com os botoes cliente',botoa_achado_verificado)
+                            mudar_cor_botao_vermelho_valido(botoes_tela_lay, botoa_achado_verificado)
+        if valid:  
+            self.QtStack.setCurrentIndex(2)
+            self.Cartao_ui.lineEdit.setText('')
+            self.Cartao_ui.lineEdit_5.setText('')
+            self.Cartao_ui.lineEdit_3.setText('')
+            self.Cartao_ui.dateEdit.setDate(minimum_date)
+                
             
             
 if __name__ == '__main__':

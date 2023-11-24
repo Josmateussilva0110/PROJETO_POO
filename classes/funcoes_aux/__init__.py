@@ -115,9 +115,9 @@ def EnviaEmail(destinatario,mensagem):
         smtp.send_message(msg)    
 
 
-def formatar_mensagem(dados_cliente, flag=1, parcelas=1):
+def formatar_mensagem(dados_cliente, total_compra, flag=1, parcelas=1):
     # Formatar a lista de dados_cliente em uma string organizada
-    formato_mensagem = "Nome cliente: {}\nNome filme: {}\nAno: {}\nPreço: {}\nClassificação: {}\nHorario: {}\nPagamento: {}\nEmitido: {}"
+    formato_mensagem = "Nome cliente: {}\nNome filme: {}\nAno: {}\nPreço: {}\nClassificação: {}\nHorario: {}\nPagamento: {}\nTotal compra: {}\nEmitido: {}"
     data_e_hora_atuais = datetime.now()
     data_e_hora_em_texto = data_e_hora_atuais.strftime('%d/%m/%Y %H:%M')
     # Extrair os valores relevantes da lista
@@ -127,15 +127,18 @@ def formatar_mensagem(dados_cliente, flag=1, parcelas=1):
     preco = dados_cliente[3]
     classificacao = dados_cliente[4]
     horario = dados_cliente[5]
+    total = f'{total_compra:.2f}'
+    total_compra_exibir = float(total)
     if flag == 1:
         pagamento = 'Pix'
     elif flag == 2:
         pagamento = 'Cartão de Debito'
     elif flag == 3:
         pagamento = f'Cartão de Credito\nDividido em {parcelas} X'
+        total_compra_exibir /= int(parcelas)
     emissao = data_e_hora_em_texto
     # Criar a mensagem formatada
-    mensagem_formatada = formato_mensagem.format(nome_cliente, nome_filme, ano, preco, classificacao, horario, pagamento, emissao)
+    mensagem_formatada = formato_mensagem.format(nome_cliente, nome_filme, ano, preco, classificacao, horario, pagamento, total_compra_exibir, emissao)
 
     return mensagem_formatada
 

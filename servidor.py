@@ -8,7 +8,6 @@ from classes.class_filme import *
 from classes.funcoes_aux import *
 from classes.class_armazenar_botoes import *
 
-# ip = 192.168.1.6
 
 host = ''
 porta = 8007
@@ -198,18 +197,6 @@ def menu(con, cliente):
             else:
                 con.send('0'.encode())
                 
-        # elif mensagem == '14':
-        #     lista_botoes = con.recv(4096).decode().split(',')  # Supondo que os botões estejam separados por vírgula
-
-        #     for botao in lista_botoes:
-        #         # Atualizar o valor de 'validar' para 1 no banco de dados
-        #         if dados_botoes.atualizar_valido(botao):
-        #             print(f'Valor de "validar" atualizado para 1 para o botão {botao}.')
-        #         else:
-        #             print(f'Erro ao atualizar "validar" para 1 para o botão {botao}.')
-
-        #     # Enviar confirmação ao cliente
-        #     con.send('1'.encode())
         elif mensagem == '14':
             lista_botoes = con.recv(4096).decode().split(',')  # Supondo que os botões estejam separados por vírgula
 
