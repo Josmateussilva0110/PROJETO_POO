@@ -164,7 +164,7 @@ def menu(con, cliente):
             saida = dados_botoes.buscar_botao(botao)
             if saida is None:
                 con.send('1'.encode())
-                if dados_botoes.armazenar_botoes(botao):
+                if dados_botoes.armazenar_botao(botao):
                     print(f'Botão {botao} armazenado com sucesso no servidor.')
                 else:
                     print(f'Erro ao armazenar o botão {botao} no servidor.')

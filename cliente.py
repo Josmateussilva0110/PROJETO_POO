@@ -1,6 +1,7 @@
 import sys
 import socket
 import random
+import math
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox, QInputDialog
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QStringListModel
@@ -21,7 +22,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.2.101'
+ip = '192.168.1.7'
 porta = 8007
 nome = 'mateus'
 addr = ((ip,porta))
@@ -126,10 +127,10 @@ class Ui_Main(QMainWindow, Main):
         self.dados_clienete = list()
         self.saida = None
         self.cpf_do_usuario = None
-        self.opcao_selecionada = None
         self.itens_filme = ''
         self.horarios_cliente = ''
         self.resposta = None
+        self.total_compra = None
     
         #tela principal
         self.tela_main_ui.pushButton_3.clicked.connect(self.fecharAplicacao)
@@ -709,6 +710,16 @@ class Ui_Main(QMainWindow, Main):
                     if not ok:
                         QtWidgets.QMessageBox.information(self, 'Seleção', 'Compra cancelada.')
                         return
+                    
+                    meia = QtWidgets.QMessageBox.question(
+                    self, 'Seleção', 'meia entrada?',
+                    QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
+                    )
+                    if meia == QtWidgets.QMessageBox.Yes:
+                        meia_entrada = float(partes[7])
+                        self.total_compra = meia_entrada / 2
+                    else:
+                        self.total_compra = float(partes[7])
 
                     # O usuário selecionou um horário
                     reply1 = QtWidgets.QMessageBox.question(
@@ -772,7 +783,6 @@ class Ui_Main(QMainWindow, Main):
             
     def escolheuPix(self):
         cpf = self.cpf_do_usuario
-        print(cpf)
         client_socket.send('11'.encode())
         client_socket.send(cpf.encode())
         email = client_socket.recv(4096).decode()
@@ -782,7 +792,7 @@ class Ui_Main(QMainWindow, Main):
         info_dialog = QMessageBox()
         info_dialog.setIcon(QMessageBox.Information)
         info_dialog.setText("Escolheu Pix!")
-        info_dialog.setInformativeText(f"Você escolheu a opção de pagamento Pix.\nNúmero Pix: {numero_pix}")
+        info_dialog.setInformativeText(f"Você escolheu a opção de pagamento Pix.\nChave Pix: {numero_pix}")
         info_dialog.setWindowTitle("Pagamento Pix")
         info_dialog.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
 
@@ -819,36 +829,54 @@ class Ui_Main(QMainWindow, Main):
                 print('botoes_tela_lay',botoes_tela_lay)
                 mudar_cor_botao_vermelho(botoes_tela_lay, botoa_achado) # esta em funções aux.py
                 
-            self.QtStack.setCurrentIndex(9)
+            self.QtStack.setCurrentIndex(2)
         
         
     def botaoconfirmartelacartao(self):
+        minimum_date = QtCore.QDate(1800, 9, 14)
+        opc_cartao = None
         cpf = self.cpf_do_usuario
-        print(cpf)
         client_socket.send('11'.encode())
         client_socket.send(cpf.encode())
         email = client_socket.recv(4096).decode()
-        print(email)
         op = QtWidgets.QMessageBox.question(
             self, 'Seleção', 'Finalizar escolha?',
             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
         )
         if op == QtWidgets.QMessageBox.Yes:
-            self.opcao_selecionada = self.Cartao_ui.comboBox.currentText()
-            op = self.opcao_selecionada
-            print('escolha: ',op)
+            parcelas = 1
+            op = self.Cartao_ui.comboBox.currentText()
+
             if op == 'DEBITO':
-                mensagem = 'Compra no valor de um bocado feita no cartao por debito!'
-            else:
-                mensagem = 'Compra no valor de um bocado feita no cartao por credito!'
+                opc_cartao = 2
+            if op == 'CREDITO':
+                opc_cartao = 3
+                valores = list()
+                max_parcelas = 3  # Quantidade máxima de parcelas
+                for parcela in range(1, min(max_parcelas, math.ceil(self.total_compra / 20)) + 1):
+                    valores.append(parcela)
+                parcelas, ok = QInputDialog.getItem(self, 'Seleção', 'selecione a parcela', [str(valor) for valor in valores], 0, False)
+
+
             op1 = QtWidgets.QMessageBox.question(
-            self, 'Seleção', f'Tem Certeza que deseja fazr a compra no {op}?',
+            self, 'Seleção', f'Tem Certeza que deseja fazer a compra no {op}?',
             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
             )
             if op1 == QtWidgets.QMessageBox.Yes:    
+                self.dados_clienete.append(self.saida)
+                self.dados_clienete.append(self.itens_filme[3])
+                self.dados_clienete.append(self.itens_filme[5])
+                self.dados_clienete.append(self.itens_filme[7])
+                self.dados_clienete.append(self.itens_filme[9])
+                self.dados_clienete.append(self.horarios_cliente)  
+                mensagem = formatar_mensagem(self.dados_clienete, opc_cartao, parcelas)
+                EnviaEmail(email,mensagem)  
+                self.dados_clienete.clear()
                 QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
-                EnviaEmail(email,mensagem)
-                print('enviou a mensagem 13')
+                self.Cartao_ui.lineEdit.setText('')
+                self.Cartao_ui.lineEdit_5.setText('')
+                self.Cartao_ui.lineEdit_3.setText('')
+                self.Cartao_ui.dateEdit.setDate(minimum_date)
                 client_socket.send('13'.encode()) #sinal para pegar a lista de botoes que estão no servidor
                 try:
                     mensagem = client_socket.recv(4096).decode()
@@ -865,7 +893,7 @@ class Ui_Main(QMainWindow, Main):
                     print('botoes_tela_lay',botoes_tela_lay)
                     mudar_cor_botao_vermelho(botoes_tela_lay, botoa_achado) # esta em funções aux.py
                     
-                self.QtStack.setCurrentIndex(9)
+                self.QtStack.setCurrentIndex(2)
             
             
 if __name__ == '__main__':

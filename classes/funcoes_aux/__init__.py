@@ -115,7 +115,7 @@ def EnviaEmail(destinatario,mensagem):
         smtp.send_message(msg)    
 
 
-def formatar_mensagem(dados_cliente):
+def formatar_mensagem(dados_cliente, flag=1, parcelas=1):
     # Formatar a lista de dados_cliente em uma string organizada
     formato_mensagem = "Nome cliente: {}\nNome filme: {}\nAno: {}\nPreço: {}\nClassificação: {}\nHorario: {}\nPagamento: {}\nEmitido: {}"
     data_e_hora_atuais = datetime.now()
@@ -127,27 +127,18 @@ def formatar_mensagem(dados_cliente):
     preco = dados_cliente[3]
     classificacao = dados_cliente[4]
     horario = dados_cliente[5]
-    pagamento = "pix"
+    if flag == 1:
+        pagamento = 'Pix'
+    elif flag == 2:
+        pagamento = 'Cartão de Debito'
+    elif flag == 3:
+        pagamento = f'Cartão de Credito\nDividido em {parcelas} X'
     emissao = data_e_hora_em_texto
     # Criar a mensagem formatada
     mensagem_formatada = formato_mensagem.format(nome_cliente, nome_filme, ano, preco, classificacao, horario, pagamento, emissao)
 
     return mensagem_formatada
 
-
-# def mudar_cor_botao_vermelho(lista_botoes_achados, botoes_tela_lay): # função que muda de cor 
-#     print('entrou em função mudar cor:')
-#     print(f'lista de botoes achados: {lista_botoes_achados}')
-#     # vou comparar todos os botoes que estão na tela layout com os do banco de dados
-#     for button in botoes_tela_lay:
-#         for bot in lista_botoes_achados:
-#             print('entrou no for de comparação ?')
-#             botao_id = button.objectName() 
-#             #comparo o nome de cada um ja que no bd esta armazenado apenas os nomes 
-#             if botao_id == bot: # se achei troco a cor 
-#                 print(f'button name: {botao_id} - bot name: {bot}')
-#                 button.setStyleSheet("background-color: red;")
-#                 print('pintou')
                 
 def mudar_cor_botao_vermelho(lista_botoes_todos, lista_botoes_selecionados):
     print('entrou em função mudar cor:')
