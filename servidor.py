@@ -160,17 +160,26 @@ def menu(con, cliente):
 
         elif mensagem == '12':
             botao = con.recv(4096).decode()
-            print(f'recebido do cliente: {botao}')
-            saida = dados_botoes.buscar_botao(botao)
-            if saida is None:
+            print(f'Recebido do cliente: {botao}')
+            
+            # Buscar o botão no banco de dados
+            validar = dados_botoes.buscar_botao(botao)
+            print('Saída do buscar:', validar)
+
+            if validar is None:
                 con.send('1'.encode())
-                if dados_botoes.armazenar_botoes(botao):
+                # Armazenar o botão no banco de dados
+                if dados_botoes.armazenar_botao(botao):
                     print(f'Botão {botao} armazenado com sucesso no servidor.')
                 else:
                     print(f'Erro ao armazenar o botão {botao} no servidor.')
-            else:
+            elif validar == 0:
                 con.send('0'.encode())
-                print(f'Botão {botao} já armazenado no servidor.')
+                print(f'Botão {botao} já armazenado no servidor, mas é inválido (validar == 0).')
+                # Adicione aqui a lógica específica para tratar o caso de validar == 0
+            else:
+                con.send('2'.encode())
+                print(f'Botão {botao} já armazenado no servidor e é válido (validar == 1).')
         
         #sinal para retornar para o cliente a lista de todos os botoes que foram clicados
         elif mensagem == '13':
@@ -182,6 +191,21 @@ def menu(con, cliente):
                 con.send(lista_botoes_str.encode())
             else:
                 con.send('0'.encode())
+                
+        elif mensagem == '14':
+            lista_botoes = con.recv(4096).decode().split(',')  # Supondo que os botões estejam separados por vírgula
+
+            for botao in lista_botoes:
+                # Atualizar o valor de 'validar' para 1 no banco de dados
+                if dados_botoes.atualizar_valido(botao):
+                    print(f'Valor de "validar" atualizado para 1 para o botão {botao}.')
+                else:
+                    print(f'Erro ao atualizar "validar" para 1 para o botão {botao}.')
+
+            # Enviar confirmação ao cliente
+            con.send('1'.encode())
+                
+            
 
     print(f"[DESCONECTADO] Cliente: {nome_cliente}")
     con.close()

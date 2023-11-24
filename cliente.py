@@ -129,7 +129,6 @@ class Ui_Main(QMainWindow, Main):
         self.opcao_selecionada = None
         self.itens_filme = ''
         self.horarios_cliente = ''
-        self.resposta = None
     
         #tela principal
         self.tela_main_ui.pushButton_3.clicked.connect(self.fecharAplicacao)
@@ -758,14 +757,13 @@ class Ui_Main(QMainWindow, Main):
             client_socket.send('12'.encode())
             client_socket.send(botao_id.encode())
             try:
-                self.resposta = client_socket.recv(4096).decode()
+                resposta = client_socket.recv(4096).decode()
             except:
                 print("\nNão foi possível permanecer conectado!\n")
-                client_socket.close()
+                client_socket.close()   
                 
-                
-            if self.resposta == '0':
-                QtWidgets.QMessageBox.information(self, 'Compra', 'Acento ja escolhido.')
+            if resposta == '2':
+                 QtWidgets.QMessageBox.information(self, 'Compra', 'Acento ja escolhido.')
             else:
                 self.QtStack.setCurrentIndex(11)#TELA PAGAMENTO
 
@@ -799,6 +797,7 @@ class Ui_Main(QMainWindow, Main):
             self.dados_clienete.append(self.itens_filme[9])
             self.dados_clienete.append(self.horarios_cliente)
             mensagem = formatar_mensagem(self.dados_clienete)
+                
             EnviaEmail(email,mensagem)
             QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
             self.dados_clienete.clear()
@@ -817,6 +816,13 @@ class Ui_Main(QMainWindow, Main):
                 #lista_botoes_achados = botoa_achado.split(',')
                 botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
                 print('botoes_tela_lay',botoes_tela_lay)
+                client_socket.send('14'.encode())
+                client_socket.send(botoa_achado.encode())
+                resposta = client_socket.recv(4096).decode()
+                if resposta == '0':
+                    print(f'Erro ao atualizar "validar" para 1 para o botão {botoa_achado}.')
+                else:
+                    print(f'Valor de "validar" atualizado para 1 para o botão {botoa_achado}.')
                 mudar_cor_botao_vermelho(botoes_tela_lay, botoa_achado) # esta em funções aux.py
                 
             self.QtStack.setCurrentIndex(9)
@@ -863,6 +869,14 @@ class Ui_Main(QMainWindow, Main):
                     #lista_botoes_achados = botoa_achado.split(',')
                     botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
                     print('botoes_tela_lay',botoes_tela_lay)
+                    print('botoes_tela_lay',botoes_tela_lay)
+                    client_socket.send('14'.encode())
+                    client_socket.send(botoa_achado.encode())
+                    resposta = client_socket.recv(4096).decode()
+                    if resposta == '0':
+                        print(f'Erro ao atualizar "validar" para 1 para o botão {botoa_achado}.')
+                    else:
+                        print(f'Valor de "validar" atualizado para 1 para o botão {botoa_achado}.')
                     mudar_cor_botao_vermelho(botoes_tela_lay, botoa_achado) # esta em funções aux.py
                     
                 self.QtStack.setCurrentIndex(9)

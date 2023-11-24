@@ -166,3 +166,4 @@ def mudar_cor_botao_vermelho(lista_botoes_todos, lista_botoes_selecionados):
             print('pintou')
             
 
+
