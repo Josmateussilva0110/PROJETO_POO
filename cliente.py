@@ -129,9 +129,9 @@ class Ui_Main(QMainWindow, Main):
         self.cpf_do_usuario = None
         self.itens_filme = ''
         self.horarios_cliente = ''
-
         self.resposta = None
         self.total_compra = None
+        self.botao_id = None
 
     
         #tela principal
@@ -733,6 +733,21 @@ class Ui_Main(QMainWindow, Main):
                     if reply1 == QtWidgets.QMessageBox.Yes:
                         self.itens_filme = partes
                         self.horarios_cliente = horario_selecionado
+                        client_socket.send('15'.encode()) #sinal para pegar a lista de botoes que estão no servidor
+                        try:
+                            mensagem = client_socket.recv(4096).decode()
+                            print('Entrou aqui',mensagem)
+                        except:
+                            print("\nNão foi possível permanecer conectado!\n")
+                            client_socket.close()
+                        if mensagem == '1': # encontrei os botoes
+                            print('mensagem encontrada')
+                            botoa_achado = client_socket.recv(4096).decode()
+                            print('lista com os botoes cliente',botoa_achado)
+                            #lista_botoes_achados = botoa_achado.split(',')
+                            botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
+                            print('botoes_tela_lay',botoes_tela_lay)
+                            mudar_cor_botao_vermelho_valido(botoes_tela_lay, botoa_achado) # esta em funções aux.py
                         self.QtStack.setCurrentIndex(10)
                     # else:
                     #     self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
@@ -760,16 +775,24 @@ class Ui_Main(QMainWindow, Main):
         else:
             QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
             
+            
+    # def ir_tela_pagamento(self, button):
+    #     botao_id = button.objectName() 
+    #     print(f'Selecionou o botao: {botao_id}')
+    #     self.QtStack.setCurrentIndex(11)#TELA PAGAMENTO
+    #     return botao_id        
+    
+            
     def ir_tela_pagamento(self, button):
-        botao_id = button.objectName() 
-        print(f'Selecionou o botao: {botao_id}')
+        self.botao_id = button.objectName() 
+        print(f'Selecionou o botao: {self.botao_id}')
         op = QtWidgets.QMessageBox.question(
             self, 'Seleção', 'Finalizar escolha?',
             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
         )
         if op == QtWidgets.QMessageBox.Yes:
             client_socket.send('12'.encode())
-            client_socket.send(botao_id.encode())
+            client_socket.send(self.botao_id.encode())
             try:
                 resposta = client_socket.recv(4096).decode()
             except:
@@ -777,12 +800,13 @@ class Ui_Main(QMainWindow, Main):
                 client_socket.close()   
                 
             if resposta == '2':
-                 QtWidgets.QMessageBox.information(self, 'Compra', 'Acento ja escolhido.')
+                  QtWidgets.QMessageBox.information(self, 'Compra', 'Acento ja escolhido.')
             else:
                 self.QtStack.setCurrentIndex(11)#TELA PAGAMENTO
 
             
     def escolheuPix(self):
+        print('tentei né',self.botao_id)
         cpf = self.cpf_do_usuario
         client_socket.send('11'.encode())
         client_socket.send(cpf.encode())
@@ -824,19 +848,34 @@ class Ui_Main(QMainWindow, Main):
                 client_socket.close()
             if mensagem == '1': # encontrei os botoes
                 print('mensagem encontrada')
-                botoa_achado = client_socket.recv(4096).decode()
+                botoa_achado = client_socket.recv(4096).decode()##Botões achados no servidor com 0
                 print('lista com os botoes cliente',botoa_achado)
+
                 #lista_botoes_achados = botoa_achado.split(',')
                 botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
                 print('botoes_tela_lay',botoes_tela_lay)
+                
                 client_socket.send('14'.encode())
-                client_socket.send(botoa_achado.encode())
+                client_socket.send(self.botao_id.encode())
                 resposta = client_socket.recv(4096).decode()
                 if resposta == '0':
-                    print(f'Erro ao atualizar "validar" para 1 para o botão {botoa_achado}.')
+                    print(f'Erro ao atualizar "validar" para 1 para o botão {self.botao_id}.')
                 else:
-                    print(f'Valor de "validar" atualizado para 1 para o botão {botoa_achado}.')
-                mudar_cor_botao_vermelho(botoes_tela_lay, botoa_achado) # esta em funções aux.py
+                    print(f'Valor de "validar" atualizado para 1 para o botão {self.botao_id}.')
+                
+                client_socket.send('15'.encode()) #sinal para pegar a lista de botoes que estão no servidor
+                try:
+                    mensagem = client_socket.recv(4096).decode()
+                    print('Entrou aqui',mensagem)
+                except:
+                    print("\nNão foi possível permanecer conectado!\n")
+                    client_socket.close()
+                if mensagem == '1': # encontrei os botoes
+                    print('mensagem encontrada')
+                    botoa_achado_verificado = client_socket.recv(4096).decode()
+                    print('lista com os botoes cliente',botoa_achado_verificado)
+                    #lista_botoes_achados = botoa_achado.split(',')
+                    mudar_cor_botao_vermelho_valido(botoes_tela_lay, botoa_achado_verificado)
                 
             self.QtStack.setCurrentIndex(2)
         
@@ -900,15 +939,27 @@ class Ui_Main(QMainWindow, Main):
                     #lista_botoes_achados = botoa_achado.split(',')
                     botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
                     print('botoes_tela_lay',botoes_tela_lay)
-                    print('botoes_tela_lay',botoes_tela_lay)
                     client_socket.send('14'.encode())
-                    client_socket.send(botoa_achado.encode())
+                    client_socket.send(self.botao_id.encode())
                     resposta = client_socket.recv(4096).decode()
                     if resposta == '0':
-                        print(f'Erro ao atualizar "validar" para 1 para o botão {botoa_achado}.')
+                        print(f'Erro ao atualizar "validar" para 1 para o botão {self.botao_id}.')
                     else:
-                        print(f'Valor de "validar" atualizado para 1 para o botão {botoa_achado}.')
-                    mudar_cor_botao_vermelho(botoes_tela_lay, botoa_achado) # esta em funções aux.py
+                        print(f'Valor de "validar" atualizado para 1 para o botão {self.botao_id}.')
+                    
+                    client_socket.send('15'.encode()) #sinal para pegar a lista de botoes que estão no servidor
+                    try:
+                        mensagem = client_socket.recv(4096).decode()
+                        print('Entrou aqui',mensagem)
+                    except:
+                        print("\nNão foi possível permanecer conectado!\n")
+                        client_socket.close()
+                    if mensagem == '1': # encontrei os botoes
+                        print('mensagem encontrada')
+                        botoa_achado_verificado = client_socket.recv(4096).decode()
+                        print('lista com os botoes cliente',botoa_achado_verificado)
+                        #lista_botoes_achados = botoa_achado.split(',')
+                        mudar_cor_botao_vermelho_valido(botoes_tela_lay, botoa_achado_verificado)
                     
                 self.QtStack.setCurrentIndex(2)
             

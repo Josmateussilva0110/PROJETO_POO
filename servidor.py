@@ -165,6 +165,8 @@ def menu(con, cliente):
             # Buscar o botão no banco de dados
             validar = dados_botoes.buscar_botao(botao)
             print('Saída do buscar:', validar)
+            
+            print('Saída do buscar--->', validar["validar"] if validar else None)
 
             if validar is None:
                 con.send('1'.encode())
@@ -174,18 +176,21 @@ def menu(con, cliente):
                     print(f'Botão {botao} armazenado com sucesso no servidor.')
                 else:
                     print(f'Erro ao armazenar o botão {botao} no servidor.')
-            elif validar == 0:
+            elif validar["validar"] == 0:
+                print('Entrou aqui rapá')
                 con.send('0'.encode())
                 print(f'Botão {botao} já armazenado no servidor, mas é inválido (validar == 0).')
                 # Adicione aqui a lógica específica para tratar o caso de validar == 0
-            else:
+            elif validar["validar"] == 1:
                 con.send('2'.encode())
                 print(f'Botão {botao} já armazenado no servidor e é válido (validar == 1).')
+            else:
+                print('Ta errado')
         
         #sinal para retornar para o cliente a lista de todos os botoes que foram clicados
         elif mensagem == '13':
             lista_botoes = dados_botoes.obter_todos_botoes()
-            print('lista com todos os botões',lista_botoes)
+            print('lista com todos os botões1',lista_botoes)
             if lista_botoes != None:
                 con.send('1'.encode())
                 lista_botoes_str = ','.join(lista_botoes)
@@ -193,18 +198,49 @@ def menu(con, cliente):
             else:
                 con.send('0'.encode())
                 
+        # elif mensagem == '14':
+        #     lista_botoes = con.recv(4096).decode().split(',')  # Supondo que os botões estejam separados por vírgula
+
+        #     for botao in lista_botoes:
+        #         # Atualizar o valor de 'validar' para 1 no banco de dados
+        #         if dados_botoes.atualizar_valido(botao):
+        #             print(f'Valor de "validar" atualizado para 1 para o botão {botao}.')
+        #         else:
+        #             print(f'Erro ao atualizar "validar" para 1 para o botão {botao}.')
+
+        #     # Enviar confirmação ao cliente
+        #     con.send('1'.encode())
         elif mensagem == '14':
             lista_botoes = con.recv(4096).decode().split(',')  # Supondo que os botões estejam separados por vírgula
 
-            for botao in lista_botoes:
-                # Atualizar o valor de 'validar' para 1 no banco de dados
-                if dados_botoes.atualizar_valido(botao):
-                    print(f'Valor de "validar" atualizado para 1 para o botão {botao}.')
-                else:
-                    print(f'Erro ao atualizar "validar" para 1 para o botão {botao}.')
+            # Verificar se há pelo menos um botão na lista
+            if lista_botoes:
+                ultimo_botao = lista_botoes[-1]
 
-            # Enviar confirmação ao cliente
-            con.send('1'.encode())
+                # Atualizar o valor de 'validar' para 1 apenas para o último botão no banco de dados
+                if dados_botoes.atualizar_valido(ultimo_botao):
+                    print(f'Valor de "validar" atualizado para 1 para o último botão {ultimo_botao}.')
+                    # Enviar confirmação ao cliente
+                    con.send('1'.encode())
+                else:
+                    print(f'Erro ao atualizar "validar" para 1 para o último botão {ultimo_botao}.')
+                    # Enviar informação de erro ao cliente
+                    con.send('0'.encode())
+            else:
+                print('Lista de botões vazia. Nenhum botão atualizado.')
+                # Enviar informação de erro ao cliente
+                con.send('0'.encode())
+            
+            
+        elif mensagem == '15':
+            lista_botoes_validos = dados_botoes.obter_botoes_validos()
+            print('lista com todos os botões',lista_botoes_validos)
+            if lista_botoes_validos != None:
+                con.send('1'.encode())
+                lista_botoes_str = ','.join(lista_botoes_validos)
+                con.send(lista_botoes_str.encode())
+            else:
+                con.send('0'.encode())
                 
             
 

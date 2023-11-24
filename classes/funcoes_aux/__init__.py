@@ -156,5 +156,21 @@ def mudar_cor_botao_vermelho(lista_botoes_todos, lista_botoes_selecionados):
             button.setStyleSheet("background-color: red;")
             print('pintou')
             
+def mudar_cor_botao_vermelho_valido(lista_botoes_todos, lista_botoes_selecionados):
+    print('entrou em função mudar cor:')
+    print(f'lista de todos os botoes: {lista_botoes_todos}')
+    print(f'lista de botoes selecionados: {lista_botoes_selecionados}')
+
+    # Itera sobre todos os botões na lista de todos os botões
+    for button in lista_botoes_todos:
+        botao_id = button.objectName()
+        print('id do botão', botao_id)
+
+        # Verifica se o nome do botão está na lista de botões selecionados
+        if botao_id in lista_botoes_selecionados:
+            print(f'Um elemetno do button name: {botao_id} esta igual a {lista_botoes_selecionados}')
+            button.setStyleSheet("background-color: red;")
+            print('pintou')
+            
 
 
