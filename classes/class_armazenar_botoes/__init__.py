@@ -45,34 +45,30 @@ class Armazenar_botoes():
         cursor.close()
 
 
-    def armazenar_botoes(self, botao):
+    def armazenar_botao(self, botao):
         cursor = self.db_connection.cursor()
-        valid = False
-
-        insert_query = "INSERT INTO Botoes(botao) VALUES (%s)"
-        values = (botao, )
         try:
+            insert_query = "INSERT INTO Botoes(botao) VALUES (%s)"
+            values = (botao, )
             cursor.execute(insert_query, values)
             self.db_connection.commit()
-            valid = True 
             cursor.close()
-        except mysql.connector.Error:
+            return True
+        except mysql.connector.Error as err:
             self.db_connection.rollback()
             cursor.close()
-        return valid
+            return False
     
 
     def buscar_botao(self, botao):
         cursor = self.db_connection.cursor()
-
         select_query = "SELECT * FROM Botoes WHERE botao = %s"
         try:
             cursor.execute(select_query, (botao,))
             result = cursor.fetchone()
             if result:
-                achou = result
                 cursor.close()
-                return achou
+                return result
             else:
                 cursor.close()
                 return None

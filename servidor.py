@@ -160,13 +160,17 @@ def menu(con, cliente):
 
         elif mensagem == '12':
             botao = con.recv(4096).decode()
-            print(f'recebido do servidor: {botao}')
+            print(f'recebido do cliente: {botao}')
             saida = dados_botoes.buscar_botao(botao)
-            if saida == None:
-                dados_botoes.armazenar_botoes(botao)
+            if saida is None:
                 con.send('1'.encode())
+                if dados_botoes.armazenar_botoes(botao):
+                    print(f'Botão {botao} armazenado com sucesso no servidor.')
+                else:
+                    print(f'Erro ao armazenar o botão {botao} no servidor.')
             else:
                 con.send('0'.encode())
+                print(f'Botão {botao} já armazenado no servidor.')
         
         #sinal para retornar para o cliente a lista de todos os botoes que foram clicados
         elif mensagem == '13':

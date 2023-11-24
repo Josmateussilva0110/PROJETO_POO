@@ -21,7 +21,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '10.180.41.156'
+ip = '192.168.2.101'
 porta = 8007
 nome = 'mateus'
 addr = ((ip,porta))
@@ -129,6 +129,7 @@ class Ui_Main(QMainWindow, Main):
         self.opcao_selecionada = None
         self.itens_filme = ''
         self.horarios_cliente = ''
+        self.resposta = None
     
         #tela principal
         self.tela_main_ui.pushButton_3.clicked.connect(self.fecharAplicacao)
@@ -682,7 +683,6 @@ class Ui_Main(QMainWindow, Main):
             if item_selecionado:
                 # Divida a string do item selecionado para extrair o ID
                 partes = item_selecionado.split()
-                print(f'partes: {partes}')
                 # O ID do filme é a última parte da string
                 filme_id = partes[1]
 
@@ -711,34 +711,18 @@ class Ui_Main(QMainWindow, Main):
                         return
 
                     # O usuário selecionou um horário
-                    reply = QtWidgets.QMessageBox.question(
+                    reply1 = QtWidgets.QMessageBox.question(
                         self, 'Seleção', 'Deseja comprar o ingresso para esse filme?',
                         QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                         QtWidgets.QMessageBox.No
                     )
                     # Verifique a resposta do usuário
-                    if reply == QtWidgets.QMessageBox.Yes:
-                        print('enviou a mensagem 13')
-                        client_socket.send('13'.encode()) #sinal para pegar a lista de botoes que estão no servidor
-                        try:
-                            mensagem = client_socket.recv(4096).decode()
-                            print('Entrou aqui',mensagem)
-                        except:
-                            print("\nNão foi possível permanecer conectado!\n")
-                            client_socket.close()
-                        if mensagem == '1': # encontrei os botoes
-                            print('mensagem encontrada')
-                            botoa_achado = client_socket.recv(4096).decode()
-                            print('lista com os botoes cliente',botoa_achado)
-                            #lista_botoes_achados = botoa_achado.split(',')
-                            botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
-                            print('botoes_tela_lay',botoes_tela_lay)
-                            mudar_cor_botao_vermelho(botoes_tela_lay, botoa_achado) # esta em funções aux.py
+                    if reply1 == QtWidgets.QMessageBox.Yes:
                         self.itens_filme = partes
                         self.horarios_cliente = horario_selecionado
                         self.QtStack.setCurrentIndex(10)
-                    else:
-                        self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
+                    # else:
+                    #     self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
                 else:
                     QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')
             else:
@@ -763,26 +747,27 @@ class Ui_Main(QMainWindow, Main):
         else:
             QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
             
-    def mudar_cor_red(self, button):
+    def ir_tela_pagamento(self, button):
         botao_id = button.objectName() 
-        client_socket.send('12'.encode())
-        client_socket.send(botao_id.encode())
         print(f'Selecionou o botao: {botao_id}')
-        try:
-            resposta = client_socket.recv(4096).decode()
-        except:
-            print("\nNão foi possível permanecer conectado!\n")
-            client_socket.close()
-        if resposta == '0':
-            QtWidgets.QMessageBox.information(self, 'Compra', 'Acento ja escolhido.')
-        else:
-            op = QtWidgets.QMessageBox.question(
-                self, 'Seleção', 'Finalizar escolha?',
-                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
-            )
-            if op == QtWidgets.QMessageBox.Yes:
-                #button.setStyleSheet("background-color: red;")
-                self.QtStack.setCurrentIndex(11)
+        op = QtWidgets.QMessageBox.question(
+            self, 'Seleção', 'Finalizar escolha?',
+            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
+        )
+        if op == QtWidgets.QMessageBox.Yes:
+            client_socket.send('12'.encode())
+            client_socket.send(botao_id.encode())
+            try:
+                self.resposta = client_socket.recv(4096).decode()
+            except:
+                print("\nNão foi possível permanecer conectado!\n")
+                client_socket.close()
+                
+                
+            if self.resposta == '0':
+                QtWidgets.QMessageBox.information(self, 'Compra', 'Acento ja escolhido.')
+            else:
+                self.QtStack.setCurrentIndex(11)#TELA PAGAMENTO
 
             
     def escolheuPix(self):
@@ -804,6 +789,7 @@ class Ui_Main(QMainWindow, Main):
 
         # Exiba o QMessageBox
         result = info_dialog.exec_()
+
         # Após a confirmação, vá para a próxima tela
         if result == QMessageBox.Ok:
             self.dados_clienete.append(self.saida)
@@ -816,6 +802,23 @@ class Ui_Main(QMainWindow, Main):
             EnviaEmail(email,mensagem)
             QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
             self.dados_clienete.clear()
+            print('enviou a mensagem 13')
+            client_socket.send('13'.encode()) #sinal para pegar a lista de botoes que estão no servidor
+            try:
+                mensagem = client_socket.recv(4096).decode()
+                print('Entrou aqui',mensagem)
+            except:
+                print("\nNão foi possível permanecer conectado!\n")
+                client_socket.close()
+            if mensagem == '1': # encontrei os botoes
+                print('mensagem encontrada')
+                botoa_achado = client_socket.recv(4096).decode()
+                print('lista com os botoes cliente',botoa_achado)
+                #lista_botoes_achados = botoa_achado.split(',')
+                botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
+                print('botoes_tela_lay',botoes_tela_lay)
+                mudar_cor_botao_vermelho(botoes_tela_lay, botoa_achado) # esta em funções aux.py
+                
             self.QtStack.setCurrentIndex(9)
         
         
@@ -845,6 +848,23 @@ class Ui_Main(QMainWindow, Main):
             if op1 == QtWidgets.QMessageBox.Yes:    
                 QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
                 EnviaEmail(email,mensagem)
+                print('enviou a mensagem 13')
+                client_socket.send('13'.encode()) #sinal para pegar a lista de botoes que estão no servidor
+                try:
+                    mensagem = client_socket.recv(4096).decode()
+                    print('Entrou aqui',mensagem)
+                except:
+                    print("\nNão foi possível permanecer conectado!\n")
+                    client_socket.close()
+                if mensagem == '1': # encontrei os botoes
+                    print('mensagem encontrada')
+                    botoa_achado = client_socket.recv(4096).decode()
+                    print('lista com os botoes cliente',botoa_achado)
+                    #lista_botoes_achados = botoa_achado.split(',')
+                    botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
+                    print('botoes_tela_lay',botoes_tela_lay)
+                    mudar_cor_botao_vermelho(botoes_tela_lay, botoa_achado) # esta em funções aux.py
+                    
                 self.QtStack.setCurrentIndex(9)
             
             
