@@ -46,20 +46,6 @@ class Armazenar_botoes():
         self.db_connection.commit()
         cursor.close()
 
-
-    # def armazenar_botao(self, botao):
-    #     cursor = self.db_connection.cursor()
-    #     try:
-    #         insert_query = "INSERT INTO Botoes(botao) VALUES (%s)"
-    #         values = (botao, )
-    #         cursor.execute(insert_query, values)
-    #         self.db_connection.commit()
-    #         cursor.close()
-    #         return True
-    #     except mysql.connector.Error as err:
-    #         self.db_connection.rollback()
-    #         cursor.close()
-    #         return False
         
     def armazenar_botao(self, botao):
         cursor = self.db_connection.cursor()
@@ -89,26 +75,6 @@ class Armazenar_botoes():
             self.db_connection.rollback()
             cursor.close()
             return False
-
-
-    
-    # def buscar_botao(self, botao):
-    #     cursor = self.db_connection.cursor()
-    #     select_query = "SELECT * FROM Botoes WHERE botao = %s"
-    #     try:
-    #         cursor.execute(select_query, (botao,))
-    #         result = cursor.fetchone()
-    #         cursor.close()
-
-    #         if result:
-    #             # Index 1 corresponde à coluna 'validar'
-    #             validar = result[1]
-    #             return validar
-    #         else:
-    #             return None
-    #     except mysql.connector.Error as err:
-    #         cursor.close()
-    #         return None
         
     def buscar_botao(self, botao):
         cursor = self.db_connection.cursor(dictionary=True)  # Usar dictionary=True para obter resultados como dicionários
@@ -171,18 +137,6 @@ class Armazenar_botoes():
         finally:
             cursor.close()        
             
-    # def atualizar_valido(self, botao):
-    #     cursor = self.db_connection.cursor()
-    #     try:
-    #         # Atualizar o valor de 'validar' para 1
-    #         update_query = "UPDATE Botoes SET validar = 1 WHERE botao = %s"
-    #         cursor.execute(update_query, (botao,))
-    #         self.db_connection.commit()
-    #         print(f'Valor de "validar" atualizado para 1 para o botão {botao}.')
-    #         return True
-    #     except mysql.connector.Error as err:
-    #         print(f'Erro ao atualizar "validar" para 1 para o botão {botao}: {err}')
-    #         return False
     def atualizar_valido(self, nome_botao):
         cursor = self.db_connection.cursor()
 
@@ -199,33 +153,3 @@ class Armazenar_botoes():
             return False
         finally:
             cursor.close()
-    
-        
-    # def atualizar_validos(self, lista_botoes):
-    #     cursor = self.db_connection.cursor()
-
-    #     try:
-    #         for botao in lista_botoes:
-    #             # Verificar se o botão já existe no banco de dados
-    #             existencia_query = "SELECT * FROM Botoes WHERE botao = %s"
-    #             cursor.execute(existencia_query, (botao,))
-    #             resultado_existencia = cursor.fetchone()
-
-    #             if resultado_existencia:
-    #                 # Botão existe, então atualizar 'validar' para 1
-    #                 update_query = "UPDATE Botoes SET validar = 1 WHERE botao = %s"
-    #                 cursor.execute(update_query, (botao,))
-    #                 self.db_connection.commit()
-    #                 print(f'Valor de "validar" atualizado para 1 para o botão {botao}.')
-    #             else:
-    #                 # Botão não existe, então não atualizar 'validar'
-    #                 print(f'Botão {botao} não encontrado no banco de dados. Não foi possível atualizar "validar".')
-
-    #         return True
-
-    #     except mysql.connector.Error as err:
-    #         print(f'Erro ao verificar ou atualizar "validar" para 1 para os botões: {err}')
-    #         return False
-    #     finally:
-    #         cursor.close()
-

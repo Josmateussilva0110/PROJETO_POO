@@ -7,6 +7,7 @@ from classes.classe_armazena_filme import *
 from classes.class_filme import *
 from classes.funcoes_aux import *
 from classes.class_armazenar_botoes import *
+from classes.class_armazenar_botao_02 import *
 
 
 host = ''
@@ -19,6 +20,7 @@ db = create_database()
 dados_usuarios = Armazenar(mydb)
 dados_filme = Armazenar_filmes(mydb)
 dados_botoes = Armazenar_botoes(mydb)
+dados_botoes_02 = Armazenar_botoes_02(mydb)
 
 
 def menu(con, cliente):
@@ -228,6 +230,35 @@ def menu(con, cliente):
                 con.send(lista_botoes_str.encode())
             else:
                 con.send('0'.encode())
+        
+        elif mensagem == '16':
+            botao = con.recv(4096).decode()
+            print(f'Recebido do cliente: {botao}')
+            
+            # Buscar o botão no banco de dados
+            validar = dados_botoes_02.buscar_botao_02(botao)
+            print('Saída do buscar:', validar)
+            
+            print('Saída do buscar--->', validar["validar"] if validar else None)
+
+            if validar is None:
+                con.send('1'.encode())
+                # Armazenar o botão no banco de dados
+
+                if dados_botoes_02.armazenar_botao_02(botao):
+                    print(f'Botão {botao} armazenado com sucesso no servidor.')
+                else:
+                    print(f'Erro ao armazenar o botão {botao} no servidor.')
+            elif validar["validar"] == 0:
+                print('Entrou aqui rapá')
+                con.send('0'.encode())
+                print(f'Botão {botao} já armazenado no servidor, mas é inválido (validar == 0).')
+                # Adicione aqui a lógica específica para tratar o caso de validar == 0
+            elif validar["validar"] == 1:
+                con.send('2'.encode())
+                print(f'Botão {botao} já armazenado no servidor e é válido (validar == 1).')
+            else:
+                print('Ta errado')
                 
             
 

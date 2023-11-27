@@ -9,9 +9,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from classes.funcoes_aux import lista_botoes
 
-class Tela_layout(object):
+class Tela_layout_02(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setEnabled(True)
@@ -215,5 +214,5 @@ class Tela_layout(object):
         self.pushButton_41.setText(_translate("MainWindow", "13"))
         self.pushButton_42.setText(_translate("MainWindow", "11"))
         self.pushButton_2.setText(_translate("MainWindow", "Voltar"))
-        self.label_2.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\">Sala 01</p></body></html>"))
+        self.label_2.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\">Sala 02</p></body></html>"))
 import imagens_rc

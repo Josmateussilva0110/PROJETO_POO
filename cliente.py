@@ -18,11 +18,12 @@ from TELA_EXCLUIR_FILME_ui import *
 from TELA_CLIENTE_VER_FILMES_ui import *
 from TELA_LAYOUT import *
 from TELA_PAGAMENTO import *
+from TELA_LAYOUT_02 import *
 from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.1.5'
+ip = '10.180.46.177'
 porta = 8007
 nome = 'mateus'
 addr = ((ip,porta))
@@ -54,6 +55,7 @@ class Main(QtWidgets.QWidget):
         self.stack10 = QtWidgets.QMainWindow()
         self.stack11 = QtWidgets.QMainWindow()
         self.stack12 = QtWidgets.QMainWindow()
+        self.stack13 = QtWidgets.QMainWindow()
 
 
         self.tela_main_ui = Ui_Dialog()
@@ -103,6 +105,9 @@ class Main(QtWidgets.QWidget):
         self.Cartao_ui = EscolheuCartao()
         self.Cartao_ui.setupUi(self.stack12)
 
+        self.TELA_LAYOUT_02 = Tela_layout_02()
+        self.TELA_LAYOUT_02.setupUi(self.stack13)
+
         self.QtStack.addWidget(self.stack0)
         self.QtStack.addWidget(self.stack1)
         self.QtStack.addWidget(self.stack2)
@@ -116,6 +121,7 @@ class Main(QtWidgets.QWidget):
         self.QtStack.addWidget(self.stack10)
         self.QtStack.addWidget(self.stack11)
         self.QtStack.addWidget(self.stack12)
+        self.QtStack.addWidget(self.stack13)
 
 
 class Ui_Main(QMainWindow, Main):
@@ -132,6 +138,7 @@ class Ui_Main(QMainWindow, Main):
         self.resposta = None
         self.total_compra = None
         self.botao_id = None
+        self.tela_para_exibir = None
 
     
         #tela principal
@@ -193,10 +200,18 @@ class Ui_Main(QMainWindow, Main):
 
         for button, function in buttons_and_functions:
             button.clicked.connect(lambda _, btn=button: function(btn))
+        
+        buttons_and_functions_02 = lista_botoes_red_02(self)
+        for button, function in buttons_and_functions_02:
+            button.clicked.connect(lambda _, btn=button: function(btn))
+
             
 
         #tela layout
         self.TELA_LAYOUT.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
+
+        #tela layout_02
+        self.TELA_LAYOUT_02.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
 
         #TELA PAGAMENTO
         self.TELA_PAGAMENTO.pushButton_4.clicked.connect(self.Tela_Cliente_Ver_Filmes)
@@ -748,9 +763,14 @@ class Ui_Main(QMainWindow, Main):
                             botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
                             print('botoes_tela_lay',botoes_tela_lay)
                             mudar_cor_botao_vermelho_valido(botoes_tela_lay, botoa_achado) # esta em funções aux.py
-                        self.QtStack.setCurrentIndex(10)
-                    # else:
-                    #     self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.setText('')
+                        print(f'horarios list: {horarios_list[0]}')
+                        print(f'horario selecionado: {horario_selecionado}')
+                        if horario_selecionado == horarios_list[0]:
+                            self.tela_para_exibir = 10
+                            self.QtStack.setCurrentIndex(10)
+                        elif horario_selecionado == horarios_list[1]:
+                            self.tela_para_exibir = 13
+                            self.QtStack.setCurrentIndex(13)
                 else:
                     QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')
             else:
@@ -777,6 +797,7 @@ class Ui_Main(QMainWindow, Main):
     
             
     def ir_tela_pagamento(self, button):
+        print('entrou aqui função ir tela pagamento')
         self.botao_id = button.objectName() 
         print(f'Selecionou o botao: {self.botao_id}')
         op = QtWidgets.QMessageBox.question(
@@ -784,8 +805,12 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
         )
         if op == QtWidgets.QMessageBox.Yes:
-            client_socket.send('12'.encode())
-            client_socket.send(self.botao_id.encode())
+            if self.tela_para_exibir == 10:
+                client_socket.send('12'.encode())
+                client_socket.send(self.botao_id.encode())
+            elif self.tela_para_exibir == 13:
+                client_socket.send('16'.encode())
+                client_socket.send(self.botao_id.encode())
             try:
                 resposta = client_socket.recv(4096).decode()
             except:
