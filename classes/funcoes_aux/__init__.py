@@ -67,6 +67,12 @@ def lista_botoes_tela_layout(self): #retorno todos os botoes que preciso
     ]
     return botao
 
+def lista_botoes_tela_layout_02(self): #retorno todos os botoes que preciso
+    botao = [
+        getattr(self.TELA_LAYOUT_02, f"pushButton_{i}") for i in range(3, 43)
+    ]
+    return botao
+
 def lista_de_classificacao_filme():
     lista = ['livre', '10', '12', '14', '16', '18']
     return lista
@@ -166,9 +172,7 @@ def mudar_cor_botao_vermelho(lista_botoes_todos, lista_botoes_selecionados):
             print('pintou')
             
 def mudar_cor_botao_vermelho_valido(lista_botoes_todos, lista_botoes_selecionados):
-    print('entrou em função mudar cor:')
-    print(f'lista de todos os botoes: {lista_botoes_todos}')
-    print(f'lista de botoes selecionados: {lista_botoes_selecionados}')
+    print('entrou em função mudar cor valido:')
 
     # Itera sobre todos os botões na lista de todos os botões
     for button in lista_botoes_todos:
@@ -180,6 +184,3 @@ def mudar_cor_botao_vermelho_valido(lista_botoes_todos, lista_botoes_selecionado
             print(f'Um elemetno do button name: {botao_id} esta igual a {lista_botoes_selecionados}')
             button.setStyleSheet("background-color: red;")
             print('pintou')
-            
-
-

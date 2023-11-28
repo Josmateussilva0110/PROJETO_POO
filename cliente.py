@@ -495,8 +495,6 @@ class Ui_Main(QMainWindow, Main):
                         QMessageBox.No
                     )
 
-                    #filme_id = int(filme_id)
-
                     if reply == QMessageBox.Yes:
                         client_socket.send('6'.encode())
                         client_socket.send(f'1 {filme_id}'.encode())
@@ -577,7 +575,6 @@ class Ui_Main(QMainWindow, Main):
         client_socket.send('7'.encode())  
         try:
             filmes = client_socket.recv(4096).decode()
-           # print('TELA CLI: ',filmes)
         except:
             print("\nNão foi possível permanecer conectado!\n")
             client_socket.close()
@@ -766,8 +763,11 @@ class Ui_Main(QMainWindow, Main):
                             client_socket.close()
                         if mensagem == '1': # encontrei os botoes
                             botoa_achado = client_socket.recv(4096).decode()
-                            print(f'lista com os botoes cliente: {botoa_achado}')
-                            botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
+                            print(f'botoes achados: {botoa_achado}')
+                            if self.tela_para_exibir == 10:
+                                botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
+                            elif self.tela_para_exibir == 13:
+                                botoes_tela_lay = lista_botoes_tela_layout_02(self)
                             mudar_cor_botao_vermelho_valido(botoes_tela_lay, botoa_achado) # esta em funções aux.py
                         if self.tela_para_exibir == 10:
                             self.QtStack.setCurrentIndex(10)
@@ -869,10 +869,10 @@ class Ui_Main(QMainWindow, Main):
                 client_socket.close()
             if mensagem == '1': # encontrei os botoes
                 botoa_achado = client_socket.recv(4096).decode()##Botões achados no servidor com 0
-                print('lista com os botoes cliente',botoa_achado)
-
-                #lista_botoes_achados = botoa_achado.split(',')
-                botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
+                if self.tela_para_exibir == 10:
+                    botoes_tela_lay = lista_botoes_tela_layout(self)
+                elif self.tela_para_exibir == 13:
+                    botoes_tela_lay = lista_botoes_tela_layout_02(self)
                 
                 client_socket.send('14'.encode())
                 enviar_dados = list()
@@ -899,7 +899,7 @@ class Ui_Main(QMainWindow, Main):
                 if mensagem == '1': # encontrei os botoes
                     print('botoes achados')
                     botoa_achado_verificado = client_socket.recv(4096).decode()
-                    print('lista com os botoes cliente',botoa_achado_verificado)
+ 
                     mudar_cor_botao_vermelho_valido(botoes_tela_lay, botoa_achado_verificado)
                 
             self.QtStack.setCurrentIndex(2)
