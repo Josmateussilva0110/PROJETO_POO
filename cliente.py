@@ -763,12 +763,14 @@ class Ui_Main(QMainWindow, Main):
                             client_socket.close()
                         if mensagem == '1': # encontrei os botoes
                             botoa_achado = client_socket.recv(4096).decode()
-                            print(f'botoes achados: {botoa_achado}')
                             if self.tela_para_exibir == 10:
                                 botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
                             elif self.tela_para_exibir == 13:
                                 botoes_tela_lay = lista_botoes_tela_layout_02(self)
-                            mudar_cor_botao_vermelho_valido(botoes_tela_lay, botoa_achado) # esta em funções aux.py
+                            print(f'tela lay: {botoes_tela_lay}')
+                            print()
+                            print(f'botoes achados: {botoa_achado}')
+                            #mudar_cor_botao_vermelho_valido(botoes_tela_lay, botoa_achado) # esta em funções aux.py
                         if self.tela_para_exibir == 10:
                             self.QtStack.setCurrentIndex(10)
                         elif self.tela_para_exibir == 13:

@@ -144,6 +144,7 @@ def menu(con, cliente):
         # buscar horarios do filme
         elif mensagem == '10':
             dados_filme_id = con.recv(4096).decode()
+            print(f'o que o servidor recebeu: {dados_filme_id}')
             result = dados_filme.buscar_horarios_id(dados_filme_id)
             if result:
                 horarios = [horario for horario in result]
