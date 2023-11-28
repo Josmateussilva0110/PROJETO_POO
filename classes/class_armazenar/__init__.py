@@ -141,4 +141,24 @@ class Armazenar:
         result = cursor.fetchone()
         cursor.close()
         return result[0] if result else None
+    
+    def contar_pessoas_cadastradas(self):
+        try:
+            cursor = self.db_connection.cursor()
+            
+            # Certifique-se de usar o banco de dados 'Cineplus' antes da consulta
+            cursor.execute("USE Cineplus")
 
+            count_query = "SELECT COUNT(*) FROM Usuarios"
+            cursor.execute(count_query)
+            result = cursor.fetchone()
+
+            # Certifique-se de confirmar (commit) a transação
+            self.db_connection.commit()
+
+            # result é uma tupla com um único valor, que é a contagem
+            return result[0] if result else 0
+        except mysql.connector.Error as err:
+            print(f"Erro ao contar pessoas cadastradas: {err}")
+        finally:
+            cursor.close()

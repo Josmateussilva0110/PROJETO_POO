@@ -296,6 +296,21 @@ def menu(con, cliente):
             else:
                 print('Ta errado')
                 
+        elif mensagem == '17':
+            lista_todos = []
+            cont_cliente = dados_usuarios.contar_pessoas_cadastradas()
+            cont_filmes = dados_filme.contar_filmes_cadastrados()
+            cont_filmes_cartaz = dados_filme.contar_filmes_em_cartaz()  # Adicionado para contar filmes em cartaz
+            cont_cliente = str(cont_cliente)
+            cont_filmes = str(cont_filmes)
+            cont_filmes_cartaz = str(cont_filmes_cartaz)  # Convertido para string
+            lista_todos.append(cont_cliente)
+            lista_todos.append(cont_filmes)
+            lista_todos.append(cont_filmes_cartaz)  # Adicionado o contador de filmes em cartaz
+            print(cont_cliente)
+            print(cont_filmes)
+            print(lista_todos)
+            con.send(','.join(lista_todos).encode())  # Enviando a lista como uma string separada por vírgulas
             
 
     print(f"[DESCONECTADO] Cliente: {nome_cliente}")

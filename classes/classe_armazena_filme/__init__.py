@@ -198,3 +198,25 @@ class Armazenar_filmes:
             return filme_strings
         except Exception as e:
             return []
+        
+    def contar_filmes_cadastrados(self):
+        try:
+            cursor = self.db_connection.cursor()
+            cursor.execute("SELECT COUNT(*) FROM Filmes")
+            count = cursor.fetchone()[0]
+            return count
+        except mysql.connector.Error as err:
+            return 0
+        finally:
+            cursor.close()
+    
+    def contar_filmes_em_cartaz(self):
+        try:
+            cursor = self.db_connection.cursor()
+            cursor.execute("SELECT COUNT(*) FROM Filmes WHERE em_cartaz = 1")
+            count = cursor.fetchone()[0]
+            return count
+        except mysql.connector.Error as err:
+            return 0
+        finally:
+            cursor.close()

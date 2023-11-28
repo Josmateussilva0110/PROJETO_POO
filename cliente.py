@@ -23,7 +23,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '10.180.47.108'
+ip = '192.168.2.103'
 porta = 8007
 nome = 'mateus'
 addr = ((ip,porta))
@@ -160,8 +160,7 @@ class Ui_Main(QMainWindow, Main):
 
         #tela estatistica
         self.TELA_ESTATISTICA_ui.pushButton_4.clicked.connect(self.abrirLoginFunc)
-
-
+        
         #Tela_Gestao
         self.TELA_GESTAO_FILMES_ui.pushButton_4.clicked.connect(self.abrirLoginFunc)
         self.TELA_GESTAO_FILMES_ui.pushButton_3.clicked.connect(self.TelaCadastraFilme)
@@ -239,6 +238,34 @@ class Ui_Main(QMainWindow, Main):
         self.QtStack.setCurrentIndex(3)
     
     def Tela_Estatistica(self):
+        client_socket.send('17'.encode())
+        try:
+            retorno = client_socket.recv(4096).decode()
+
+            # Quebra os dados na vírgula para obter uma lista
+            lista_todos = retorno.split(',')
+
+            # Faça o que for necessário com a lista
+            cont_cliente = lista_todos[0]
+            cont_filmes = lista_todos[1]
+            cont_filmes_cartaz = lista_todos[2]
+
+            # Remova caracteres indesejados
+            cont_cliente = cont_cliente.strip(" '[]")
+            cont_filmes = cont_filmes.strip(" '[]")
+            cont_filmes_cartaz = cont_filmes_cartaz.strip(" '[]")
+
+            # Atualize o texto na linha de edição
+            self.TELA_ESTATISTICA_ui.lineEdit.setText(f"{cont_cliente}")
+            self.TELA_ESTATISTICA_ui.lineEdit_4.setText(f"{cont_filmes}")
+            self.TELA_ESTATISTICA_ui.lineEdit_2.setText(f"{cont_filmes_cartaz}")
+
+        except Exception as e:
+            print(f"\nNão foi possível permanecer conectado! Erro: {e}\n")
+
+
+        
+        
         self.QtStack.setCurrentIndex(4)
     
     def TelaGestao(self):
