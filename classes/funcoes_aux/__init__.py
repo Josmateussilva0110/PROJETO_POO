@@ -176,19 +176,17 @@ def mudar_cor_botao_vermelho_valido(lista_botoes_todos, lista_botoes_selecionado
     print(f'lista de todos: {lista_botoes_todos}')
     print(f'lista botoes selecionado: {lista_botoes_selecionados}')
     
-    # Extrai o número do identificador do botão selecionado
-    numero_selecionado = lista_botoes_selecionados.split('_')[-1]
-    
-    # Itera sobre todos os botões na lista de todos os botões
+    # Extrai números dos identificadores dos botões selecionados
+    numeros_selecionados = [int(botao.split('_')[-1]) for botao in lista_botoes_selecionados.split(',')]
+
     for button in lista_botoes_todos:
         botao_id = button.objectName()
         print('id do botão', botao_id)
         
         # Extrai o número do identificador do botão na lista completa
-        numero_botao = botao_id.split('_')[-1]
+        numero_botao = int(botao_id.split('_')[-1])
         
-        # Compara os números e muda a cor se forem iguais
-        if numero_botao == numero_selecionado:
-            print(f'Um elemento do button name: {botao_id} está igual a {lista_botoes_selecionados}')
+        if numero_botao in numeros_selecionados:
+            print(f'Um elemento do button name: {botao_id} está igual a algum dos selecionados')
             button.setStyleSheet("background-color: red;")
             print('pintou')
