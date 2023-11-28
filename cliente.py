@@ -713,7 +713,9 @@ class Ui_Main(QMainWindow, Main):
                     QMessageBox.No
                 )
                 if reply == QMessageBox.Yes:
+                    print('enviou o sinal 10 para o servidor')
                     client_socket.send('10'.encode())
+                    print(f'enviou o filme_id: {filme_id}')
                     client_socket.send(f'{filme_id}'.encode())
                     try:
                         horarios = client_socket.recv(4096).decode()
@@ -752,8 +754,10 @@ class Ui_Main(QMainWindow, Main):
                             self.tela_para_exibir = 13
                         self.itens_filme = partes
                         self.horarios_cliente = horario_selecionado
+                        print('enviou o sinal 15 para o servidor')
                         client_socket.send('15'.encode()) #sinal para pegar a lista de botoes que estão no servidor
                         tela = str(self.tela_para_exibir)
+                        print(f'enviou a tela: {tela}')
                         client_socket.send(tela.encode()) 
                         try:
                             mensagem = client_socket.recv(4096).decode()
@@ -968,7 +972,6 @@ class Ui_Main(QMainWindow, Main):
                         print('mensagem encontrada')
                         botoa_achado = client_socket.recv(4096).decode()
                         print('lista com os botoes cliente',botoa_achado)
-                        #lista_botoes_achados = botoa_achado.split(',')
                         botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
                         print('botoes_tela_lay',botoes_tela_lay)
                         client_socket.send('14'.encode())
