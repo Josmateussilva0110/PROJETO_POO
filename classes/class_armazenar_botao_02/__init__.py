@@ -94,3 +94,63 @@ class Armazenar_botoes_02():
             print(f'Erro ao buscar o botão {botao}: {err}')
             cursor.close()
             return None
+
+
+    def obter_todos_botoes_02(self):
+        cursor = self.db_connection.cursor()
+
+        select_query = "SELECT botao FROM Botoes_02"
+        try:
+            cursor.execute(select_query)
+            result = cursor.fetchall()
+            if result:
+                botoes = [row[0] for row in result]
+                cursor.close()
+                return botoes
+            else:
+                cursor.close()
+                return None
+        except mysql.connector.Error as err:
+            print(f'Erro ao obter todos os botões: {err}')
+            cursor.close()
+            return None
+
+
+    def obter_botoes_validos_02(self):
+        cursor = self.db_connection.cursor()
+
+        select_query = "SELECT botao FROM Botoes_02 WHERE validar = 1"
+        
+        try:
+            cursor.execute(select_query)
+            result = cursor.fetchall()
+            
+            if result:
+                botoes_validos = [row[0] for row in result]
+                return botoes_validos
+            else:
+                return None
+
+        except mysql.connector.Error as err:
+            print(f'Erro ao obter botões válidos: {err}')
+            return None
+        finally:
+            cursor.close() 
+
+
+    def atualizar_valido_02(self, nome_botao):
+        cursor = self.db_connection.cursor()
+
+        try:
+            # Atualizar o valor de 'validar' para 1 apenas para o botão específico
+            update_query = "UPDATE Botoes_02 SET validar = 1 WHERE botao = %s"
+            cursor.execute(update_query, (nome_botao,))
+            self.db_connection.commit()
+            
+            print(f'Valor de "validar" atualizado para 1 para o botão {nome_botao}.')
+            return True
+        except mysql.connector.Error as err:
+            print(f'Erro ao atualizar "validar" para 1 para o botão {nome_botao}: {err}')
+            return False
+        finally:
+            cursor.close()

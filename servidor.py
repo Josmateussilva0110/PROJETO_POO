@@ -156,7 +156,6 @@ def menu(con, cliente):
             cpf = con.recv(4096).decode()
             if dados_usuarios.buscar_email_cpf(cpf):
                 retorno = dados_usuarios.buscar_email_cpf(cpf)
-                print(retorno)
                 con.send(retorno.encode())
 
         elif mensagem == '12':
@@ -190,31 +189,54 @@ def menu(con, cliente):
         
         #sinal para retornar para o cliente a lista de todos os botoes que foram clicados
         elif mensagem == '13':
-            lista_botoes = dados_botoes.obter_todos_botoes()
-            print('lista com todos os botões1',lista_botoes)
-            if lista_botoes != None:
-                con.send('1'.encode())
-                lista_botoes_str = ','.join(lista_botoes)
-                con.send(lista_botoes_str.encode())
-            else:
-                con.send('0'.encode())
+            tela = con.recv(4096).decode()
+            print(f'tela que recebi do cliente sinal 13: {tela}')
+            if tela == '10':
+                lista_botoes = dados_botoes.obter_todos_botoes()
+                print('lista com todos os botões1',lista_botoes)
+                if lista_botoes != None:
+                    con.send('1'.encode())
+                    lista_botoes_str = ','.join(lista_botoes)
+                    con.send(lista_botoes_str.encode())
+                else:
+                    con.send('0'.encode())
+            elif tela == '13':
+                lista_botoes = dados_botoes_02.obter_todos_botoes_02()
+                print('lista com todos os botões1',lista_botoes)
+                if lista_botoes != None:
+                    con.send('1'.encode())
+                    lista_botoes_str = ','.join(lista_botoes)
+                    con.send(lista_botoes_str.encode())
+                else:
+                    con.send('0'.encode())
                 
         elif mensagem == '14':
             lista_botoes = con.recv(4096).decode().split(',')  # Supondo que os botões estejam separados por vírgula
-
+            print(f'recebido do cliente sinal 14: {lista_botoes}')
+            botao = lista_botoes[0]
             # Verificar se há pelo menos um botão na lista
-            if lista_botoes:
-                ultimo_botao = lista_botoes[-1]
-
-                # Atualizar o valor de 'validar' para 1 apenas para o último botão no banco de dados
-                if dados_botoes.atualizar_valido(ultimo_botao):
-                    print(f'Valor de "validar" atualizado para 1 para o último botão {ultimo_botao}.')
-                    # Enviar confirmação ao cliente
-                    con.send('1'.encode())
-                else:
-                    print(f'Erro ao atualizar "validar" para 1 para o último botão {ultimo_botao}.')
-                    # Enviar informação de erro ao cliente
-                    con.send('0'.encode())
+            if botao:
+                ultimo_botao = botao
+                if lista_botoes[1] == '10':
+                    # Atualizar o valor de 'validar' para 1 apenas para o último botão no banco de dados
+                    if dados_botoes.atualizar_valido(ultimo_botao):
+                        print(f'Valor de "validar" atualizado para 1 para o último botão {ultimo_botao}.')
+                        # Enviar confirmação ao cliente
+                        con.send('1'.encode())
+                    else:
+                        print(f'Erro ao atualizar "validar" para 1 para o último botão {ultimo_botao}.')
+                        # Enviar informação de erro ao cliente
+                        con.send('0'.encode())
+                elif lista_botoes[1] == '13':
+                    # Atualizar o valor de 'validar' para 1 apenas para o último botão no banco de dados
+                    if dados_botoes_02.atualizar_valido_02(ultimo_botao):
+                        print(f'Valor de "validar" atualizado para 1 para o último botão {ultimo_botao}.')
+                        # Enviar confirmação ao cliente
+                        con.send('1'.encode())
+                    else:
+                        print(f'Erro ao atualizar "validar" para 1 para o último botão {ultimo_botao}.')
+                        # Enviar informação de erro ao cliente
+                        con.send('0'.encode())
             else:
                 print('Lista de botões vazia. Nenhum botão atualizado.')
                 # Enviar informação de erro ao cliente
@@ -222,14 +244,28 @@ def menu(con, cliente):
             
             
         elif mensagem == '15':
-            lista_botoes_validos = dados_botoes.obter_botoes_validos()
-            print('lista com todos os botões',lista_botoes_validos)
-            if lista_botoes_validos != None:
-                con.send('1'.encode())
-                lista_botoes_str = ','.join(lista_botoes_validos)
-                con.send(lista_botoes_str.encode())
-            else:
-                con.send('0'.encode())
+            tela = con.recv(4096).decode()
+            print(f'tela que recebi do cliente sinal 15: {tela}')
+            if tela == '10':
+                print('entrou no if 10')
+                lista_botoes_validos = dados_botoes.obter_botoes_validos()
+                print('lista com todos os botões',lista_botoes_validos)
+                if lista_botoes_validos != None:
+                    con.send('1'.encode())
+                    lista_botoes_str = ','.join(lista_botoes_validos)
+                    con.send(lista_botoes_str.encode())
+                else:
+                    con.send('0'.encode())
+            elif tela == '13':
+                print('entrou no if 13')
+                lista_botoes_validos = dados_botoes_02.obter_botoes_validos_02()
+                print('lista com todos os botões',lista_botoes_validos)
+                if lista_botoes_validos != None:
+                    con.send('1'.encode())
+                    lista_botoes_str = ','.join(lista_botoes_validos)
+                    con.send(lista_botoes_str.encode())
+                else:
+                    con.send('0'.encode())
         
         elif mensagem == '16':
             botao = con.recv(4096).decode()
@@ -237,7 +273,6 @@ def menu(con, cliente):
             
             # Buscar o botão no banco de dados
             validar = dados_botoes_02.buscar_botao_02(botao)
-            print('Saída do buscar:', validar)
             
             print('Saída do buscar--->', validar["validar"] if validar else None)
 
