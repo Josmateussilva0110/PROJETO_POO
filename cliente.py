@@ -23,7 +23,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.1.5'
+ip = '10.180.47.108'
 porta = 8007
 nome = 'mateus'
 addr = ((ip,porta))
@@ -770,7 +770,7 @@ class Ui_Main(QMainWindow, Main):
                             print(f'tela lay: {botoes_tela_lay}')
                             print()
                             print(f'botoes achados: {botoa_achado}')
-                            #mudar_cor_botao_vermelho_valido(botoes_tela_lay, botoa_achado) # esta em funções aux.py
+                            mudar_cor_botao_vermelho_valido(botoes_tela_lay, botoa_achado) # esta em funções aux.py
                         if self.tela_para_exibir == 10:
                             self.QtStack.setCurrentIndex(10)
                         elif self.tela_para_exibir == 13:
