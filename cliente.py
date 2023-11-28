@@ -23,7 +23,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.2.103'
+ip = '192.168.1.5'
 porta = 8007
 nome = 'mateus'
 addr = ((ip,porta))
@@ -991,20 +991,29 @@ class Ui_Main(QMainWindow, Main):
                     QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
                     valid = True
                     client_socket.send('13'.encode()) #sinal para pegar a lista de botoes que estão no servidor
+                    tela = str(self.tela_para_exibir)
+                    client_socket.send(tela.encode())
                     try:
                         mensagem = client_socket.recv(4096).decode()
-                        print('Entrou aqui',mensagem)
                     except:
                         print("\nNão foi possível permanecer conectado!\n")
                         client_socket.close()
                     if mensagem == '1': # encontrei os botoes
-                        print('mensagem encontrada')
-                        botoa_achado = client_socket.recv(4096).decode()
-                        print('lista com os botoes cliente',botoa_achado)
-                        botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
-                        print('botoes_tela_lay',botoes_tela_lay)
+                        botoa_achado = client_socket.recv(4096).decode()##Botões achados no servidor com 0
+                        if self.tela_para_exibir == 10:
+                            botoes_tela_lay = lista_botoes_tela_layout(self)
+                        elif self.tela_para_exibir == 13:
+                            botoes_tela_lay = lista_botoes_tela_layout_02(self)
+                        
                         client_socket.send('14'.encode())
-                        client_socket.send(self.botao_id.encode())
+                        enviar_dados = list()
+                        tela = str(self.tela_para_exibir)
+                        enviar_dados.append(self.botao_id)
+                        enviar_dados.append(tela)
+                        enviar_servidor = ','.join(enviar_dados)
+                        print(f'enviando para o servidor: {enviar_servidor}')
+                        client_socket.send(enviar_servidor.encode())
+
                         resposta = client_socket.recv(4096).decode()
                         if resposta == '0':
                             print(f'Erro ao atualizar "validar" para 1 para o botão {self.botao_id}.')
@@ -1012,16 +1021,16 @@ class Ui_Main(QMainWindow, Main):
                             print(f'Valor de "validar" atualizado para 1 para o botão {self.botao_id}.')
                         
                         client_socket.send('15'.encode()) #sinal para pegar a lista de botoes que estão no servidor
+                        client_socket.send(tela.encode())
                         try:
                             mensagem = client_socket.recv(4096).decode()
-                            print('Entrou aqui',mensagem)
                         except:
                             print("\nNão foi possível permanecer conectado!\n")
                             client_socket.close()
                         if mensagem == '1': # encontrei os botoes
-                            print('mensagem encontrada')
+                            print('botoes achados')
                             botoa_achado_verificado = client_socket.recv(4096).decode()
-                            print('lista com os botoes cliente',botoa_achado_verificado)
+        
                             mudar_cor_botao_vermelho_valido(botoes_tela_lay, botoa_achado_verificado)
         if valid:  
             self.QtStack.setCurrentIndex(2)
