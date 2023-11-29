@@ -191,3 +191,44 @@ def mudar_cor_botao_vermelho_valido(lista_botoes_todos, lista_botoes_selecionado
             button.setStyleSheet("background-color: red;")
             print('pintou')
 
+
+
+def processar_dados_do_botao(client_socket, tela_para_exibir, botao_id, botoes):
+    print('entrou na função processar dados')
+    client_socket.send('13'.encode())  # sinal para pegar a lista de botões que estão no servidor
+    print('enviou o sinal 13')
+    tela = str(tela_para_exibir)
+    client_socket.send(tela.encode())
+    try:
+        mensagem = client_socket.recv(4096).decode()
+    except:
+        print("\nNão foi possível permanecer conectado!\n")
+        client_socket.close()
+
+    if mensagem == '1':  # encontrei os botões
+        botoa_achado = client_socket.recv(4096).decode()##Botões achados no servidor com 0
+        client_socket.send('14'.encode())
+        print('enviou o sinal 14')
+        enviar_dados = [botao_id, str(tela_para_exibir)]
+        enviar_servidor = ','.join(enviar_dados)
+        print(f'enviando para o servidor: {enviar_servidor}')
+        client_socket.send(enviar_servidor.encode())
+
+        resposta = client_socket.recv(4096).decode()
+        if resposta == '0':
+            print(f'Erro ao atualizar "validar" para 1 para o botão {botao_id}.')
+        else:
+            print(f'Valor de "validar" atualizado para 1 para o botão {botao_id}.')
+        
+        client_socket.send('15'.encode()) #sinal para pegar a lista de botoes que estão no servidor
+        client_socket.send(tela.encode())
+        try:
+            mensagem = client_socket.recv(4096).decode()
+        except:
+            print("\nNão foi possível permanecer conectado!\n")
+            client_socket.close()
+        if mensagem == '1':  # encontrei os botões
+            print('entrou aqui ?')
+            botoa_achado_verificado = client_socket.recv(4096).decode()
+            print(f'botoes achados verific: {botoa_achado_verificado}')
+            mudar_cor_botao_vermelho_valido(botoes, botoa_achado_verificado)

@@ -245,6 +245,7 @@ def menu(con, cliente):
             
             
         elif mensagem == '15':
+            print('entrou no 15')
             tela = con.recv(4096).decode()
             print(f'tela que recebi do cliente sinal 15: {tela}')
             if tela == '10':

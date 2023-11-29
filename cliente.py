@@ -887,50 +887,11 @@ class Ui_Main(QMainWindow, Main):
             EnviaEmail(email,mensagem)
             QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
             self.dados_clienete.clear()
-            print('enviou a mensagem 13')
-            client_socket.send('13'.encode()) #sinal para pegar a lista de botoes que estão no servidor
-            tela = str(self.tela_para_exibir)
-            client_socket.send(tela.encode())
-            try:
-                mensagem = client_socket.recv(4096).decode()
-            except:
-                print("\nNão foi possível permanecer conectado!\n")
-                client_socket.close()
-            if mensagem == '1': # encontrei os botoes
-                botoa_achado = client_socket.recv(4096).decode()##Botões achados no servidor com 0
-                if self.tela_para_exibir == 10:
-                    botoes_tela_lay = lista_botoes_tela_layout(self)
-                elif self.tela_para_exibir == 13:
-                    botoes_tela_lay = lista_botoes_tela_layout_02(self)
-                
-                client_socket.send('14'.encode())
-                enviar_dados = list()
-                tela = str(self.tela_para_exibir)
-                enviar_dados.append(self.botao_id)
-                enviar_dados.append(tela)
-                enviar_servidor = ','.join(enviar_dados)
-                print(f'enviando para o servidor: {enviar_servidor}')
-                client_socket.send(enviar_servidor.encode())
-
-                resposta = client_socket.recv(4096).decode()
-                if resposta == '0':
-                    print(f'Erro ao atualizar "validar" para 1 para o botão {self.botao_id}.')
-                else:
-                    print(f'Valor de "validar" atualizado para 1 para o botão {self.botao_id}.')
-                
-                client_socket.send('15'.encode()) #sinal para pegar a lista de botoes que estão no servidor
-                client_socket.send(tela.encode())
-                try:
-                    mensagem = client_socket.recv(4096).decode()
-                except:
-                    print("\nNão foi possível permanecer conectado!\n")
-                    client_socket.close()
-                if mensagem == '1': # encontrei os botoes
-                    print('botoes achados')
-                    botoa_achado_verificado = client_socket.recv(4096).decode()
- 
-                    mudar_cor_botao_vermelho_valido(botoes_tela_lay, botoa_achado_verificado)
-                
+            if self.tela_para_exibir == 10:
+                botoes = lista_botoes_tela_layout(self)
+            elif self.tela_para_exibir == 13:
+                botoes = lista_botoes_tela_layout_02(self)
+            processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes)
             self.QtStack.setCurrentIndex(2)
         
         
@@ -990,48 +951,11 @@ class Ui_Main(QMainWindow, Main):
                     self.dados_clienete.clear()
                     QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
                     valid = True
-                    client_socket.send('13'.encode()) #sinal para pegar a lista de botoes que estão no servidor
-                    tela = str(self.tela_para_exibir)
-                    client_socket.send(tela.encode())
-                    try:
-                        mensagem = client_socket.recv(4096).decode()
-                    except:
-                        print("\nNão foi possível permanecer conectado!\n")
-                        client_socket.close()
-                    if mensagem == '1': # encontrei os botoes
-                        botoa_achado = client_socket.recv(4096).decode()##Botões achados no servidor com 0
-                        if self.tela_para_exibir == 10:
-                            botoes_tela_lay = lista_botoes_tela_layout(self)
-                        elif self.tela_para_exibir == 13:
-                            botoes_tela_lay = lista_botoes_tela_layout_02(self)
-                        
-                        client_socket.send('14'.encode())
-                        enviar_dados = list()
-                        tela = str(self.tela_para_exibir)
-                        enviar_dados.append(self.botao_id)
-                        enviar_dados.append(tela)
-                        enviar_servidor = ','.join(enviar_dados)
-                        print(f'enviando para o servidor: {enviar_servidor}')
-                        client_socket.send(enviar_servidor.encode())
-
-                        resposta = client_socket.recv(4096).decode()
-                        if resposta == '0':
-                            print(f'Erro ao atualizar "validar" para 1 para o botão {self.botao_id}.')
-                        else:
-                            print(f'Valor de "validar" atualizado para 1 para o botão {self.botao_id}.')
-                        
-                        client_socket.send('15'.encode()) #sinal para pegar a lista de botoes que estão no servidor
-                        client_socket.send(tela.encode())
-                        try:
-                            mensagem = client_socket.recv(4096).decode()
-                        except:
-                            print("\nNão foi possível permanecer conectado!\n")
-                            client_socket.close()
-                        if mensagem == '1': # encontrei os botoes
-                            print('botoes achados')
-                            botoa_achado_verificado = client_socket.recv(4096).decode()
-        
-                            mudar_cor_botao_vermelho_valido(botoes_tela_lay, botoa_achado_verificado)
+                    if self.tela_para_exibir == 10:
+                        botoes = lista_botoes_tela_layout(self)
+                    elif self.tela_para_exibir == 13:
+                        botoes = lista_botoes_tela_layout_02(self)
+                    processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes)
         if valid:  
             self.QtStack.setCurrentIndex(2)
             self.Cartao_ui.lineEdit.setText('')
