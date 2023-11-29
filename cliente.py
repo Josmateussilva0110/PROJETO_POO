@@ -905,7 +905,7 @@ class Ui_Main(QMainWindow, Main):
             self.dados_clienete.append(self.itens_filme[7])
             self.dados_clienete.append(self.itens_filme[9])
             self.dados_clienete.append(self.horarios_cliente)
-            mensagem = formatar_mensagem(self.dados_clienete, self.total_compra)
+            mensagem = formatar_mensagem(self.dados_clienete, self.total_compra, self.tela_para_exibir)
                 
             EnviaEmail(email,mensagem)
             QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
@@ -971,7 +971,7 @@ class Ui_Main(QMainWindow, Main):
                     self.dados_clienete.append(self.itens_filme[7])
                     self.dados_clienete.append(self.itens_filme[9])
                     self.dados_clienete.append(self.horarios_cliente)  
-                    mensagem = formatar_mensagem(self.dados_clienete, self.total_compra, opc_cartao, parcelas)
+                    mensagem = formatar_mensagem(self.dados_clienete, self.total_compra, self.tela_para_exibir, opc_cartao, parcelas)
                     EnviaEmail(email,mensagem)  
                     self.dados_clienete.clear()
                     QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')

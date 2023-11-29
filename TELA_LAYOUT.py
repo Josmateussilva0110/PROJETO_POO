@@ -166,9 +166,9 @@ class Tela_layout(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        #botoes = lista_botoes(self)
-        #for button in botoes:
-        #    button.setStyleSheet("background-color: green;")
+        botoes = lista_botoes(self)
+        for button in botoes:
+            button.setStyleSheet("background-color: green;")
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

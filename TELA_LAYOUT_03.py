@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from classes.funcoes_aux import lista_botoes
 
 class Tela_layout_03(object):
     def setupUi(self, MainWindow):
@@ -165,9 +166,9 @@ class Tela_layout_03(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        #botoes = lista_botoes(self)
-        #for button in botoes:
-        #    button.setStyleSheet("background-color: green;")
+        botoes = lista_botoes(self)
+        for button in botoes:
+            button.setStyleSheet("background-color: green;")
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

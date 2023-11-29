@@ -139,11 +139,17 @@ def EnviaEmail(destinatario,mensagem):
         smtp.send_message(msg)    
 
 
-def formatar_mensagem(dados_cliente, total_compra, flag=1, parcelas=1):
+def formatar_mensagem(dados_cliente, total_compra, sala, flag=1, parcelas=1):
     # Formatar a lista de dados_cliente em uma string organizada
-    formato_mensagem = "Nome cliente: {}\nNome filme: {}\nAno: {}\nPreço: {}\nClassificação: {}\nHorario: {}\nPagamento: {}\nTotal compra: {}\nEmitido: {}"
+    formato_mensagem = "Nome cliente: {}\nNome filme: {}\nAno: {}\nPreço: {}\nClassificação: {}\nHorario: {}\nSala: {}\nTotal compra: {}\nPagamento: {}\nEmitido: {}"
     data_e_hora_atuais = datetime.now()
     data_e_hora_em_texto = data_e_hora_atuais.strftime('%d/%m/%Y %H:%M')
+    if sala == 10:
+        sala_exibir = '01'
+    elif sala == 13:
+        sala_exibir = '02'
+    elif sala == 14:
+        sala_exibir = '03'
     # Extrair os valores relevantes da lista
     nome_cliente = dados_cliente[0]
     nome_filme = dados_cliente[1]
@@ -162,12 +168,12 @@ def formatar_mensagem(dados_cliente, total_compra, flag=1, parcelas=1):
         total_compra_exibir /= int(parcelas)
     emissao = data_e_hora_em_texto
     # Criar a mensagem formatada
-    mensagem_formatada = formato_mensagem.format(nome_cliente, nome_filme, ano, preco, classificacao, horario, pagamento, total_compra_exibir, emissao)
+    mensagem_formatada = formato_mensagem.format(nome_cliente, nome_filme, ano, preco, classificacao, horario, sala_exibir, total_compra_exibir, pagamento, emissao)
 
     return mensagem_formatada
 
                 
-def mudar_cor_botao_vermelho(lista_botoes_todos, lista_botoes_selecionados):
+'''def mudar_cor_botao_vermelho(lista_botoes_todos, lista_botoes_selecionados):
     print('entrou em função mudar cor:')
     print(f'lista de todos os botoes: {lista_botoes_todos}')
     print(f'lista de botoes selecionados: {lista_botoes_selecionados}')
@@ -181,7 +187,7 @@ def mudar_cor_botao_vermelho(lista_botoes_todos, lista_botoes_selecionados):
         if botao_id in lista_botoes_selecionados:
             print(f'Um elemetno do button name: {botao_id} esta igual a {lista_botoes_selecionados}')
             button.setStyleSheet("background-color: red;")
-            print('pintou')
+            print('pintou')'''
             
 def mudar_cor_botao_vermelho_valido(lista_botoes_todos, lista_botoes_selecionados):
     print('entrou em função mudar cor valido:')
