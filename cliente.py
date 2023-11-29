@@ -806,12 +806,7 @@ class Ui_Main(QMainWindow, Main):
                             client_socket.close()
                         if mensagem == '1': # encontrei os botoes
                             botoa_achado = client_socket.recv(4096).decode()
-                            if self.tela_para_exibir == 10:
-                                botoes_tela_lay = lista_botoes_tela_layout(self) # pego todos os botoes que preciso da tela layout esta em funções_aux.py
-                            elif self.tela_para_exibir == 13:
-                                botoes_tela_lay = lista_botoes_tela_layout_02(self)
-                            elif self.tela_para_exibir == 14:
-                                botoes_tela_lay = lista_botoes_tela_layout_03(self)
+                            botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
                             print(f'tela lay: {botoes_tela_lay}')
                             print()
                             print(f'botoes achados: {botoa_achado}')
@@ -910,13 +905,8 @@ class Ui_Main(QMainWindow, Main):
             EnviaEmail(email,mensagem)
             QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
             self.dados_clienete.clear()
-            if self.tela_para_exibir == 10:
-                botoes = lista_botoes_tela_layout(self)
-            elif self.tela_para_exibir == 13:
-                botoes = lista_botoes_tela_layout_02(self)
-            elif self.tela_para_exibir == 14:
-                botoes = lista_botoes_tela_layout_03(self)
-            processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes)
+            botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
+            processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
             self.QtStack.setCurrentIndex(2)
         
         
@@ -976,13 +966,8 @@ class Ui_Main(QMainWindow, Main):
                     self.dados_clienete.clear()
                     QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
                     valid = True
-                    if self.tela_para_exibir == 10:
-                        botoes = lista_botoes_tela_layout(self)
-                    elif self.tela_para_exibir == 13:
-                        botoes = lista_botoes_tela_layout_02(self)
-                    elif self.tela_para_exibir == 14:
-                        botoes = lista_botoes_tela_layout_03(self)
-                    processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes)
+                    botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
+                    processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
         if valid:  
             self.QtStack.setCurrentIndex(2)
             self.Cartao_ui.lineEdit.setText('')

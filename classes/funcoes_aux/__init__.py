@@ -67,23 +67,24 @@ def lista_botoes_red_03(self):
     ]
     return botao_and_funcao
 
-def lista_botoes_tela_layout(self): #retorno todos os botoes que preciso
-    botao = [
+
+def lista_botoes_tela_layout(self, tela):
+    if tela == 10:
+        botao = [
         getattr(self.TELA_LAYOUT, f"pushButton_{i}") for i in range(3, 43)
-    ]
-    return botao
-
-def lista_botoes_tela_layout_02(self): #retorno todos os botoes que preciso
-    botao = [
+        ]
+    
+    elif tela == 13:
+        botao = [
         getattr(self.TELA_LAYOUT_02, f"pushButton_{i}") for i in range(3, 43)
-    ]
+        ]
+    
+    elif tela == 14:
+        botao = [
+        getattr(self.TELA_LAYOUT_03, f"pushButton_{i}") for i in range(3, 43)
+        ]
     return botao
 
-def lista_botoes_tela_layout_03(self): #retorno todos os botoes que preciso
-    botao = [
-        getattr(self.TELA_LAYOUT_03, f"pushButton_{i}") for i in range(3, 43)
-    ]
-    return botao
 
 def lista_de_classificacao_filme():
     lista = ['livre', '10', '12', '14', '16', '18']
@@ -172,22 +173,6 @@ def formatar_mensagem(dados_cliente, total_compra, sala, flag=1, parcelas=1):
 
     return mensagem_formatada
 
-                
-'''def mudar_cor_botao_vermelho(lista_botoes_todos, lista_botoes_selecionados):
-    print('entrou em função mudar cor:')
-    print(f'lista de todos os botoes: {lista_botoes_todos}')
-    print(f'lista de botoes selecionados: {lista_botoes_selecionados}')
-
-    # Itera sobre todos os botões na lista de todos os botões
-    for button in lista_botoes_todos:
-        botao_id = button.objectName()
-        print('id do botão', botao_id)
-
-        # Verifica se o nome do botão está na lista de botões selecionados
-        if botao_id in lista_botoes_selecionados:
-            print(f'Um elemetno do button name: {botao_id} esta igual a {lista_botoes_selecionados}')
-            button.setStyleSheet("background-color: red;")
-            print('pintou')'''
             
 def mudar_cor_botao_vermelho_valido(lista_botoes_todos, lista_botoes_selecionados):
     print('entrou em função mudar cor valido:')
