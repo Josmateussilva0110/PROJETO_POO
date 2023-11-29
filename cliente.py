@@ -980,6 +980,8 @@ class Ui_Main(QMainWindow, Main):
                         botoes = lista_botoes_tela_layout(self)
                     elif self.tela_para_exibir == 13:
                         botoes = lista_botoes_tela_layout_02(self)
+                    elif self.tela_para_exibir == 14:
+                        botoes = lista_botoes_tela_layout_03(self)
                     processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes)
         if valid:  
             self.QtStack.setCurrentIndex(2)
