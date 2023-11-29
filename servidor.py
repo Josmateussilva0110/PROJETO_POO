@@ -8,6 +8,7 @@ from classes.class_filme import *
 from classes.funcoes_aux import *
 from classes.class_armazenar_botoes import *
 from classes.class_armazenar_botao_02 import *
+from classes.class_armazenar_botao_03 import *
 
 
 host = ''
@@ -21,6 +22,7 @@ dados_usuarios = Armazenar(mydb)
 dados_filme = Armazenar_filmes(mydb)
 dados_botoes = Armazenar_botoes(mydb)
 dados_botoes_02 = Armazenar_botoes_02(mydb)
+dados_botoes_03 = Armazenar_botoes_03(mydb)
 
 
 def menu(con, cliente):
@@ -268,6 +270,18 @@ def menu(con, cliente):
                     con.send(lista_botoes_str.encode())
                 else:
                     con.send('0'.encode())
+            
+            elif tela == '14':
+                print('entrou no if 14')
+
+                lista_botoes_validos = dados_botoes_03.obter_botoes_validos_03()
+                print('lista com todos os botões',lista_botoes_validos)
+                if lista_botoes_validos != None:
+                    con.send('1'.encode())
+                    lista_botoes_str = ','.join(lista_botoes_validos)
+                    con.send(lista_botoes_str.encode())
+                else:
+                    con.send('0'.encode())
         
         elif mensagem == '16':
             botao = con.recv(4096).decode()
@@ -312,6 +326,36 @@ def menu(con, cliente):
             print(cont_filmes)
             print(lista_todos)
             con.send(','.join(lista_todos).encode())  # Enviando a lista como uma string separada por vírgulas
+        
+
+        elif mensagem == '18':
+            botao = con.recv(4096).decode()
+            print(f'Recebido do cliente: {botao}')
+            
+            # Buscar o botão no banco de dados
+            validar = dados_botoes_03.buscar_botao_03(botao)
+            print('Saída do buscar:', validar)
+            
+            print('Saída do buscar--->', validar["validar"] if validar else None)
+
+            if validar is None:
+                con.send('1'.encode())
+                # Armazenar o botão no banco de dados
+
+                if dados_botoes_03.armazenar_botao_03(botao):
+                    print(f'Botão {botao} armazenado com sucesso no servidor.')
+                else:
+                    print(f'Erro ao armazenar o botão {botao} no servidor.')
+            elif validar["validar"] == 0:
+                print('Entrou aqui rapá')
+                con.send('0'.encode())
+                print(f'Botão {botao} já armazenado no servidor, mas é inválido (validar == 0).')
+                # Adicione aqui a lógica específica para tratar o caso de validar == 0
+            elif validar["validar"] == 1:
+                con.send('2'.encode())
+                print(f'Botão {botao} já armazenado no servidor e é válido (validar == 1).')
+            else:
+                print('Ta errado')
             
 
     print(f"[DESCONECTADO] Cliente: {nome_cliente}")

@@ -61,6 +61,12 @@ def lista_botoes_red_02(self):
     ]
     return botao_and_funcao
 
+def lista_botoes_red_03(self):
+    botao_and_funcao = [
+        (getattr(self.TELA_LAYOUT_03, f"pushButton_{i}"), self.ir_tela_pagamento) for i in range(3, 43)
+    ]
+    return botao_and_funcao
+
 def lista_botoes_tela_layout(self): #retorno todos os botoes que preciso
     botao = [
         getattr(self.TELA_LAYOUT, f"pushButton_{i}") for i in range(3, 43)

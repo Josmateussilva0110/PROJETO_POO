@@ -19,6 +19,7 @@ from TELA_CLIENTE_VER_FILMES_ui import *
 from TELA_LAYOUT import *
 from TELA_PAGAMENTO import *
 from TELA_LAYOUT_02 import *
+from TELA_LAYOUT_03 import *
 from Cartao_ui import *
 from classes.funcoes_aux import *
 
@@ -56,6 +57,7 @@ class Main(QtWidgets.QWidget):
         self.stack11 = QtWidgets.QMainWindow()
         self.stack12 = QtWidgets.QMainWindow()
         self.stack13 = QtWidgets.QMainWindow()
+        self.stack14 = QtWidgets.QMainWindow()
 
 
         self.tela_main_ui = Ui_Dialog()
@@ -108,6 +110,9 @@ class Main(QtWidgets.QWidget):
         self.TELA_LAYOUT_02 = Tela_layout_02()
         self.TELA_LAYOUT_02.setupUi(self.stack13)
 
+        self.TELA_LAYOUT_03 = Tela_layout_03()
+        self.TELA_LAYOUT_03.setupUi(self.stack14)
+
         self.QtStack.addWidget(self.stack0)
         self.QtStack.addWidget(self.stack1)
         self.QtStack.addWidget(self.stack2)
@@ -122,6 +127,7 @@ class Main(QtWidgets.QWidget):
         self.QtStack.addWidget(self.stack11)
         self.QtStack.addWidget(self.stack12)
         self.QtStack.addWidget(self.stack13)
+        self.QtStack.addWidget(self.stack14)
 
 
 class Ui_Main(QMainWindow, Main):
@@ -203,6 +209,10 @@ class Ui_Main(QMainWindow, Main):
         buttons_and_functions_02 = lista_botoes_red_02(self)
         for button, function in buttons_and_functions_02:
             button.clicked.connect(lambda _, btn=button: function(btn))
+        
+        buttons_and_functions_03 = lista_botoes_red_03(self)
+        for button, function in buttons_and_functions_03:
+            button.clicked.connect(lambda _, btn=button: function(btn))
 
             
 
@@ -211,6 +221,9 @@ class Ui_Main(QMainWindow, Main):
 
         #tela layout_02
         self.TELA_LAYOUT_02.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
+
+        #tela layout_03
+        self.TELA_LAYOUT_03.pushButton_2.clicked.connect(self.Tela_Cliente_Ver_Filmes)
 
         #TELA PAGAMENTO
         self.TELA_PAGAMENTO.pushButton_4.clicked.connect(self.Tela_Cliente_Ver_Filmes)
@@ -776,6 +789,9 @@ class Ui_Main(QMainWindow, Main):
                             self.tela_para_exibir = 10
                         elif horario_selecionado == horarios_list[1]:
                             self.tela_para_exibir = 13
+                        elif horario_selecionado == horarios_list[2]:
+                            self.tela_para_exibir = 14
+
                         self.itens_filme = partes
                         self.horarios_cliente = horario_selecionado
                         print('enviou o sinal 15 para o servidor')
@@ -802,6 +818,8 @@ class Ui_Main(QMainWindow, Main):
                             self.QtStack.setCurrentIndex(10)
                         elif self.tela_para_exibir == 13:
                             self.QtStack.setCurrentIndex(13)
+                        elif self.tela_para_exibir == 14:
+                            self.QtStack.setCurrentIndex(14)
                 else:
                     QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')
             else:
@@ -841,6 +859,9 @@ class Ui_Main(QMainWindow, Main):
                 client_socket.send(self.botao_id.encode())
             elif self.tela_para_exibir == 13:
                 client_socket.send('16'.encode())
+                client_socket.send(self.botao_id.encode())
+            elif self.tela_para_exibir == 14:
+                client_socket.send('18'.encode())
                 client_socket.send(self.botao_id.encode())
             try:
                 resposta = client_socket.recv(4096).decode()
