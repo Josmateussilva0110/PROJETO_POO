@@ -212,6 +212,16 @@ def menu(con, cliente):
                     con.send(lista_botoes_str.encode())
                 else:
                     con.send('0'.encode())
+            
+            elif tela == '14':
+                lista_botoes = dados_botoes_03.obter_todos_botoes_03()
+                print('lista com todos os botões1',lista_botoes)
+                if lista_botoes != None:
+                    con.send('1'.encode())
+                    lista_botoes_str = ','.join(lista_botoes)
+                    con.send(lista_botoes_str.encode())
+                else:
+                    con.send('0'.encode())
                 
         elif mensagem == '14':
             lista_botoes = con.recv(4096).decode().split(',')  # Supondo que os botões estejam separados por vírgula
@@ -233,6 +243,17 @@ def menu(con, cliente):
                 elif lista_botoes[1] == '13':
                     # Atualizar o valor de 'validar' para 1 apenas para o último botão no banco de dados
                     if dados_botoes_02.atualizar_valido_02(ultimo_botao):
+                        print(f'Valor de "validar" atualizado para 1 para o último botão {ultimo_botao}.')
+                        # Enviar confirmação ao cliente
+                        con.send('1'.encode())
+                    else:
+                        print(f'Erro ao atualizar "validar" para 1 para o último botão {ultimo_botao}.')
+                        # Enviar informação de erro ao cliente
+                        con.send('0'.encode())
+                
+                elif lista_botoes[1] == '14':
+                    # Atualizar o valor de 'validar' para 1 apenas para o último botão no banco de dados
+                    if dados_botoes_03.atualizar_valido_03(ultimo_botao):
                         print(f'Valor de "validar" atualizado para 1 para o último botão {ultimo_botao}.')
                         # Enviar confirmação ao cliente
                         con.send('1'.encode())

@@ -79,6 +79,12 @@ def lista_botoes_tela_layout_02(self): #retorno todos os botoes que preciso
     ]
     return botao
 
+def lista_botoes_tela_layout_03(self): #retorno todos os botoes que preciso
+    botao = [
+        getattr(self.TELA_LAYOUT_03, f"pushButton_{i}") for i in range(3, 43)
+    ]
+    return botao
+
 def lista_de_classificacao_filme():
     lista = ['livre', '10', '12', '14', '16', '18']
     return lista
