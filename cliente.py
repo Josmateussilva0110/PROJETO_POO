@@ -244,7 +244,7 @@ class Ui_Main(QMainWindow, Main):
         
         ##TELA_CLIENTES_EXCLUIR_RESERVA
         self.TELA_EXCLUIR_RESERVA_ui.pushButton.clicked.connect(self.abrirTelaDPSLoginCli)
-        self.TELA_EXCLUIR_RESERVA_ui.listView.clicked.connect(self.item_selecionado_Excluir_Reserva)
+        # self.TELA_EXCLUIR_RESERVA_ui.listView.clicked.connect(self.item_selecionado_Excluir_Reserva)
     
     def VoltarMain(self):
         self.QtStack.setCurrentIndex(0)
@@ -1008,29 +1008,29 @@ class Ui_Main(QMainWindow, Main):
         
         
     
-    def item_selecionado_Excluir_Reserva(self, index):
-        # Obtenha o item selecionado
-        selected_index = index.row()
+    # def item_selecionado_Excluir_Reserva(self, index):
+    #     # Obtenha o item selecionado
+    #     selected_index = index.row()
 
-        # Verifique se há um item selecionado
-        if selected_index >= 0:
-            # Exiba um diálogo de confirmação
-            resposta = QtWidgets.QMessageBox.question(
-                self,
-                'Confirmação',
-                f'Deseja excluir o item {selected_index}?',
-                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-                QtWidgets.QMessageBox.No
-            )
+    #     # Verifique se há um item selecionado
+    #     if selected_index >= 0:
+    #         # Exiba um diálogo de confirmação
+    #         resposta = QtWidgets.QMessageBox.question(
+    #             self,
+    #             'Confirmação',
+    #             f'Deseja excluir o item {selected_index}?',
+    #             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+    #             QtWidgets.QMessageBox.No
+    #         )
 
-            # Verifique a resposta do usuário
-            if resposta == QtWidgets.QMessageBox.Yes:
-                client_socket.send('20'.encode())
-                # Implemente a lógica de exclusão aqui
-                print(f'Item {selected_index} excluído.')  
-                self.QtStack.setCurrentIndex(2)
-        else:
-            QtWidgets.QMessageBox.warning(self, 'Aviso', 'Nenhum item selecionado.')
+    #         # Verifique a resposta do usuário
+    #         if resposta == QtWidgets.QMessageBox.Yes:
+    #             client_socket.send('20'.encode())
+    #             # Implemente a lógica de exclusão aqui
+    #             print(f'Item {selected_index} excluído.')  
+    #             self.QtStack.setCurrentIndex(2)
+    #     else:
+    #         QtWidgets.QMessageBox.warning(self, 'Aviso', 'Nenhum item selecionado.')
 
             
             
