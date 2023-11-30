@@ -233,9 +233,10 @@ def menu(con, cliente):
                 if lista_botoes[1] == '10':
                     # Atualizar o valor de 'validar' para 1 apenas para o último botão no banco de dados
                     if dados_botoes.atualizar_valido(ultimo_botao):
-                        print(f'Valor de "validar" atualizado para 1 para o último botão {ultimo_botao}.')
-                        # Enviar confirmação ao cliente
-                        con.send('1'.encode())
+                        if dados_botoes.atualizar_cpf(cpf):
+                            print(f'Valor de "validar" atualizado para 1 para o último botão {ultimo_botao}.')
+                            # Enviar confirmação ao cliente
+                            con.send('1'.encode())
                     else:
                         print(f'Erro ao atualizar "validar" para 1 para o último botão {ultimo_botao}.')
                         # Enviar informação de erro ao cliente
@@ -377,6 +378,34 @@ def menu(con, cliente):
                 print(f'Botão {botao} já armazenado no servidor e é válido (validar == 1).')
             else:
                 print('Ta errado')
+        
+        elif mensagem == '19':
+            print('Entrou aqui')
+            cpf = con.recv(4096).decode()
+            cpf = int(cpf)
+            botoes_associados = dados_botoes.obter_botoes_por_cpf(cpf)
+
+            if botoes_associados:
+                print(f'Botoes associados ao CPF {cpf}: {botoes_associados}')
+                resposta = ",".join(botoes_associados)
+                con.send(resposta.encode())
+                # Faça aqui o que desejar com a lista de botões associados
+            else:
+                con.send('0'.encode())
+                # Faça aqui o que desejar se nenhum botão estiver associado ao CPF
+                
+        elif mensagem == '20':
+            botao = lista_botoes[0]
+            # Verificar se há pelo menos um botão na lista
+            if botao:
+                ultimo_botao = botao
+                if lista_botoes[1] == '10':
+                    if dados_botoes.Exclui_Reserva(ultimo_botao):
+                        print(f'Excluido')
+                        # Enviar confirmação ao cliente
+                        con.send('1'.encode())
+
+            
             
 
     print(f"[DESCONECTADO] Cliente: {nome_cliente}")

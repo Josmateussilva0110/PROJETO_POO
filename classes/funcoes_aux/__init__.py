@@ -235,3 +235,4 @@ def processar_dados_do_botao(client_socket, tela_para_exibir, botao_id, botoes):
             botoa_achado_verificado = client_socket.recv(4096).decode()
             print(f'botoes achados verific: {botoa_achado_verificado}')
             mudar_cor_botao_vermelho_valido(botoes, botoa_achado_verificado)
+            

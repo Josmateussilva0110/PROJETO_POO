@@ -15,6 +15,7 @@ from TELA_GESTAO_FILMES_ui import *#
 from TELA_CADASTRO_FILMES import *#
 from TELA_LISTA_FILMES_ui import *#
 from TELA_EXCLUIR_FILME_ui import *
+from TELA_EXCLUIR_RESERVA_ui import *
 from TELA_CLIENTE_VER_FILMES_ui import *
 from TELA_LAYOUT import *
 from TELA_PAGAMENTO import *
@@ -24,7 +25,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.1.5'
+ip = '192.168.2.103'
 porta = 8007
 nome = 'mateus'
 addr = ((ip,porta))
@@ -58,6 +59,7 @@ class Main(QtWidgets.QWidget):
         self.stack12 = QtWidgets.QMainWindow()
         self.stack13 = QtWidgets.QMainWindow()
         self.stack14 = QtWidgets.QMainWindow()
+        self.stack15 = QtWidgets.QMainWindow()
 
 
         self.tela_main_ui = Ui_Dialog()
@@ -112,6 +114,9 @@ class Main(QtWidgets.QWidget):
 
         self.TELA_LAYOUT_03 = Tela_layout_03()
         self.TELA_LAYOUT_03.setupUi(self.stack14)
+        
+        self.TELA_EXCLUIR_RESERVA_ui = Tela_Excluir_Reserva()
+        self.TELA_EXCLUIR_RESERVA_ui.setupUi(self.stack15)
 
         self.QtStack.addWidget(self.stack0)
         self.QtStack.addWidget(self.stack1)
@@ -128,6 +133,7 @@ class Main(QtWidgets.QWidget):
         self.QtStack.addWidget(self.stack12)
         self.QtStack.addWidget(self.stack13)
         self.QtStack.addWidget(self.stack14)
+        self.QtStack.addWidget(self.stack15)
 
 
 class Ui_Main(QMainWindow, Main):
@@ -159,6 +165,8 @@ class Ui_Main(QMainWindow, Main):
         ##TELA_CLIENTES
         self.TELA_USUARIO.pushButton_4.clicked.connect(self.VoltarMain)
         self.TELA_USUARIO.pushButton.clicked.connect(self.Tela_Cliente_Ver_Filmes)
+        self.TELA_USUARIO.pushButton_3.clicked.connect(self.ir_tela_Excluir_Reserva)
+        
 
         self.TELA_DPS_LOGIN_FUNC_ui.pushButton_4.clicked.connect(self.VoltarMain)
         self.TELA_DPS_LOGIN_FUNC_ui.pushButton.clicked.connect(self.Tela_Estatistica)
@@ -233,6 +241,10 @@ class Ui_Main(QMainWindow, Main):
         #TELA_CARTAO
         self.Cartao_ui.pushButton_2.clicked.connect(self.escolher_horarios)
         self.Cartao_ui.pushButton.clicked.connect(self.botaoconfirmartelacartao)
+        
+        ##TELA_CLIENTES_EXCLUIR_RESERVA
+        self.TELA_EXCLUIR_RESERVA_ui.pushButton.clicked.connect(self.abrirTelaDPSLoginCli)
+        self.TELA_EXCLUIR_RESERVA_ui.listView.clicked.connect(self.item_selecionado_Excluir_Reserva)
     
     def VoltarMain(self):
         self.QtStack.setCurrentIndex(0)
@@ -295,6 +307,8 @@ class Ui_Main(QMainWindow, Main):
         
     def escolheuCartao(self):
         self.QtStack.setCurrentIndex(12)
+        
+    
     
 
     def botao_ok(self):
@@ -974,7 +988,50 @@ class Ui_Main(QMainWindow, Main):
             self.Cartao_ui.lineEdit_5.setText('')
             self.Cartao_ui.lineEdit_3.setText('')
             self.Cartao_ui.dateEdit.setDate(minimum_date)
-                
+      
+    ##Direciona para a tela de excluir_Reserva          
+    def ir_tela_Excluir_Reserva(self):
+        client_socket.send('19'.encode())
+        client_socket.send(self.cpf_do_usuario.encode())
+        botoes = client_socket.recv(4096).decode()
+        print('Chegou do servidor esses botões', botoes)
+        
+        if botoes != '0':
+            lista_botoes = botoes.split(',')  # Converta a string de botões em uma lista
+            model = QStringListModel()
+            model.setStringList(lista_botoes)
+            self.TELA_EXCLUIR_RESERVA_ui.listView.setModel(model)
+            self.TELA_EXCLUIR_RESERVA_ui.listView.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+            self.QtStack.setCurrentIndex(15)  # Altere o índice para a tela do cliente
+        else:
+            QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Sem Dados.')
+        
+        
+    
+    def item_selecionado_Excluir_Reserva(self, index):
+        # Obtenha o item selecionado
+        selected_index = index.row()
+
+        # Verifique se há um item selecionado
+        if selected_index >= 0:
+            # Exiba um diálogo de confirmação
+            resposta = QtWidgets.QMessageBox.question(
+                self,
+                'Confirmação',
+                f'Deseja excluir o item {selected_index}?',
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                QtWidgets.QMessageBox.No
+            )
+
+            # Verifique a resposta do usuário
+            if resposta == QtWidgets.QMessageBox.Yes:
+                client_socket.send('20'.encode())
+                # Implemente a lógica de exclusão aqui
+                print(f'Item {selected_index} excluído.')  
+                self.QtStack.setCurrentIndex(2)
+        else:
+            QtWidgets.QMessageBox.warning(self, 'Aviso', 'Nenhum item selecionado.')
+
             
             
 if __name__ == '__main__':
