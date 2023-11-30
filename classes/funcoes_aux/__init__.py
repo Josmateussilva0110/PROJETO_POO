@@ -193,6 +193,8 @@ def mudar_cor_botao_vermelho_valido(lista_botoes_todos, lista_botoes_selecionado
             print(f'Um elemento do button name: {botao_id} está igual a algum dos selecionados')
             button.setStyleSheet("background-color: red;")
             print('pintou')
+        else:
+            button.setStyleSheet("background-color: green;")
 
 
 

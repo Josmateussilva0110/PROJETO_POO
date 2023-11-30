@@ -399,11 +399,11 @@ def menu(con, cliente):
             # Verificar se há pelo menos um botão na lista
             if botao:
                 ultimo_botao = botao
-                if lista_botoes[1] == '10':
-                    if dados_botoes.Exclui_Reserva(ultimo_botao):
-                        print(f'Excluido')
-                        # Enviar confirmação ao cliente
-                        con.send('1'.encode())
+                # if lista_botoes[1] == '10':
+                if dados_botoes.Exclui_Reserva(ultimo_botao):
+                    print(f'Excluido')
+                    # Enviar confirmação ao cliente
+                    # con.send('1'.encode())
 
             
             

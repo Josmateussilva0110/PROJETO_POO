@@ -191,7 +191,6 @@ class Armazenar_botoes():
             
     def Exclui_Reserva(self, nome_botao):
         cursor = self.db_connection.cursor()
-
         try:
             # Excluir a linha correspondente ao botão específico
             delete_query = "DELETE FROM Botoes WHERE botao = %s"
