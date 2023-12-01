@@ -407,16 +407,19 @@ def menu(con, cliente):
                 
         elif mensagem == '20':
             print(f'sinal 20')
-            print(f'lista botoes do servidor: {lista_botoes}')
-            botao = lista_botoes[0]
+            dados = con.recv(4096).decode()
+            print(f'DADOS RECEBIDOS: {dados}')
+            dados_partes = dados.split(',')
+            print(f'dados_partes[0]: {dados_partes[0]}')
+            print(f'dados_partes[1]: {dados_partes[1]}')
             # Verificar se há pelo menos um botão na lista
-            if botao:
-                ultimo_botao = botao
-                if lista_botoes[1] == '10':
-                    if dados_botoes.Exclui_Reserva(ultimo_botao):
+            if dados_partes[0]:
+                botao = dados_partes[0]
+                if dados_partes[1] == '10':
+                    if dados_botoes.Exclui_Reserva(botao):
                         print(f'EXCLUIDO TELA 10')
-                elif lista_botoes[1] == '13':
-                    if dados_botoes_02.Exclui_Reserva_02(ultimo_botao):
+                elif dados_partes[1] == '13':
+                    if dados_botoes_02.Exclui_Reserva_02(botao):
                         print(f'EXCLUIDO TELA 13')
         
         elif mensagem == '21':

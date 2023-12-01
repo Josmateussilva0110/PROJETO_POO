@@ -78,6 +78,7 @@ class Armazenar_botoes():
             return False
         
     def buscar_botao(self, botao):
+        print('ENTROU EM BUSCAR BOTAO')
         cursor = self.db_connection.cursor(dictionary=True)  # Usar dictionary=True para obter resultados como dicionários
         select_query = "SELECT * FROM Botoes WHERE botao = %s"
         print(select_query)
@@ -190,6 +191,7 @@ class Armazenar_botoes():
             cursor.close()
             
     def Exclui_Reserva(self, nome_botao):
+        print('ENTROU EM EXCLUIR RESERVA')
         cursor = self.db_connection.cursor()
         try:
             # Excluir a linha correspondente ao botão específico

@@ -989,14 +989,14 @@ class Ui_Main(QMainWindow, Main):
       
     ##Direciona para a tela de excluir_Reserva          
     def ir_tela_Excluir_Reserva(self):
-        print(f'entrou ir tela reserva')
+        print(f'ENTROU EM IR TELA EXCLUIR')
         client_socket.send('19'.encode())
         tela = str(self.tela_para_exibir)
         lista_dados = [self.cpf_do_usuario, tela]
         dados = ','.join(lista_dados)
         client_socket.send(dados.encode())
         botoes = client_socket.recv(4096).decode()
-        print('Chegou do servidor esses botões', botoes)
+        print('Chegou do servidor esses botões: ', botoes)
         
         if botoes != '0':
             lista_botoes = botoes.split(',')  # Converta a string de botões em uma lista
@@ -1041,7 +1041,10 @@ class Ui_Main(QMainWindow, Main):
                 print(f'LISTA BOTOES EXCLUIDOS: {item_selecionado}')
                 pintar_botao_verde_excluido(botoes_tela_lay,item_selecionado)
                 client_socket.send('20'.encode())
-                print(f'Reserva da cadeira {item_selecionado} excluída.')
+                str_tela = str(tela)
+                lista_dados = [str_botao, str_tela]
+                dados = ','.join(lista_dados)
+                client_socket.send(dados.encode())
                 self.QtStack.setCurrentIndex(2)
         else:
             QtWidgets.QMessageBox.warning(self, 'Aviso', 'Nenhum item selecionado.')

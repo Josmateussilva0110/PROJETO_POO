@@ -79,6 +79,7 @@ class Armazenar_botoes_02():
 
 
     def buscar_botao_02(self, botao):
+        print('ENTROU EM BUSCAR BOTAO 2')
         cursor = self.db_connection.cursor(dictionary=True)  # Usar dictionary=True para obter resultados como dicionários
         select_query = "SELECT * FROM Botoes_02 WHERE botao = %s"
         
