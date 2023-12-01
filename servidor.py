@@ -244,9 +244,10 @@ def menu(con, cliente):
                 elif lista_botoes[1] == '13':
                     # Atualizar o valor de 'validar' para 1 apenas para o último botão no banco de dados
                     if dados_botoes_02.atualizar_valido_02(ultimo_botao):
-                        print(f'Valor de "validar" atualizado para 1 para o último botão {ultimo_botao}.')
-                        # Enviar confirmação ao cliente
-                        con.send('1'.encode())
+                        if dados_botoes_02.atualizar_cpf_02(cpf):
+                            print(f'Valor de "validar" atualizado para 1 para o último botão {ultimo_botao}.')
+                            # Enviar confirmação ao cliente
+                            con.send('1'.encode())
                     else:
                         print(f'Erro ao atualizar "validar" para 1 para o último botão {ultimo_botao}.')
                         # Enviar informação de erro ao cliente
@@ -380,33 +381,51 @@ def menu(con, cliente):
                 print('Ta errado')
         
         elif mensagem == '19':
-            print('Entrou aqui')
-            cpf = con.recv(4096).decode()
-            cpf = int(cpf)
+            print('ta no 19')
+            lista_completas_botoes = list()
+            dados = con.recv(4096).decode()
+            dados_lista = dados.split(',')
+            cpf = int(dados_lista[0])
             botoes_associados = dados_botoes.obter_botoes_por_cpf(cpf)
+            botoes_associados_02 = dados_botoes_02.obter_botoes_por_cpf_02(cpf)
 
-            if botoes_associados:
-                print(f'Botoes associados ao CPF {cpf}: {botoes_associados}')
-                resposta = ",".join(botoes_associados)
-                con.send(resposta.encode())
-                # Faça aqui o que desejar com a lista de botões associados
-            else:
+            lista_completas_botoes = []
+
+            if botoes_associados is not None:
+                lista_completas_botoes.extend(botoes_associados)
+
+            if botoes_associados_02 is not None:
+                lista_completas_botoes.extend(botoes_associados_02)
+
+            if not lista_completas_botoes:
                 con.send('0'.encode())
-                # Faça aqui o que desejar se nenhum botão estiver associado ao CPF
+            else:
+                enviar_lista = ','.join(map(str, lista_completas_botoes))
+                print(f'Botoes associados: {enviar_lista}')
+                con.send(enviar_lista.encode())
+                # Faça aqui o que desejar com a lista de botões associados
                 
         elif mensagem == '20':
+            print(f'sinal 20')
+            print(f'lista botoes: {lista_botoes}')
             botao = lista_botoes[0]
             # Verificar se há pelo menos um botão na lista
             if botao:
                 ultimo_botao = botao
-                # if lista_botoes[1] == '10':
-                if dados_botoes.Exclui_Reserva(ultimo_botao):
-                    print(f'Excluido')
-                    
-                    # Enviar confirmação ao cliente
-                    # con.send('1'.encode())
+                if lista_botoes[1] == '10':
+                    if dados_botoes.Exclui_Reserva(ultimo_botao):
+                        print(f'Excluido')
+                elif lista_botoes[1] == '13':
+                    if dados_botoes_02.Exclui_Reserva_02(ultimo_botao):
+                        print(f'Excluido')
+        
+        elif mensagem == '21':
+            botao = con.recv(4096).decode()
+            str_botao = str(botao)
+            if dados_botoes.buscar_botao(str_botao):
+                print(f'entrou na busca de botao')
+                con.send('10'.encode())
 
-            
             
 
     print(f"[DESCONECTADO] Cliente: {nome_cliente}")

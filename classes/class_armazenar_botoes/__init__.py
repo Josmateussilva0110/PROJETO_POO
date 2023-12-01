@@ -89,7 +89,7 @@ class Armazenar_botoes():
 
             if result:
                 print('achou algo',result)
-                return result
+                return True
             else:
                 return None
         except mysql.connector.Error as err:
@@ -202,3 +202,6 @@ class Armazenar_botoes():
             return False
         finally:
             cursor.close()
+
+    def procurar_botao(self, botao):
+        pass

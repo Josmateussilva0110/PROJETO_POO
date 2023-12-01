@@ -39,6 +39,7 @@ class Armazenar_botoes_02():
 
         criar_tabela_botoes = """
         CREATE TABLE IF NOT EXISTS Botoes_02 (
+            cpf INT DEFAULT 0 NOT NULL,
             botao VARCHAR(255),
             validar TINYINT(1) NOT NULL DEFAULT 0
         )
@@ -151,6 +152,58 @@ class Armazenar_botoes_02():
             return True
         except mysql.connector.Error as err:
             print(f'Erro ao atualizar "validar" para 1 para o botão {nome_botao}: {err}')
+            return False
+        finally:
+            cursor.close()
+    
+
+    def atualizar_cpf_02(self, novo_cpf):
+        cursor = self.db_connection.cursor()
+
+        try:
+            # Atualizar o valor de 'cpf' para o novo valor
+            update_query = "UPDATE Botoes_02 SET cpf = %s WHERE cpf = 0"
+            cursor.execute(update_query, (novo_cpf,))
+            self.db_connection.commit()
+            return True
+        except mysql.connector.Error as err:
+            print(f'Erro ao atualizar "cpf" para {novo_cpf}: {err}')
+            return False
+        finally:
+            cursor.close()
+
+    def obter_botoes_por_cpf_02(self, cpf):
+        cursor = self.db_connection.cursor()
+
+        select_query = "SELECT botao FROM Botoes_02 WHERE cpf = %s"
+        
+        try:
+            cursor.execute(select_query, (cpf,))
+            result = cursor.fetchall()
+
+            if result:
+                botoes_associados = [row[0] for row in result]
+                return botoes_associados
+            else:
+                return None  # Retorna None se nenhum botão estiver associado ao CPF
+
+        except mysql.connector.Error as err:
+            print(f'Erro ao obter botões associados ao CPF {cpf}: {err}')
+            return None  # Retorna None em caso de erro
+        finally:
+            cursor.close()
+
+
+    def Exclui_Reserva_02(self, nome_botao):
+        cursor = self.db_connection.cursor()
+        try:
+            # Excluir a linha correspondente ao botão específico
+            delete_query = "DELETE FROM Botoes_02 WHERE botao = %s"
+            cursor.execute(delete_query, (nome_botao,))
+            self.db_connection.commit()
+            return True
+        except mysql.connector.Error as err:
+            print(f'Erro ao excluir a linha para o botão {nome_botao}: {err}')
             return False
         finally:
             cursor.close()

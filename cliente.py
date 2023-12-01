@@ -989,8 +989,12 @@ class Ui_Main(QMainWindow, Main):
       
     ##Direciona para a tela de excluir_Reserva          
     def ir_tela_Excluir_Reserva(self):
+        print(f'entrou ir tela reserva')
         client_socket.send('19'.encode())
-        client_socket.send(self.cpf_do_usuario.encode())
+        tela = str(self.tela_para_exibir)
+        lista_dados = [self.cpf_do_usuario, tela]
+        dados = ','.join(lista_dados)
+        client_socket.send(dados.encode())
         botoes = client_socket.recv(4096).decode()
         print('Chegou do servidor esses botões', botoes)
         
@@ -999,7 +1003,6 @@ class Ui_Main(QMainWindow, Main):
             model = QStringListModel()
             model.setStringList(lista_botoes)
             self.TELA_EXCLUIR_RESERVA_ui.listView.setModel(model)
-            self.TELA_EXCLUIR_RESERVA_ui.listView.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
             self.QtStack.setCurrentIndex(15)  # Altere o índice para a tela do cliente
         else:
             QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Sem Dados.')
@@ -1007,10 +1010,7 @@ class Ui_Main(QMainWindow, Main):
         
     
     def item_selecionado_Excluir_Reserva(self, index):
-        client_socket.send('19'.encode())
-        client_socket.send(self.cpf_do_usuario.encode())
-        botoes = client_socket.recv(4096).decode()
-        print('Chegou do servidor esses botões', botoes)
+        print('entrou em item excluir reserva')
         # Obtenha o item selecionado
         selected_index = index.row()
 
@@ -1031,9 +1031,13 @@ class Ui_Main(QMainWindow, Main):
             # Verifique a resposta do usuário
             if resposta == QtWidgets.QMessageBox.Yes:
                 self.botoes_excluidos.append(item_selecionado)
+                botao = str(self.botoes_excluidos)
+                client_socket.send('21'.encode())
+                client_socket.send(botao.encode())
+                tela = client_socket.recv(4096).decode()
+                print(f'tela: {tela}')
                 botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
-                print(self.botoes_excluidos)
-                print(botoes_tela_lay)
+                print(f'lista botoes excluidos: {self.botoes_excluidos}')
                 pintar_botao_verde_excluido(botoes_tela_lay,item_selecionado)
                 client_socket.send('20'.encode())
                 print(f'Reserva da cadeira {item_selecionado} excluída.')
