@@ -202,6 +202,3 @@ class Armazenar_botoes():
             return False
         finally:
             cursor.close()
-
-    def procurar_botao(self, botao):
-        pass

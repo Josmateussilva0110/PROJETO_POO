@@ -1031,11 +1031,11 @@ class Ui_Main(QMainWindow, Main):
             # Verifique a resposta do usuário
             if resposta == QtWidgets.QMessageBox.Yes:
                 self.botoes_excluidos.append(item_selecionado)
-                botao = str(self.botoes_excluidos)
-                client_socket.send('21'.encode())
-                client_socket.send(botao.encode())
-                tela = client_socket.recv(4096).decode()
-                print(f'tela: {tela}')
+                #botao = str(item_selecionado)
+                #client_socket.send('21'.encode())
+                #client_socket.send(botao.encode())
+                #tela = client_socket.recv(4096).decode()
+                #print(f'tela: {tela}')
                 botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
                 print(f'lista botoes excluidos: {self.botoes_excluidos}')
                 pintar_botao_verde_excluido(botoes_tela_lay,item_selecionado)
