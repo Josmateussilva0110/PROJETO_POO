@@ -25,7 +25,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.2.103'
+ip = '192.168.1.5'
 porta = 8007
 nome = 'mateus'
 addr = ((ip,porta))
@@ -747,15 +747,13 @@ class Ui_Main(QMainWindow, Main):
         # Obtenha o item selecionado na QListView
         if index.isValid():
             item_selecionado = index.data()
-
-            # Se o item for válido, você pode acessar o texto (nome do filme, neste caso)
             if item_selecionado:
-                # Divida a string do item selecionado para extrair o ID
-                partes = item_selecionado.split()
-                # O ID do filme é a última parte da string
+                filme_selecionado = item_selecionado.split()
+                partes = enxugar_string(filme_selecionado)
                 filme_id = partes[1]
-
-                # Exiba um QMessageBox ou lógica específica do cliente aqui
+                preco_inicio = partes.index('Preço:') + 1
+                proximo_index = partes.index('Classificação:') if 'Classificação:' in partes else len(partes)
+                preco_filme = ''.join(partes[preco_inicio:proximo_index])
                 reply = QMessageBox.question(
                     self,
                     'Detalhes do Filme',
@@ -786,10 +784,10 @@ class Ui_Main(QMainWindow, Main):
                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
                     )
                     if meia == QtWidgets.QMessageBox.Yes:
-                        meia_entrada = float(partes[7])
+                        meia_entrada = float(preco_filme)
                         self.total_compra = meia_entrada / 2
                     else:
-                        self.total_compra = float(partes[7])
+                        self.total_compra = float(preco_filme)
 
                     # O usuário selecionou um horário
                     reply1 = QtWidgets.QMessageBox.question(

@@ -142,7 +142,7 @@ def EnviaEmail(destinatario,mensagem):
 
 def formatar_mensagem(dados_cliente, total_compra, sala, flag=1, parcelas=1):
     # Formatar a lista de dados_cliente em uma string organizada
-    formato_mensagem = "Nome cliente: {}\nNome filme: {}\nAno: {}\nPreço: {}\nClassificação: {}\nHorario: {}\nSala: {}\nTotal compra: {}\nPagamento: {}\nEmitido: {}"
+    formato_mensagem = "Nome cliente: {}\nNome filme: {}\nAno: {}\nClassificação: {}\nHorario: {}\nSala: {}\nTotal compra: {}\nPagamento: {}\nEmitido: {}"
     data_e_hora_atuais = datetime.now()
     data_e_hora_em_texto = data_e_hora_atuais.strftime('%d/%m/%Y %H:%M')
     if sala == 10:
@@ -155,7 +155,6 @@ def formatar_mensagem(dados_cliente, total_compra, sala, flag=1, parcelas=1):
     nome_cliente = dados_cliente[0]
     nome_filme = dados_cliente[1]
     ano = dados_cliente[2]
-    preco = dados_cliente[3]
     classificacao = dados_cliente[4]
     horario = dados_cliente[5]
     total = f'{total_compra:.2f}'
@@ -169,7 +168,7 @@ def formatar_mensagem(dados_cliente, total_compra, sala, flag=1, parcelas=1):
         total_compra_exibir /= int(parcelas)
     emissao = data_e_hora_em_texto
     # Criar a mensagem formatada
-    mensagem_formatada = formato_mensagem.format(nome_cliente, nome_filme, ano, preco, classificacao, horario, sala_exibir, total_compra_exibir, pagamento, emissao)
+    mensagem_formatada = formato_mensagem.format(nome_cliente, nome_filme, ano, classificacao, horario, sala_exibir, total_compra_exibir, pagamento, emissao)
 
     return mensagem_formatada
 
@@ -253,4 +252,12 @@ def pintar_botao_verde_excluido(lista_botoes_todos, lista_botoes_excluidos):
             print(f'O botão {botao_id} foi excluído do banco de dados.')
             button.setStyleSheet("background-color: green;")
 
-            
+
+def enxugar_string(partes):
+    nome_filme_inicio = partes.index('Nome:') + 1
+    proximo_marcador_index = partes.index('Ano:') if 'Ano:' in partes else len(partes)
+    nome_filme = ' '.join(partes[nome_filme_inicio:proximo_marcador_index])
+    partes[3] = nome_filme
+    if len(partes) > 4:
+        partes.pop(4)
+    return partes
