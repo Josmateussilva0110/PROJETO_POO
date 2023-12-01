@@ -117,7 +117,7 @@ class Main(QtWidgets.QWidget):
         
         self.TELA_EXCLUIR_RESERVA_ui = Tela_Excluir_Reserva()
         self.TELA_EXCLUIR_RESERVA_ui.setupUi(self.stack15)
-
+        
         self.QtStack.addWidget(self.stack0)
         self.QtStack.addWidget(self.stack1)
         self.QtStack.addWidget(self.stack2)
@@ -151,6 +151,7 @@ class Ui_Main(QMainWindow, Main):
         self.total_compra = None
         self.botao_id = None
         self.tela_para_exibir = None
+        self.botoes_excluidos = []
 
     
         #tela principal
@@ -245,6 +246,7 @@ class Ui_Main(QMainWindow, Main):
         ##TELA_CLIENTES_EXCLUIR_RESERVA
         self.TELA_EXCLUIR_RESERVA_ui.pushButton.clicked.connect(self.abrirTelaDPSLoginCli)
         self.TELA_EXCLUIR_RESERVA_ui.listView.clicked.connect(self.item_selecionado_Excluir_Reserva)
+        
     
     def VoltarMain(self):
         self.QtStack.setCurrentIndex(0)
@@ -288,8 +290,6 @@ class Ui_Main(QMainWindow, Main):
         except Exception as e:
             print(f"\nNão foi possível permanecer conectado! Erro: {e}\n")
 
-
-        
         
         self.QtStack.setCurrentIndex(4)
     
@@ -1009,11 +1009,18 @@ class Ui_Main(QMainWindow, Main):
         
     
     def item_selecionado_Excluir_Reserva(self, index):
+        client_socket.send('19'.encode())
+        client_socket.send(self.cpf_do_usuario.encode())
+        botoes = client_socket.recv(4096).decode()
+        print('Chegou do servidor esses botões', botoes)
         # Obtenha o item selecionado
         selected_index = index.row()
 
         # Verifique se há um item selecionado
         if selected_index >= 0:
+            
+            item_selecionado = index.data()
+            print(type(item_selecionado))
             # Exiba um diálogo de confirmação
             resposta = QtWidgets.QMessageBox.question(
                 self,
@@ -1025,13 +1032,16 @@ class Ui_Main(QMainWindow, Main):
 
             # Verifique a resposta do usuário
             if resposta == QtWidgets.QMessageBox.Yes:
+                self.botoes_excluidos.append(item_selecionado)
+                botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
+                print(self.botoes_excluidos)
+                print(botoes_tela_lay)
+                pintar_botao_verde_excluido(botoes_tela_lay,item_selecionado)
                 client_socket.send('20'.encode())
-                # Implemente a lógica de exclusão aqui
-                print(f'Item {selected_index} excluído.')  
+                print(f'Reserva da cadeira {item_selecionado} excluída.')
                 self.QtStack.setCurrentIndex(2)
         else:
             QtWidgets.QMessageBox.warning(self, 'Aviso', 'Nenhum item selecionado.')
-
             
             
 if __name__ == '__main__':

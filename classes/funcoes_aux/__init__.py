@@ -238,3 +238,19 @@ def processar_dados_do_botao(client_socket, tela_para_exibir, botao_id, botoes):
             print(f'botoes achados verific: {botoa_achado_verificado}')
             mudar_cor_botao_vermelho_valido(botoes, botoa_achado_verificado)
             
+def pintar_botao_verde_excluido(lista_botoes_todos, lista_botoes_excluidos):
+    # Extrai números dos identificadores dos botões excluídos
+    numeros_excluidos = [int(botao.split('_')[-1]) for botao in lista_botoes_excluidos.split(',')]
+
+    for button in lista_botoes_todos:
+        botao_id = button.objectName()
+        print('id do botão', botao_id)
+        
+        # Extrai o número do identificador do botão na lista completa
+        numero_botao = int(botao_id.split('_')[-1])
+        
+        if numero_botao in numeros_excluidos:
+            print(f'O botão {botao_id} foi excluído do banco de dados.')
+            button.setStyleSheet("background-color: green;")
+
+            

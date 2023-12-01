@@ -402,6 +402,7 @@ def menu(con, cliente):
                 # if lista_botoes[1] == '10':
                 if dados_botoes.Exclui_Reserva(ultimo_botao):
                     print(f'Excluido')
+                    
                     # Enviar confirmação ao cliente
                     # con.send('1'.encode())
 
