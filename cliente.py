@@ -1030,9 +1030,15 @@ class Ui_Main(QMainWindow, Main):
             # Verifique a resposta do usuário
             if resposta == QtWidgets.QMessageBox.Yes:
                 self.botoes_excluidos.append(item_selecionado)
-                botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
-                print(self.botoes_excluidos)
-                print(botoes_tela_lay)
+                client_socket.send('21'.encode())
+                str_botao = str(item_selecionado)
+                print(f'BOTAO ENVIADO: {str_botao}')
+                client_socket.send(str_botao.encode())
+                tela = client_socket.recv(4096).decode()
+                print(f'TELA RECEBIDA: {tela}')
+                int_tela = int(tela)
+                botoes_tela_lay = lista_botoes_tela_layout(self, int_tela)
+                print(f'LISTA BOTOES EXCLUIDOS: {item_selecionado}')
                 pintar_botao_verde_excluido(botoes_tela_lay,item_selecionado)
                 client_socket.send('20'.encode())
                 print(f'Reserva da cadeira {item_selecionado} excluída.')

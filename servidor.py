@@ -407,25 +407,34 @@ def menu(con, cliente):
                 
         elif mensagem == '20':
             print(f'sinal 20')
-            print(f'lista botoes: {lista_botoes}')
+            print(f'lista botoes do servidor: {lista_botoes}')
             botao = lista_botoes[0]
             # Verificar se há pelo menos um botão na lista
             if botao:
                 ultimo_botao = botao
                 if lista_botoes[1] == '10':
                     if dados_botoes.Exclui_Reserva(ultimo_botao):
-                        print(f'Excluido')
+                        print(f'EXCLUIDO TELA 10')
                 elif lista_botoes[1] == '13':
                     if dados_botoes_02.Exclui_Reserva_02(ultimo_botao):
-                        print(f'Excluido')
+                        print(f'EXCLUIDO TELA 13')
         
         elif mensagem == '21':
             botao = con.recv(4096).decode()
             str_botao = str(botao)
-            if dados_botoes.buscar_botao(str_botao):
-                print(f'entrou na busca de botao')
+            print(f'BOTAO RECEBIDO DO CLIENTE: {str_botao}')
+            aux = dados_botoes.buscar_botao(str_botao)
+            if aux != None:
+                print('achei o botao tela 10!!!')
                 con.send('10'.encode())
-
+            else:
+                print('nao achei botao tela 10')
+            aux_01 = dados_botoes_02.buscar_botao_02(str_botao)
+            if aux_01 != None:
+                print('achei o botao tela 13!!!')
+                con.send('13'.encode())
+            else:
+                print('nao achei botao tela 13')
             
 
     print(f"[DESCONECTADO] Cliente: {nome_cliente}")

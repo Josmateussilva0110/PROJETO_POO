@@ -251,7 +251,7 @@ def pintar_botao_verde_excluido(lista_botoes_todos, lista_botoes_excluidos):
         if numero_botao in numeros_excluidos:
             print(f'O botão {botao_id} foi excluído do banco de dados.')
             button.setStyleSheet("background-color: green;")
-            print('pintou de verde')
+            print('PINTOU DE VERDE')
 
 
 def enxugar_string(partes):
