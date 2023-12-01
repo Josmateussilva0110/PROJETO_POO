@@ -89,7 +89,7 @@ class Armazenar_botoes():
 
             if result:
                 print('achou algo',result)
-                return True
+                return result
             else:
                 return None
         except mysql.connector.Error as err:
