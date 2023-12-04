@@ -220,3 +220,14 @@ class Armazenar_filmes:
             return 0
         finally:
             cursor.close()
+
+    def somar_precos_total_tela_1(self):
+        try:
+            cursor = self.db_connection.cursor()
+            cursor.execute("SELECT SUM(preco) FROM Filmes")
+            total_preco = cursor.fetchone()[0]
+            return total_preco
+        except mysql.connector.Error as err:
+            return 0
+        finally:
+            cursor.close()

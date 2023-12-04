@@ -25,7 +25,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.1.5'
+ip = '192.168.2.105'
 porta = 8007
 nome = 'mateus'
 addr = ((ip,porta))
@@ -152,6 +152,10 @@ class Ui_Main(QMainWindow, Main):
         self.botao_id = None
         self.tela_para_exibir = None
         self.botoes_excluidos = []
+        self.soma_tela_1 = 0
+        self.soma_tela_2 = 0
+        self.soma_tela_3 = 0
+        
 
     
         #tela principal
@@ -263,35 +267,6 @@ class Ui_Main(QMainWindow, Main):
     
     def abrirLoginFunc(self):
         self.QtStack.setCurrentIndex(3)
-    
-    def Tela_Estatistica(self):
-        client_socket.send('17'.encode())
-        try:
-            retorno = client_socket.recv(4096).decode()
-
-            # Quebra os dados na vírgula para obter uma lista
-            lista_todos = retorno.split(',')
-
-            # Faça o que for necessário com a lista
-            cont_cliente = lista_todos[0]
-            cont_filmes = lista_todos[1]
-            cont_filmes_cartaz = lista_todos[2]
-
-            # Remova caracteres indesejados
-            cont_cliente = cont_cliente.strip(" '[]")
-            cont_filmes = cont_filmes.strip(" '[]")
-            cont_filmes_cartaz = cont_filmes_cartaz.strip(" '[]")
-
-            # Atualize o texto na linha de edição
-            self.TELA_ESTATISTICA_ui.lineEdit.setText(f"{cont_cliente}")
-            self.TELA_ESTATISTICA_ui.lineEdit_4.setText(f"{cont_filmes}")
-            self.TELA_ESTATISTICA_ui.lineEdit_2.setText(f"{cont_filmes_cartaz}")
-
-        except Exception as e:
-            print(f"\nNão foi possível permanecer conectado! Erro: {e}\n")
-
-        
-        self.QtStack.setCurrentIndex(4)
     
     def TelaGestao(self):
         self.QtStack.setCurrentIndex(5)
@@ -788,6 +763,9 @@ class Ui_Main(QMainWindow, Main):
                         self.total_compra = meia_entrada / 2
                     else:
                         self.total_compra = float(preco_filme)
+                        
+                    self.valor = self.total_compra
+                        
 
                     # O usuário selecionou um horário
                     reply1 = QtWidgets.QMessageBox.question(
@@ -856,20 +834,28 @@ class Ui_Main(QMainWindow, Main):
             
     def ir_tela_pagamento(self, button):
         print('entrou aqui função ir tela pagamento')
-        self.botao_id = button.objectName() 
-        print(f'Selecionou o botao: {self.botao_id}')
+        # self.botao_id = button.objectName() 
+        # print(f'Selecionou o botao: {self.botao_id}')
         op = QtWidgets.QMessageBox.question(
             self, 'Seleção', 'Finalizar escolha?',
             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
         )
         if op == QtWidgets.QMessageBox.Yes:
             if self.tela_para_exibir == 10:
+                self.botao_id = button.objectName() 
+                print(f'Selecionou o botao da tela 1: {self.botao_id}')
                 client_socket.send('12'.encode())
                 client_socket.send(self.botao_id.encode())
+                # self.soma_tela_1 += self.total_compra
             elif self.tela_para_exibir == 13:
+                self.botao_id = button.objectName() 
+                print(f'Selecionou o botao da tela 2: {self.botao_id}')
                 client_socket.send('16'.encode())
                 client_socket.send(self.botao_id.encode())
+                # self.soma_tela_2 += self.total_compra
             elif self.tela_para_exibir == 14:
+                self.botao_id = button.objectName() 
+                print(f'Selecionou o botao da tela 3: {self.botao_id}')
                 client_socket.send('18'.encode())
                 client_socket.send(self.botao_id.encode())
             try:
@@ -919,6 +905,27 @@ class Ui_Main(QMainWindow, Main):
             self.dados_clienete.clear()
             botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
             processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
+            if self.tela_para_exibir == 10:
+                lista = []
+                client_socket.send('22'.encode())
+                lista.append(self.soma_tela_1)
+                lista.append('+')
+                lista.append(self.total_compra)
+                client_socket.send(str(lista).encode())
+                self.soma_tela_1 = client_socket.recv(4096).decode()
+                print(self.soma_tela_1)
+            if self.tela_para_exibir == 13:
+                # self.soma_tela_2 = atualizar_variavel(self.soma_tela_2, operacao='+', valor=self.total_compra)
+                # print(self.soma_tela_2)
+                lista = []
+                client_socket.send('22'.encode())
+                lista.append(self.soma_tela_2)
+                lista.append('+')
+                lista.append(self.total_compra)
+                client_socket.send(str(lista).encode())
+                self.soma_tela_2 = client_socket.recv(4096).decode()
+                print(self.soma_tela_2)
+                
             self.QtStack.setCurrentIndex(2)
         
         
@@ -1003,6 +1010,24 @@ class Ui_Main(QMainWindow, Main):
             model = QStringListModel()
             model.setStringList(lista_botoes)
             self.TELA_EXCLUIR_RESERVA_ui.listView.setModel(model)
+            if self.tela_para_exibir == 10:
+                lista = []
+                client_socket.send('22'.encode())
+                lista.append(self.soma_tela_2)
+                lista.append('-')
+                lista.append(self.total_compra)
+                client_socket.send(str(lista).encode())
+                self.soma_tela_2 = client_socket.recv(4096).decode()
+                print(self.soma_tela_2)
+            if self.tela_para_exibir == 13:
+                lista = []
+                client_socket.send('22'.encode())
+                lista.append(self.soma_tela_2)
+                lista.append('-')
+                lista.append(self.total_compra)
+                client_socket.send(str(lista).encode())
+                self.soma_tela_2 = client_socket.recv(4096).decode()
+                print(self.soma_tela_2)
             self.QtStack.setCurrentIndex(15)  # Altere o índice para a tela do cliente
         else:
             QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Sem Dados.')
@@ -1029,7 +1054,6 @@ class Ui_Main(QMainWindow, Main):
 
             # Verifique a resposta do usuário
             if resposta == QtWidgets.QMessageBox.Yes:
-                self.botoes_excluidos.append(item_selecionado)
                 client_socket.send('21'.encode())
                 str_botao = str(item_selecionado)
                 print(f'BOTAO ENVIADO: {str_botao}')
@@ -1048,6 +1072,52 @@ class Ui_Main(QMainWindow, Main):
                 self.QtStack.setCurrentIndex(2)
         else:
             QtWidgets.QMessageBox.warning(self, 'Aviso', 'Nenhum item selecionado.')
+            
+    def Tela_Estatistica(self):
+        client_socket.send('17'.encode())
+        try:
+            retorno = client_socket.recv(4096).decode()
+
+            # Quebra os dados na vírgula para obter uma lista
+            lista_todos = retorno.split(',')
+
+            # Faça o que for necessário com a lista
+            cont_cliente = lista_todos[0]
+            cont_filmes = lista_todos[1]
+            cont_filmes_cartaz = lista_todos[2]
+
+            # Remova caracteres indesejados
+            cont_cliente = cont_cliente.strip(" '[]")
+            cont_filmes = cont_filmes.strip(" '[]")
+            cont_filmes_cartaz = cont_filmes_cartaz.strip(" '[]")
+            # client_socket.send('22'.encode())
+            # self.botao_id = str(self.botao_id)
+            # client_socket.send(self.botao_id.encode())
+            # valido = client_socket.recv(4096).decode()
+            # print(valido)
+            # if valido == '1':
+            #     if self.tela_para_exibir == 10:
+            #         self.soma_tela_1 += self.total_compra
+            #         print(self.soma_tela_1)
+            #     if self.tela_para_exibir == 13:
+            #         self.soma_tela_2 += self.total_compra
+            #         print(self.soma_tela_2)
+            
+            # Atualize o texto na linha de edição
+            self.TELA_ESTATISTICA_ui.lineEdit.setText(f"{cont_cliente}")
+            self.TELA_ESTATISTICA_ui.lineEdit_4.setText(f"{cont_filmes}")
+            self.TELA_ESTATISTICA_ui.lineEdit_2.setText(f"{cont_filmes_cartaz}")
+            self.TELA_ESTATISTICA_ui.lineEdit_3.setText(f"{self.soma_tela_1}")
+            self.TELA_ESTATISTICA_ui.lineEdit_5.setText(f"{self.soma_tela_2}")
+            # self.TELA_ESTATISTICA_ui.lineEdit_6.setText(f"{self.valor_sala3}")
+            self.TELA_ESTATISTICA_ui.lineEdit_7.setText(f"{self.soma_tela_1 + self.soma_tela_2 + self.soma_tela_3}")
+            
+
+        except Exception as e:
+            print(f"\nNão foi possível permanecer conectado! Erro: {e}\n")
+
+        
+        self.QtStack.setCurrentIndex(4)
             
             
 if __name__ == '__main__':

@@ -265,3 +265,24 @@ def enxugar_string(partes):
     if len(partes) > 4:
         partes.pop(4)
     return partes
+
+def atualizar_variavel(variavel, operacao='+', valor=1):
+    print('Entrou aqui')
+    """
+    Atualiza a variável com base na operação fornecida.
+
+    Parâmetros:
+    - variavel: A variável a ser atualizada.
+    - operacao: A operação a ser realizada ('+' para soma, '-' para subtração).
+    - valor: O valor a ser adicionado ou subtraído (padrão é 1).
+
+    Retorna:
+    O valor atualizado da variável.
+    """
+    if operacao == '+':
+        print('Entrou aqui')
+        variavel += valor
+    elif operacao == '-':
+        print('Entrou aqui')
+        variavel -= valor
+    return variavel

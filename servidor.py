@@ -345,8 +345,6 @@ def menu(con, cliente):
             lista_todos.append(cont_cliente)
             lista_todos.append(cont_filmes)
             lista_todos.append(cont_filmes_cartaz)  # Adicionado o contador de filmes em cartaz
-            print(cont_cliente)
-            print(cont_filmes)
             print(lista_todos)
             con.send(','.join(lista_todos).encode())  # Enviando a lista como uma string separada por vírgulas
         
@@ -438,6 +436,24 @@ def menu(con, cliente):
                 con.send('13'.encode())
             else:
                 print('nao achei botao tela 13')
+            
+        elif mensagem == '22':
+            receber = con.recv(4096).decode()
+            dados_partes = receber.split(',')
+            total_compra = float(dados_partes[0].strip(" '[]"))  # Converte para float
+            operacao = dados_partes[1].strip(" '[]")
+            valor = float(dados_partes[2].strip(" '[]"))  # Converte para float
+
+            print(f'dados_partes[0]: {total_compra}')
+            print(f'dados_partes[1]: {operacao}')
+            print(f'dados_partes[2]: {valor}')
+
+            total = atualizar_variavel(total_compra, operacao, valor)
+            print(total)
+            con.send(str(total).encode())
+
+
+            
             
 
     print(f"[DESCONECTADO] Cliente: {nome_cliente}")
