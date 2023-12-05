@@ -32,7 +32,6 @@ class Armazenar_botoes_03():
             cursor.close()
 
 
-
     def criar_tabela_botoes_03(self):
         # Use o banco de dados 'Cineplus'
         cursor = self.db_connection.cursor()
@@ -40,6 +39,7 @@ class Armazenar_botoes_03():
 
         criar_tabela_botoes = """
         CREATE TABLE IF NOT EXISTS Botoes_03 (
+            cpf INT DEFAULT 0 NOT NULL,
             botao VARCHAR(255),
             validar TINYINT(1) NOT NULL DEFAULT 0
         )
@@ -79,6 +79,7 @@ class Armazenar_botoes_03():
 
 
     def buscar_botao_03(self, botao):
+        print('ENTROU EM BUSCAR BOTAO 3')
         cursor = self.db_connection.cursor(dictionary=True)  # Usar dictionary=True para obter resultados como dicionários
         select_query = "SELECT * FROM Botoes_03 WHERE botao = %s"
         
@@ -95,7 +96,7 @@ class Armazenar_botoes_03():
             print(f'Erro ao buscar o botão {botao}: {err}')
             cursor.close()
             return None
-    
+
 
     def obter_todos_botoes_03(self):
         cursor = self.db_connection.cursor()
@@ -136,7 +137,7 @@ class Armazenar_botoes_03():
             print(f'Erro ao obter botões válidos: {err}')
             return None
         finally:
-            cursor.close()
+            cursor.close() 
 
 
     def atualizar_valido_03(self, nome_botao):
@@ -154,4 +155,56 @@ class Armazenar_botoes_03():
             print(f'Erro ao atualizar "validar" para 1 para o botão {nome_botao}: {err}')
             return False
         finally:
-            cursor.close() 
+            cursor.close()
+    
+
+    def atualizar_cpf_03(self, novo_cpf):
+        cursor = self.db_connection.cursor()
+
+        try:
+            # Atualizar o valor de 'cpf' para o novo valor
+            update_query = "UPDATE Botoes_03 SET cpf = %s WHERE cpf = 0"
+            cursor.execute(update_query, (novo_cpf,))
+            self.db_connection.commit()
+            return True
+        except mysql.connector.Error as err:
+            print(f'Erro ao atualizar "cpf" para {novo_cpf}: {err}')
+            return False
+        finally:
+            cursor.close()
+
+    def obter_botoes_por_cpf_03(self, cpf):
+        cursor = self.db_connection.cursor()
+
+        select_query = "SELECT botao FROM Botoes_03 WHERE cpf = %s"
+        
+        try:
+            cursor.execute(select_query, (cpf,))
+            result = cursor.fetchall()
+
+            if result:
+                botoes_associados = [row[0] for row in result]
+                return botoes_associados
+            else:
+                return None  # Retorna None se nenhum botão estiver associado ao CPF
+
+        except mysql.connector.Error as err:
+            print(f'Erro ao obter botões associados ao CPF {cpf}: {err}')
+            return None  # Retorna None em caso de erro
+        finally:
+            cursor.close()
+
+
+    def Exclui_Reserva_03(self, nome_botao):
+        cursor = self.db_connection.cursor()
+        try:
+            # Excluir a linha correspondente ao botão específico
+            delete_query = "DELETE FROM Botoes_03 WHERE botao = %s"
+            cursor.execute(delete_query, (nome_botao,))
+            self.db_connection.commit()
+            return True
+        except mysql.connector.Error as err:
+            print(f'Erro ao excluir a linha para o botão {nome_botao}: {err}')
+            return False
+        finally:
+            cursor.close()

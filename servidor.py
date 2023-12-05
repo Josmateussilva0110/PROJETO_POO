@@ -258,6 +258,18 @@ def menu(con, cliente):
                         print(f'Erro ao atualizar "validar" para 1 para o último botão {ultimo_botao}.')
                         # Enviar informação de erro ao cliente
                         con.send('0'.encode())
+                    
+                elif lista_botoes[1] == '14':
+                    # Atualizar o valor de 'validar' para 1 apenas para o último botão no banco de dados
+                    if dados_botoes_03.atualizar_valido_03(ultimo_botao):
+                        if dados_botoes_03.atualizar_cpf_03(cpf):
+                            print(f'Valor de "validar" atualizado para 1 para o último botão {ultimo_botao}.')
+                            # Enviar confirmação ao cliente
+                            con.send('1'.encode())
+                    else:
+                        print(f'Erro ao atualizar "validar" para 1 para o último botão {ultimo_botao}.')
+                        # Enviar informação de erro ao cliente
+                        con.send('0'.encode())
                 
                 elif lista_botoes[1] == '14':
                     # Atualizar o valor de 'validar' para 1 apenas para o último botão no banco de dados
@@ -392,6 +404,7 @@ def menu(con, cliente):
             cpf = int(dados_lista[0])
             botoes_associados = dados_botoes.obter_botoes_por_cpf(cpf)
             botoes_associados_02 = dados_botoes_02.obter_botoes_por_cpf_02(cpf)
+            botoes_associados_03 = dados_botoes_03.obter_botoes_por_cpf_03(cpf)
 
             lista_completas_botoes = []
 
@@ -400,6 +413,9 @@ def menu(con, cliente):
 
             if botoes_associados_02 is not None:
                 lista_completas_botoes.extend(botoes_associados_02)
+            
+            if botoes_associados_03 is not None:
+                lista_completas_botoes.extend(botoes_associados_03)
 
             if not lista_completas_botoes:
                 con.send('0'.encode())
@@ -425,6 +441,9 @@ def menu(con, cliente):
                 elif dados_partes[1] == '13':
                     if dados_botoes_02.Exclui_Reserva_02(botao):
                         print(f'EXCLUIDO TELA 13')
+                elif dados_partes[1] == '14':
+                    if dados_botoes_03.Exclui_Reserva_03(botao):
+                        print('EXCLUIDO TELA 14')
         
         elif mensagem == '21':
             botao = con.recv(4096).decode()
@@ -442,6 +461,12 @@ def menu(con, cliente):
                 con.send('13'.encode())
             else:
                 print('nao achei botao tela 13')
+            aux_02 = dados_botoes_03.buscar_botao_03(str_botao)
+            if aux_02 != None:
+                print('achei botao tela 14!!!')
+                con.send('14'.encode())
+            else:
+                print('nao achei botao tela 14')
             
         elif mensagem == '22':
             lista = list()
