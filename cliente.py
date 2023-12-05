@@ -153,6 +153,8 @@ class Ui_Main(QMainWindow, Main):
         self.tela_para_exibir = None
         self.botoes_excluidos = []
         self.frequencia_valores = dict()
+        self.frequencia_valores_02 = dict()
+        self.frequencia_valores_03 = dict()
 
     
         #tela principal
@@ -903,10 +905,22 @@ class Ui_Main(QMainWindow, Main):
             self.dados_clienete.clear()
             botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
             processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
-            if self.total_compra not in self.frequencia_valores:
-                self.frequencia_valores[self.total_compra] = 1
-            else:
-                self.frequencia_valores[self.total_compra] +=1
+            print(f'pix tela para exibir: {self.tela_para_exibir}')
+            if self.tela_para_exibir == 10:
+                if self.total_compra not in self.frequencia_valores:
+                    self.frequencia_valores[self.total_compra] = 1
+                else:
+                    self.frequencia_valores[self.total_compra] +=1
+            elif self.tela_para_exibir == 13:
+                if self.total_compra not in self.frequencia_valores_02:
+                    self.frequencia_valores_02[self.total_compra] = 1
+                else:
+                    self.frequencia_valores_02[self.total_compra] +=1
+            elif self.tela_para_exibir == 14:
+                if self.total_compra not in self.frequencia_valores_03:
+                    self.frequencia_valores_03[self.total_compra] = 1
+                else:
+                    self.frequencia_valores_03[self.total_compra] +=1
             self.QtStack.setCurrentIndex(2)
         
         
@@ -995,24 +1009,6 @@ class Ui_Main(QMainWindow, Main):
             model = QStringListModel()
             model.setStringList(lista_botoes)
             self.TELA_EXCLUIR_RESERVA_ui.listView.setModel(model)
-            if self.tela_para_exibir == 10:
-                lista = []
-                client_socket.send('22'.encode())
-                lista.append(self.soma_tela_2)
-                lista.append('-')
-                lista.append(self.total_compra)
-                client_socket.send(str(lista).encode())
-                self.soma_tela_2 = client_socket.recv(4096).decode()
-                print(self.soma_tela_2)
-            if self.tela_para_exibir == 13:
-                lista = []
-                client_socket.send('22'.encode())
-                lista.append(self.soma_tela_2)
-                lista.append('-')
-                lista.append(self.total_compra)
-                client_socket.send(str(lista).encode())
-                self.soma_tela_2 = client_socket.recv(4096).decode()
-                print(self.soma_tela_2)
             self.QtStack.setCurrentIndex(15)  # Altere o índice para a tela do cliente
         else:
             QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Sem Dados.')
@@ -1059,7 +1055,8 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.warning(self, 'Aviso', 'Nenhum item selecionado.')
             
     def Tela_Estatistica(self):
-        total = 0.0
+        valores = list()
+        total = total_02 = total_03 = 0.0
         client_socket.send('17'.encode())
         try:
             retorno = client_socket.recv(4096).decode()
@@ -1078,16 +1075,27 @@ class Ui_Main(QMainWindow, Main):
             cont_filmes_cartaz = cont_filmes_cartaz.strip(" '[]")
             for i, v in self.frequencia_valores.items():
                 total += i * v
+            for i, v in self.frequencia_valores_02.items():
+                total_02 += i * v
+            for i, v in self.frequencia_valores_03.items():
+                total_03 += i * v
+            valores.append(str(total))
+            valores.append(str(total_02))
+            valores.append(str(total_03))
+            enviar = ','.join(valores)
             client_socket.send('22'.encode())
-            client_socket.send(str(total).encode())
-            total_de_lucro = client_socket.recv(4096).decode()
+            client_socket.send(enviar.encode())
+            totais_de_lucro = client_socket.recv(4096).decode()
+            print(f'totais de lucro: {totais_de_lucro}')
+            partes_totais = totais_de_lucro.split(',')
+            renda_total = float(partes_totais[0]) + float(partes_totais[1])
             self.TELA_ESTATISTICA_ui.lineEdit.setText(f"{cont_cliente}")
             self.TELA_ESTATISTICA_ui.lineEdit_4.setText(f"{cont_filmes}")
             self.TELA_ESTATISTICA_ui.lineEdit_2.setText(f"{cont_filmes_cartaz}")
-            #self.TELA_ESTATISTICA_ui.lineEdit_3.setText(f"{self.soma_tela_1}")
-            #self.TELA_ESTATISTICA_ui.lineEdit_5.setText(f"{self.soma_tela_2}")
+            self.TELA_ESTATISTICA_ui.lineEdit_3.setText(f"{partes_totais[0]}")
+            self.TELA_ESTATISTICA_ui.lineEdit_5.setText(f"{partes_totais[1]}")
             # self.TELA_ESTATISTICA_ui.lineEdit_6.setText(f"{self.valor_sala3}")
-            self.TELA_ESTATISTICA_ui.lineEdit_7.setText(f"{total_de_lucro}")
+            self.TELA_ESTATISTICA_ui.lineEdit_7.setText(f"{renda_total}")
             
 
         except Exception as e:
