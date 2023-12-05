@@ -11,6 +11,7 @@ from classes.class_armazenar_botao_02 import *
 from classes.class_armazenar_botao_03 import *
 from classes.class_armazenar_lucros import *
 from classes.class_amazenar_lucro_02 import *
+from classes.class_armazenar_lucro_03 import *
 
 
 host = ''
@@ -27,6 +28,7 @@ dados_botoes_02 = Armazenar_botoes_02(mydb)
 dados_botoes_03 = Armazenar_botoes_03(mydb)
 lucros = Armazenar_lucros(mydb)
 lucros_02 = Armazenar_lucros_02(mydb)
+lucros_03 = Armazenar_lucros_03(mydb)
 
 
 def menu(con, cliente):
@@ -447,12 +449,16 @@ def menu(con, cliente):
             valores_partes = receber.split(',')
             valor = valores_partes[0]
             valor_02 = valores_partes[1]
+            valor_03 = valores_partes[2]
             lucros.armazenar_lucro(valor)
             lucros_02.armazenar_lucro_02(valor_02)
+            lucros_03.armazenar_lucro_03(valor_03)
             total_lucro = lucros.obter_lucro_total()
             total_lucro_02 = lucros_02.obter_lucro_total_02()
+            total_lucro_03 = lucros_03.obter_lucro_total_03()
             lista.append(str(total_lucro))
             lista.append(str(total_lucro_02))
+            lista.append(str(total_lucro_03))
             enviar_cliente = ','.join(lista)
             con.send(enviar_cliente.encode())
             

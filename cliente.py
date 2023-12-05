@@ -905,7 +905,6 @@ class Ui_Main(QMainWindow, Main):
             self.dados_clienete.clear()
             botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
             processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
-            print(f'pix tela para exibir: {self.tela_para_exibir}')
             if self.tela_para_exibir == 10:
                 if self.total_compra not in self.frequencia_valores:
                     self.frequencia_valores[self.total_compra] = 1
@@ -982,10 +981,21 @@ class Ui_Main(QMainWindow, Main):
                     valid = True
                     botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
                     processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
-                    if self.total_compra not in self.frequencia_valores:
-                        self.frequencia_valores[self.total_compra] = 1
-                    else:
-                        self.frequencia_valores[self.total_compra] +=1
+                    if self.tela_para_exibir == 10:
+                        if self.total_compra not in self.frequencia_valores:
+                            self.frequencia_valores[self.total_compra] = 1
+                        else:
+                            self.frequencia_valores[self.total_compra] +=1
+                    elif self.tela_para_exibir == 13:
+                        if self.total_compra not in self.frequencia_valores_02:
+                            self.frequencia_valores_02[self.total_compra] = 1
+                        else:
+                            self.frequencia_valores_02[self.total_compra] +=1
+                    elif self.tela_para_exibir == 14:
+                        if self.total_compra not in self.frequencia_valores_03:
+                            self.frequencia_valores_03[self.total_compra] = 1
+                        else:
+                            self.frequencia_valores_03[self.total_compra] +=1
         if valid:  
             self.QtStack.setCurrentIndex(2)
             self.Cartao_ui.lineEdit.setText('')
@@ -1088,13 +1098,13 @@ class Ui_Main(QMainWindow, Main):
             totais_de_lucro = client_socket.recv(4096).decode()
             print(f'totais de lucro: {totais_de_lucro}')
             partes_totais = totais_de_lucro.split(',')
-            renda_total = float(partes_totais[0]) + float(partes_totais[1])
+            renda_total = float(partes_totais[0]) + float(partes_totais[1]) + float(partes_totais[2])
             self.TELA_ESTATISTICA_ui.lineEdit.setText(f"{cont_cliente}")
             self.TELA_ESTATISTICA_ui.lineEdit_4.setText(f"{cont_filmes}")
             self.TELA_ESTATISTICA_ui.lineEdit_2.setText(f"{cont_filmes_cartaz}")
             self.TELA_ESTATISTICA_ui.lineEdit_3.setText(f"{partes_totais[0]}")
             self.TELA_ESTATISTICA_ui.lineEdit_5.setText(f"{partes_totais[1]}")
-            # self.TELA_ESTATISTICA_ui.lineEdit_6.setText(f"{self.valor_sala3}")
+            self.TELA_ESTATISTICA_ui.lineEdit_6.setText(f"{partes_totais[2]}")
             self.TELA_ESTATISTICA_ui.lineEdit_7.setText(f"{renda_total}")
             
 
