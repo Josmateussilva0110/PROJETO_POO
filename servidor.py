@@ -441,20 +441,10 @@ def menu(con, cliente):
             
         elif mensagem == '22':
             receber = con.recv(4096).decode()
-            dados_partes = receber.split(',')
-            total_compra = float(dados_partes[0].strip(" '[]"))  # Converte para float
-            operacao = dados_partes[1].strip(" '[]")
-            valor = float(dados_partes[2].strip(" '[]"))  # Converte para float
-
-            print(f'dados_partes[0]: {total_compra}')
-            print(f'dados_partes[1]: {operacao}')
-            print(f'dados_partes[2]: {valor}')
-
-            total = atualizar_variavel(total_compra, operacao, valor)
-            print(total)
-            con.send(str(total).encode())
-
-
+            valor = float(receber)
+            lucros.armazenar_lucro(receber)
+            total_lucro = lucros.obter_lucro_total()
+            con.send(str(total_lucro).encode())
             
             
 

@@ -868,6 +868,7 @@ class Ui_Main(QMainWindow, Main):
 
             
     def escolheuPix(self):
+        total= 0.0
         print('entrou na funcao de pix')
         cpf = self.cpf_do_usuario
         client_socket.send('11'.encode())
@@ -902,11 +903,10 @@ class Ui_Main(QMainWindow, Main):
             self.dados_clienete.clear()
             botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
             processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
-            if self.tela_para_exibir == 10:
-                pass
-            if self.tela_para_exibir == 13:
-                pass
-                
+            if self.total_compra not in self.frequencia_valores:
+                self.frequencia_valores[self.total_compra] = 1
+            else:
+                self.frequencia_valores[self.total_compra] +=1
             self.QtStack.setCurrentIndex(2)
         
         
@@ -968,6 +968,10 @@ class Ui_Main(QMainWindow, Main):
                     valid = True
                     botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
                     processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
+                    if self.total_compra not in self.frequencia_valores:
+                        self.frequencia_valores[self.total_compra] = 1
+                    else:
+                        self.frequencia_valores[self.total_compra] +=1
         if valid:  
             self.QtStack.setCurrentIndex(2)
             self.Cartao_ui.lineEdit.setText('')
@@ -1055,6 +1059,7 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.warning(self, 'Aviso', 'Nenhum item selecionado.')
             
     def Tela_Estatistica(self):
+        total = 0.0
         client_socket.send('17'.encode())
         try:
             retorno = client_socket.recv(4096).decode()
@@ -1071,27 +1076,18 @@ class Ui_Main(QMainWindow, Main):
             cont_cliente = cont_cliente.strip(" '[]")
             cont_filmes = cont_filmes.strip(" '[]")
             cont_filmes_cartaz = cont_filmes_cartaz.strip(" '[]")
-            # client_socket.send('22'.encode())
-            # self.botao_id = str(self.botao_id)
-            # client_socket.send(self.botao_id.encode())
-            # valido = client_socket.recv(4096).decode()
-            # print(valido)
-            # if valido == '1':
-            #     if self.tela_para_exibir == 10:
-            #         self.soma_tela_1 += self.total_compra
-            #         print(self.soma_tela_1)
-            #     if self.tela_para_exibir == 13:
-            #         self.soma_tela_2 += self.total_compra
-            #         print(self.soma_tela_2)
-            
-            # Atualize o texto na linha de edição
+            for i, v in self.frequencia_valores.items():
+                total += i * v
+            client_socket.send('22'.encode())
+            client_socket.send(str(total).encode())
+            total_de_lucro = client_socket.recv(4096).decode()
             self.TELA_ESTATISTICA_ui.lineEdit.setText(f"{cont_cliente}")
             self.TELA_ESTATISTICA_ui.lineEdit_4.setText(f"{cont_filmes}")
             self.TELA_ESTATISTICA_ui.lineEdit_2.setText(f"{cont_filmes_cartaz}")
-            self.TELA_ESTATISTICA_ui.lineEdit_3.setText(f"{self.soma_tela_1}")
-            self.TELA_ESTATISTICA_ui.lineEdit_5.setText(f"{self.soma_tela_2}")
+            #self.TELA_ESTATISTICA_ui.lineEdit_3.setText(f"{self.soma_tela_1}")
+            #self.TELA_ESTATISTICA_ui.lineEdit_5.setText(f"{self.soma_tela_2}")
             # self.TELA_ESTATISTICA_ui.lineEdit_6.setText(f"{self.valor_sala3}")
-            self.TELA_ESTATISTICA_ui.lineEdit_7.setText(f"{self.soma_tela_1 + self.soma_tela_2 + self.soma_tela_3}")
+            self.TELA_ESTATISTICA_ui.lineEdit_7.setText(f"{total_de_lucro}")
             
 
         except Exception as e:
