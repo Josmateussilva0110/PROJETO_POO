@@ -9,6 +9,7 @@ from classes.funcoes_aux import *
 from classes.class_armazenar_botoes import *
 from classes.class_armazenar_botao_02 import *
 from classes.class_armazenar_botao_03 import *
+from classes.class_armazenar_lucros import *
 
 
 host = ''
@@ -23,6 +24,7 @@ dados_filme = Armazenar_filmes(mydb)
 dados_botoes = Armazenar_botoes(mydb)
 dados_botoes_02 = Armazenar_botoes_02(mydb)
 dados_botoes_03 = Armazenar_botoes_03(mydb)
+lucros = Armazenar_lucros(mydb)
 
 
 def menu(con, cliente):

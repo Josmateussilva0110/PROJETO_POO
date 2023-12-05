@@ -25,7 +25,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.2.105'
+ip = '192.168.1.4'
 porta = 8007
 nome = 'mateus'
 addr = ((ip,porta))
@@ -152,10 +152,7 @@ class Ui_Main(QMainWindow, Main):
         self.botao_id = None
         self.tela_para_exibir = None
         self.botoes_excluidos = []
-        self.soma_tela_1 = 0
-        self.soma_tela_2 = 0
-        self.soma_tela_3 = 0
-        
+        self.frequencia_valores = dict()
 
     
         #tela principal
@@ -906,25 +903,9 @@ class Ui_Main(QMainWindow, Main):
             botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
             processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
             if self.tela_para_exibir == 10:
-                lista = []
-                client_socket.send('22'.encode())
-                lista.append(self.soma_tela_1)
-                lista.append('+')
-                lista.append(self.total_compra)
-                client_socket.send(str(lista).encode())
-                self.soma_tela_1 = client_socket.recv(4096).decode()
-                print(self.soma_tela_1)
+                pass
             if self.tela_para_exibir == 13:
-                # self.soma_tela_2 = atualizar_variavel(self.soma_tela_2, operacao='+', valor=self.total_compra)
-                # print(self.soma_tela_2)
-                lista = []
-                client_socket.send('22'.encode())
-                lista.append(self.soma_tela_2)
-                lista.append('+')
-                lista.append(self.total_compra)
-                client_socket.send(str(lista).encode())
-                self.soma_tela_2 = client_socket.recv(4096).decode()
-                print(self.soma_tela_2)
+                pass
                 
             self.QtStack.setCurrentIndex(2)
         
