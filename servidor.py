@@ -450,23 +450,18 @@ def menu(con, cliente):
             str_botao = str(botao)
             print(f'BOTAO RECEBIDO DO CLIENTE: {str_botao}')
             aux = dados_botoes.buscar_botao(str_botao)
+            aux_01 = dados_botoes_02.buscar_botao_02(str_botao)
+            aux_02 = dados_botoes_03.buscar_botao_03(str_botao)
+            
             if aux != None:
                 print('achei o botao tela 10!!!')
                 con.send('10'.encode())
-            else:
-                print('nao achei botao tela 10')
-            aux_01 = dados_botoes_02.buscar_botao_02(str_botao)
-            if aux_01 != None:
+            elif aux_01 != None:
                 print('achei o botao tela 13!!!')
                 con.send('13'.encode())
-            else:
-                print('nao achei botao tela 13')
-            aux_02 = dados_botoes_03.buscar_botao_03(str_botao)
-            if aux_02 != None:
+            elif aux_02 != None:
                 print('achei botao tela 14!!!')
                 con.send('14'.encode())
-            else:
-                print('nao achei botao tela 14')
             
         elif mensagem == '22':
             lista = list()

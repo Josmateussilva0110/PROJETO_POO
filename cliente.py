@@ -25,7 +25,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '10.180.45.208'
+ip = '192.168.1.4'
 porta = 8007
 nome = 'mateus'
 addr = ((ip,porta))
@@ -1045,6 +1045,7 @@ class Ui_Main(QMainWindow, Main):
 
             # Verifique a resposta do usuário
             if resposta == QtWidgets.QMessageBox.Yes:
+                lista_dados = list()
                 client_socket.send('21'.encode())
                 str_botao = str(item_selecionado)
                 print(f'BOTAO ENVIADO: {str_botao}')
@@ -1057,7 +1058,8 @@ class Ui_Main(QMainWindow, Main):
                 pintar_botao_verde_excluido(botoes_tela_lay,item_selecionado)
                 client_socket.send('20'.encode())
                 str_tela = str(tela)
-                lista_dados = [str_botao, str_tela]
+                lista_dados.append(str_botao)
+                lista_dados.append(str_tela)
                 dados = ','.join(lista_dados)
                 client_socket.send(dados.encode())
                 self.QtStack.setCurrentIndex(2)
