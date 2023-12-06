@@ -7,7 +7,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QStringListModel
 from tela_main_ui import *#
 from TELA_CADASTRO_ui import *#
-from TELA_USUARIO import *#
+from TELA_DPS_LOGIN_ui import *#
 from TELA_GERENCIAMENTO import *#
 from TELA_ESTATISTICA_ui import *#
 from TELA_GERENCIAMENTO import *#
@@ -25,14 +25,12 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.1.4'
+ip = '192.168.2.105'
 porta = 8007
-nome = 'mateus'
 addr = ((ip,porta))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
     client_socket.connect(addr)
-    client_socket.send(nome.encode())
 except Exception as e:
     print(f'Ocorreu uma exceção: {e}')
     exit()
@@ -69,8 +67,8 @@ class Main(QtWidgets.QWidget):
         self.TELA_CADASTRO_ui.setupUi(self.stack1)
 
 
-        self.TELA_USUARIO = Tela_usuario()
-        self.TELA_USUARIO.setupUi(self.stack2)
+        self.TELA_DPS_LOGIN_ui = Tela_Usuario()
+        self.TELA_DPS_LOGIN_ui.setupUi(self.stack2)
 
 
         #Usa-se só para ajustar essa tela
@@ -167,9 +165,9 @@ class Ui_Main(QMainWindow, Main):
         self.TELA_CADASTRO_ui.pushButton.clicked.connect(self.botao_Cadastra)
 
         ##TELA_CLIENTES
-        self.TELA_USUARIO.pushButton_4.clicked.connect(self.VoltarMain)
-        self.TELA_USUARIO.pushButton.clicked.connect(self.Tela_Cliente_Ver_Filmes)
-        self.TELA_USUARIO.pushButton_3.clicked.connect(self.ir_tela_Excluir_Reserva)
+        self.TELA_DPS_LOGIN_ui.pushButton_4.clicked.connect(self.VoltarMain)
+        self.TELA_DPS_LOGIN_ui.pushButton.clicked.connect(self.Tela_Cliente_Ver_Filmes)
+        self.TELA_DPS_LOGIN_ui.pushButton_3.clicked.connect(self.ir_tela_Excluir_Reserva)
         
 
         self.TELA_DPS_LOGIN_FUNC_ui.pushButton_4.clicked.connect(self.VoltarMain)
@@ -1068,6 +1066,7 @@ class Ui_Main(QMainWindow, Main):
                 tela = client_socket.recv(4096).decode()
                 print(f'TELA RECEBIDA: {tela}')
                 int_tela = int(tela)
+                print(int_tela)
                 botoes_tela_lay = lista_botoes_tela_layout(self, int_tela)
                 print(f'LISTA BOTOES EXCLUIDOS: {item_selecionado}')
                 print(f'botao_servidor:{botao_servidor}')
@@ -1078,6 +1077,24 @@ class Ui_Main(QMainWindow, Main):
                 lista_dados.append(str_tela)
                 dados = ','.join(lista_dados)
                 client_socket.send(dados.encode())
+                if str_tela == '10':
+                    if self.total_compra not in self.frequencia_valores:
+                        self.frequencia_valores[self.total_compra] = 1
+                    else:
+                        self.frequencia_valores[self.total_compra] -=1
+                        print('Foi decrementado do 1')
+                if str_tela == '13':
+                    if self.total_compra not in self.frequencia_valores_02:
+                        self.frequencia_valores_02[self.total_compra] = 1
+                    else:
+                        self.frequencia_valores_02[self.total_compra] -=1
+                        print('Foi decrementado do 2')
+                if str_tela == '14':
+                    if self.total_compra not in self.frequencia_valores_03:
+                        self.frequencia_valores_03[self.total_compra] = 1
+                    else:
+                        self.frequencia_valores_03[self.total_compra] -=1
+                        print('Foi decrementado do 3')
                 self.QtStack.setCurrentIndex(2)
         else:
             QtWidgets.QMessageBox.warning(self, 'Aviso', 'Nenhum item selecionado.')
@@ -1103,10 +1120,16 @@ class Ui_Main(QMainWindow, Main):
             cont_filmes_cartaz = cont_filmes_cartaz.strip(" '[]")
             for i, v in self.frequencia_valores.items():
                 total += i * v
+                print(i)
+                print(v)
             for i, v in self.frequencia_valores_02.items():
                 total_02 += i * v
+                print(i)
+                print(v)
             for i, v in self.frequencia_valores_03.items():
                 total_03 += i * v
+                print(i)
+                print(v)
             valores.append(str(total))
             valores.append(str(total_02))
             valores.append(str(total_03))

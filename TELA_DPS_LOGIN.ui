@@ -55,13 +55,6 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton_2">
-      <property name="text">
-       <string>HISTORICO</string>
-      </property>
-     </widget>
-    </item>
-    <item>
      <widget class="QPushButton" name="pushButton_3">
       <property name="text">
        <string>EXCLUIR RESERVA</string>

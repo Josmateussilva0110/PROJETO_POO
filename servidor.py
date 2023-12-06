@@ -32,9 +32,7 @@ lucros_03 = Armazenar_lucros_03(mydb)
 
 
 def menu(con, cliente):
-    nome_cliente = con.recv(1024).decode()
-    print(f"[CONECTADO] Cliente: {nome_cliente}")
-
+    
     conectado = True
 
     while conectado:
@@ -491,7 +489,7 @@ def menu(con, cliente):
             
             
 
-    print(f"[DESCONECTADO] Cliente: {nome_cliente}")
+    print(f"[DESCONECTADO]")
     con.close()
     print("[INICIADO] Aguardando conexão...")
 

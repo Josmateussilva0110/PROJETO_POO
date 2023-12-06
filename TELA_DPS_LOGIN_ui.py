@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Tela_usuario(object):
+class Tela_Usuario(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(800, 600)
@@ -32,9 +32,6 @@ class Tela_usuario(object):
         self.pushButton = QtWidgets.QPushButton(self.frame)
         self.pushButton.setObjectName("pushButton")
         self.verticalLayout.addWidget(self.pushButton)
-        self.pushButton_2 = QtWidgets.QPushButton(self.frame)
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.verticalLayout.addWidget(self.pushButton_2)
         self.pushButton_3 = QtWidgets.QPushButton(self.frame)
         self.pushButton_3.setObjectName("pushButton_3")
         self.verticalLayout.addWidget(self.pushButton_3)
@@ -55,7 +52,6 @@ class Tela_usuario(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.pushButton.setText(_translate("Dialog", "VER FILMES"))
-        self.pushButton_2.setText(_translate("Dialog", "HISTORICO"))
         self.pushButton_3.setText(_translate("Dialog", "EXCLUIR RESERVA"))
         self.label.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt;\">CINEPLUS</span></p></body></html>"))
         self.pushButton_4.setText(_translate("Dialog", "VOLTAR"))
