@@ -1016,12 +1016,26 @@ class Ui_Main(QMainWindow, Main):
         
         if botoes != '0':
             lista_botoes = botoes.split(',')  # Converta a string de botões em uma lista
-            model = QStringListModel()
-            model.setStringList(lista_botoes)
+
+            # Crie um modelo para armazenar os dados do QListView
+            model = QStandardItemModel()
+
+            # Adicione itens ao modelo, dividindo-os pela sala
+            current_sala = None
+            for botao in lista_botoes:
+                if botao.startswith('Sala'):
+                    current_sala = QStandardItem(botao)
+                    model.appendRow(current_sala)
+                else:
+                    if current_sala is not None:
+                        current_sala.appendRow(QStandardItem(botao))
+
+            # Configure o modelo no QListView
             self.TELA_EXCLUIR_RESERVA_ui.listView.setModel(model)
             self.QtStack.setCurrentIndex(15)  # Altere o índice para a tela do cliente
         else:
             QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Sem Dados.')
+
         
         
     
@@ -1048,8 +1062,9 @@ class Ui_Main(QMainWindow, Main):
                 lista_dados = list()
                 client_socket.send('21'.encode())
                 str_botao = str(item_selecionado)
-                print(f'BOTAO ENVIADO: {str_botao}')
-                client_socket.send(str_botao.encode())
+                botao_servidor = str_botao[9:]
+                print(f'BOTAO ENVIADO: {botao_servidor}')
+                client_socket.send(botao_servidor.encode())
                 tela = client_socket.recv(4096).decode()
                 print(f'TELA RECEBIDA: {tela}')
                 int_tela = int(tela)

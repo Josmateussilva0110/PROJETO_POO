@@ -409,13 +409,13 @@ def menu(con, cliente):
             lista_completas_botoes = []
 
             if botoes_associados is not None:
-                lista_completas_botoes.extend(botoes_associados)
+                lista_completas_botoes.extend([f'Sala 01: {botao}' for botao in botoes_associados])
 
             if botoes_associados_02 is not None:
-                lista_completas_botoes.extend(botoes_associados_02)
-            
+                lista_completas_botoes.extend([f'Sala 02: {botao}' for botao in botoes_associados_02])
+
             if botoes_associados_03 is not None:
-                lista_completas_botoes.extend(botoes_associados_03)
+                lista_completas_botoes.extend([f'Sala 03: {botao}' for botao in botoes_associados_03])
 
             if not lista_completas_botoes:
                 con.send('0'.encode())
@@ -435,14 +435,15 @@ def menu(con, cliente):
             # Verificar se há pelo menos um botão na lista
             if dados_partes[0]:
                 botao = dados_partes[0]
+                botao_procurar = botao[9:]
                 if dados_partes[1] == '10':
-                    if dados_botoes.Exclui_Reserva(botao):
+                    if dados_botoes.Exclui_Reserva(botao_procurar):
                         print(f'EXCLUIDO TELA 10')
                 elif dados_partes[1] == '13':
-                    if dados_botoes_02.Exclui_Reserva_02(botao):
+                    if dados_botoes_02.Exclui_Reserva_02(botao_procurar):
                         print(f'EXCLUIDO TELA 13')
                 elif dados_partes[1] == '14':
-                    if dados_botoes_03.Exclui_Reserva_03(botao):
+                    if dados_botoes_03.Exclui_Reserva_03(botao_procurar):
                         print('EXCLUIDO TELA 14')
         
         elif mensagem == '21':
