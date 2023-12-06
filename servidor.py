@@ -432,37 +432,43 @@ def menu(con, cliente):
             dados_partes = dados.split(',')
             print(f'dados_partes[0]: {dados_partes[0]}')
             print(f'dados_partes[1]: {dados_partes[1]}')
+            sala = dados_partes[0]
+            print(f'SALA DO SERVIDOR: {sala[6]}')
             # Verificar se há pelo menos um botão na lista
             if dados_partes[0]:
                 botao = dados_partes[0]
                 botao_procurar = botao[9:]
-                if dados_partes[1] == '10':
+                if sala[6] == '1':
                     if dados_botoes.Exclui_Reserva(botao_procurar):
                         print(f'EXCLUIDO TELA 10')
-                elif dados_partes[1] == '13':
+                elif sala[6] == '2':
                     if dados_botoes_02.Exclui_Reserva_02(botao_procurar):
                         print(f'EXCLUIDO TELA 13')
-                elif dados_partes[1] == '14':
+                elif sala[6] == '3':
                     if dados_botoes_03.Exclui_Reserva_03(botao_procurar):
                         print('EXCLUIDO TELA 14')
         
         elif mensagem == '21':
             botao = con.recv(4096).decode()
-            str_botao = str(botao)
-            print(f'BOTAO RECEBIDO DO CLIENTE: {str_botao}')
-            aux = dados_botoes.buscar_botao(str_botao)
-            aux_01 = dados_botoes_02.buscar_botao_02(str_botao)
-            aux_02 = dados_botoes_03.buscar_botao_03(str_botao)
-            
-            if aux != None:
-                print('achei o botao tela 10!!!')
-                con.send('10'.encode())
-            elif aux_01 != None:
-                print('achei o botao tela 13!!!')
-                con.send('13'.encode())
-            elif aux_02 != None:
-                print('achei botao tela 14!!!')
-                con.send('14'.encode())
+            str_dado = str(botao)
+            sala = str_dado[6]
+            botao_buscar = str_dado[9:]
+            print(f'dados RECEBIDO DO CLIENTE 21: {botao}')
+            if sala == '1':
+                aux = dados_botoes.buscar_botao(botao_buscar)
+                if aux != None:
+                    print('achei o botao tela 10!!!')
+                    con.send('10'.encode())
+            elif sala == '2':
+                aux_01 = dados_botoes_02.buscar_botao_02(botao_buscar)
+                if aux_01 != None:
+                    print('achei o botao tela 13!!!')
+                    con.send('13'.encode())
+            elif sala == '3':
+                aux_02 = dados_botoes_03.buscar_botao_03(botao_buscar)
+                if aux_02 != None:
+                    print('achei botao tela 14!!!')
+                    con.send('14'.encode())
             
         elif mensagem == '22':
             lista = list()
