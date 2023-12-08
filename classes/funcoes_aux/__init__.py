@@ -286,3 +286,35 @@ def atualizar_variavel(variavel, operacao='+', valor=1):
         print('Entrou aqui')
         variavel -= valor
     return variavel
+
+
+#dicionario para armazenar total_compra, frequência e botoes
+def atualizar_frequencia(self, chave, tela_para_exibir):
+    if tela_para_exibir == 10:
+        dicionario = self.frequencia_valores
+    elif tela_para_exibir == 13:
+        dicionario = self.frequencia_valores_02
+    elif tela_para_exibir == 14:
+        dicionario = self.frequencia_valores_03
+
+    if chave not in dicionario:
+        dicionario[chave] = {'frequencia': 1, 'botoes': [self.botao_id]}
+    else:
+        frequencia = dicionario[chave]['frequencia'] + 1
+        botoes = dicionario[chave]['botoes']
+        botoes.append(self.botao_id)
+        dicionario[chave] = {'frequencia': frequencia, 'botoes': botoes}
+
+
+def desatualizar_frequencia(self, tela, botao_servidor):
+    if tela == '10':
+        dicionario = self.frequencia_valores
+    elif tela == '13':
+        dicionario = self.frequencia_valores_02
+    elif tela == '14':
+        dicionario = self.frequencia_valores_03
+
+    for _, v in dicionario.items():
+        if botao_servidor in v["botoes"]:
+            v["frequencia"] -=1 
+            v["botoes"].remove(botao_servidor)

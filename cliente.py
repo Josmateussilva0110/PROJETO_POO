@@ -865,7 +865,6 @@ class Ui_Main(QMainWindow, Main):
 
             
     def escolheuPix(self):
-        lista_botao = list()
         print('entrou na funcao de pix')
         cpf = self.cpf_do_usuario
         client_socket.send('11'.encode())
@@ -900,28 +899,8 @@ class Ui_Main(QMainWindow, Main):
             self.dados_clienete.clear()
             botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
             processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
-            if self.tela_para_exibir == 10:
-                chave = self.total_compra
-                if chave not in self.frequencia_valores:
-                    self.frequencia_valores[chave] = {'frequencia': 1, 'botoes': [self.botao_id]}
-                else:
-                    frequencia = self.frequencia_valores[chave]['frequencia'] + 1
-                    botoes = self.frequencia_valores[chave]['botoes']
-                    botoes.append(self.botao_id)
-                    self.frequencia_valores[chave] = {'frequencia': frequencia, 'botoes': botoes}
-            elif self.tela_para_exibir == 13:
-                if self.total_compra not in self.frequencia_valores_02:
-                    self.frequencia_valores_02[self.total_compra] = 1
-                else:
-                    self.frequencia_valores_02[self.total_compra] +=1
-            elif self.tela_para_exibir == 14:
-                if self.total_compra not in self.frequencia_valores_03:
-                    self.frequencia_valores_03[self.total_compra] = 1
-                else:
-                    self.frequencia_valores_03[self.total_compra] +=1
-            print('DICIONARIO DE FREQUENCIA:')
-            for i, v in self.frequencia_valores.items():
-                print(f'{i} - {v["frequencia"]} - {v["botoes"]}')
+            chave = self.total_compra
+            atualizar_frequencia(self, chave, self.tela_para_exibir)
             self.QtStack.setCurrentIndex(2)
         
         
@@ -983,21 +962,8 @@ class Ui_Main(QMainWindow, Main):
                     valid = True
                     botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
                     processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
-                    if self.tela_para_exibir == 10:
-                        if self.total_compra not in self.frequencia_valores:
-                            self.frequencia_valores[self.total_compra] = 1
-                        else:
-                            self.frequencia_valores[self.total_compra] +=1
-                    elif self.tela_para_exibir == 13:
-                        if self.total_compra not in self.frequencia_valores_02:
-                            self.frequencia_valores_02[self.total_compra] = 1
-                        else:
-                            self.frequencia_valores_02[self.total_compra] +=1
-                    elif self.tela_para_exibir == 14:
-                        if self.total_compra not in self.frequencia_valores_03:
-                            self.frequencia_valores_03[self.total_compra] = 1
-                        else:
-                            self.frequencia_valores_03[self.total_compra] +=1
+                    chave = self.total_compra
+                    atualizar_frequencia(self, chave, self.tela_para_exibir)
         if valid:  
             self.QtStack.setCurrentIndex(2)
             self.Cartao_ui.lineEdit.setText('')
@@ -1081,23 +1047,7 @@ class Ui_Main(QMainWindow, Main):
                 lista_dados.append(str_tela)
                 dados = ','.join(lista_dados)
                 client_socket.send(dados.encode())
-                if str_tela == '10':
-                    for i, v in self.frequencia_valores.items():
-                        if botao_servidor in v["botoes"]:
-                            v["frequencia"] -=1 
-                            v["botoes"].remove(botao_servidor)
-                if str_tela == '13':
-                    if self.total_compra not in self.frequencia_valores_02:
-                        self.frequencia_valores_02[self.total_compra] = 1
-                    else:
-                        self.frequencia_valores_02[self.total_compra] -=1
-                        print('Foi decrementado do 2')
-                if str_tela == '14':
-                    if self.total_compra not in self.frequencia_valores_03:
-                        self.frequencia_valores_03[self.total_compra] = 1
-                    else:
-                        self.frequencia_valores_03[self.total_compra] -=1
-                        print('Foi decrementado do 3')
+                desatualizar_frequencia(self, str_tela, botao_servidor)
                 print('DICIONARIO DE FREQUENCIA APOS DECREMENTADO:')
                 for i, v in self.frequencia_valores.items():
                     print(f'{i} - {v["frequencia"]} - {v["botoes"]}')
@@ -1126,16 +1076,10 @@ class Ui_Main(QMainWindow, Main):
             cont_filmes_cartaz = cont_filmes_cartaz.strip(" '[]")
             for i, v in self.frequencia_valores.items():
                 total += i * v["frequencia"]
-                print(i)
-                print(v)
             for i, v in self.frequencia_valores_02.items():
-                total_02 += i * v
-                print(i)
-                print(v)
+                total_02 += i * v["frequencia"]
             for i, v in self.frequencia_valores_03.items():
-                total_03 += i * v
-                print(i)
-                print(v)
+                total_03 += i * v["frequencia"]
             valores.append(str(total))
             valores.append(str(total_02))
             valores.append(str(total_03))
