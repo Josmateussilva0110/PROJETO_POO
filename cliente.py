@@ -25,7 +25,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.2.105'
+ip = '192.168.1.3'
 porta = 8007
 addr = ((ip,porta))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -1143,10 +1143,10 @@ class Ui_Main(QMainWindow, Main):
             self.TELA_ESTATISTICA_ui.lineEdit.setText(f"{cont_cliente}")
             self.TELA_ESTATISTICA_ui.lineEdit_4.setText(f"{cont_filmes}")
             self.TELA_ESTATISTICA_ui.lineEdit_2.setText(f"{cont_filmes_cartaz}")
-            self.TELA_ESTATISTICA_ui.lineEdit_3.setText(f"{partes_totais[0]}")
-            self.TELA_ESTATISTICA_ui.lineEdit_5.setText(f"{partes_totais[1]}")
-            self.TELA_ESTATISTICA_ui.lineEdit_6.setText(f"{partes_totais[2]}")
-            self.TELA_ESTATISTICA_ui.lineEdit_7.setText(f"{renda_total}")
+            self.TELA_ESTATISTICA_ui.lineEdit_3.setText(f"{float(partes_totais[0]):.2f}")
+            self.TELA_ESTATISTICA_ui.lineEdit_5.setText(f"{float(partes_totais[1]):.2f}")
+            self.TELA_ESTATISTICA_ui.lineEdit_6.setText(f"{float(partes_totais[2]):.2f}")
+            self.TELA_ESTATISTICA_ui.lineEdit_7.setText(f"{float(renda_total):.2f}")
             
 
         except Exception as e:
