@@ -57,7 +57,6 @@ class Armazenar_filmes:
             result = cursor.fetchone()
             if result:
                 list_result5 = result[5].split()
-                print(list_result5)
                 # Film with the provided ID found, format its information as a string
                 filme_info = f"ID: {result[0]}\nNome: {result[1]}\nAno: {result[2]}\nPreço: {result[3]}\nClassificação: {result[4]}\nHorário: {result[5]}\nEm Cartaz: {result[6]}"
                 cursor.close()

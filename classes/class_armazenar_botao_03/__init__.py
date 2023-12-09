@@ -21,12 +21,7 @@ class Armazenar_botoes_03():
                 drop_query = "DROP TABLE Botoes_03"
                 cursor.execute(drop_query)
                 self.db_connection.commit()
-                # print("Tabela Botoes_03 excluída com sucesso.")
-            else:
-                print("A tabela Botoes_03 não existe.")
-
         except mysql.connector.Error as err:
-            print(f"Erro ao tentar excluir a tabela Botoes_03: {err}")
             self.db_connection.rollback()
         finally:
             cursor.close()
@@ -79,7 +74,6 @@ class Armazenar_botoes_03():
 
 
     def buscar_botao_03(self, botao):
-        print('ENTROU EM BUSCAR BOTAO 3')
         cursor = self.db_connection.cursor(dictionary=True)  # Usar dictionary=True para obter resultados como dicionários
         select_query = "SELECT * FROM Botoes_03 WHERE botao = %s"
         
@@ -93,7 +87,6 @@ class Armazenar_botoes_03():
             else:
                 return None
         except mysql.connector.Error as err:
-            print(f'Erro ao buscar o botão {botao}: {err}')
             cursor.close()
             return None
 
@@ -113,7 +106,6 @@ class Armazenar_botoes_03():
                 cursor.close()
                 return None
         except mysql.connector.Error as err:
-            print(f'Erro ao obter todos os botões: {err}')
             cursor.close()
             return None
 
@@ -134,7 +126,6 @@ class Armazenar_botoes_03():
                 return None
 
         except mysql.connector.Error as err:
-            print(f'Erro ao obter botões válidos: {err}')
             return None
         finally:
             cursor.close() 
@@ -149,10 +140,8 @@ class Armazenar_botoes_03():
             cursor.execute(update_query, (nome_botao,))
             self.db_connection.commit()
             
-            print(f'Valor de "validar" atualizado para 1 para o botão {nome_botao}.')
             return True
         except mysql.connector.Error as err:
-            print(f'Erro ao atualizar "validar" para 1 para o botão {nome_botao}: {err}')
             return False
         finally:
             cursor.close()
@@ -168,7 +157,6 @@ class Armazenar_botoes_03():
             self.db_connection.commit()
             return True
         except mysql.connector.Error as err:
-            print(f'Erro ao atualizar "cpf" para {novo_cpf}: {err}')
             return False
         finally:
             cursor.close()
@@ -189,7 +177,6 @@ class Armazenar_botoes_03():
                 return None  # Retorna None se nenhum botão estiver associado ao CPF
 
         except mysql.connector.Error as err:
-            print(f'Erro ao obter botões associados ao CPF {cpf}: {err}')
             return None  # Retorna None em caso de erro
         finally:
             cursor.close()
@@ -204,7 +191,6 @@ class Armazenar_botoes_03():
             self.db_connection.commit()
             return True
         except mysql.connector.Error as err:
-            print(f'Erro ao excluir a linha para o botão {nome_botao}: {err}')
             return False
         finally:
             cursor.close()

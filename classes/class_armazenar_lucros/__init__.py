@@ -20,12 +20,8 @@ class Armazenar_lucros:
                 drop_query = "DROP TABLE Lucros"
                 cursor.execute(drop_query)
                 self.db_connection.commit()
-                # print("Tabela Botoes excluída com sucesso.")
-            else:
-                print("A tabela lucros não existe.")
 
         except mysql.connector.Error as err:
-            print(f"Erro ao tentar excluir a tabela lucros: {err}")
             self.db_connection.rollback()
         finally:
             cursor.close()
@@ -74,7 +70,6 @@ class Armazenar_lucros:
             valid = True
         except mysql.connector.Error as err:
             self.db_connection.rollback()
-            print(f"Erro ao tentar armazenar o lucro: {err}")
         finally:
             cursor.close()
 
@@ -90,6 +85,4 @@ class Armazenar_lucros:
             return maior_lucro
 
         except mysql.connector.Error as err:
-            # Handle the error appropriately
-            print(f"Error: {err}")
             return 0.0

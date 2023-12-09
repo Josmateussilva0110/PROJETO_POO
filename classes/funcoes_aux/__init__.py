@@ -70,13 +70,11 @@ def lista_botoes_red_03(self):
 
 def lista_botoes_tela_layout(self, tela):
     if tela == 10:
-        print('PEGOU OS BOTOES DA TELA 10')
         botao = [
         getattr(self.TELA_LAYOUT, f"pushButton_{i}") for i in range(3, 43)
         ]
     
     elif tela == 13:
-        print('PEGOU OS BOTOES DA TELA 13')
         botao = [
         getattr(self.TELA_LAYOUT_02, f"pushButton_{i}") for i in range(3, 43)
         ]
@@ -117,7 +115,6 @@ def tratar_retorno_filmes(filmes):
             f"ID: {filme['ID']}\nNome: {filme['Nome']}\nAno: {filme['Ano']}\nPreço: {filme['Preço']}\nClassificação: {filme['Classificação']}\nHorário: {filme['Horário']}\nEm Cartaz: {filme['Em Cartaz']}"
             for filme in lista_filmes
         ]
-        #print(f"Tratar retorno: {lista_filmes_formatada}")
         return lista_filmes_formatada
     else:
         return None
@@ -176,85 +173,63 @@ def formatar_mensagem(dados_cliente, total_compra, sala, flag=1, parcelas=1):
 
             
 def mudar_cor_botao_vermelho_valido(lista_botoes_todos, lista_botoes_selecionados):
-    print('entrou em função mudar cor valido:')
-    print(f'lista de todos: {lista_botoes_todos}')
-    print(f'lista botoes selecionado: {lista_botoes_selecionados}')
-    
     # Extrai números dos identificadores dos botões selecionados
     numeros_selecionados = [int(botao.split('_')[-1]) for botao in lista_botoes_selecionados.split(',')]
 
     for button in lista_botoes_todos:
         botao_id = button.objectName()
-        print('id do botão', botao_id)
         
         # Extrai o número do identificador do botão na lista completa
         numero_botao = int(botao_id.split('_')[-1])
         
         if numero_botao in numeros_selecionados:
-            print(f'Um elemento do button name: {botao_id} está igual a algum dos selecionados')
             button.setStyleSheet("background-color: red;")
-            print('pintou')
         else:
             button.setStyleSheet("background-color: green;")
 
 
 
 def processar_dados_do_botao(client_socket, tela_para_exibir, botao_id, botoes):
-    print('entrou na função processar dados')
     client_socket.send('13'.encode())  # sinal para pegar a lista de botões que estão no servidor
-    print('enviou o sinal 13')
     tela = str(tela_para_exibir)
     client_socket.send(tela.encode())
     try:
         mensagem = client_socket.recv(4096).decode()
     except:
-        print("\nNão foi possível permanecer conectado!\n")
         client_socket.close()
 
     if mensagem == '1':  # encontrei os botões
         botoa_achado = client_socket.recv(4096).decode()##Botões achados no servidor com 0
         client_socket.send('14'.encode())
-        print('enviou o sinal 14')
         enviar_dados = [botao_id, str(tela_para_exibir)]
         enviar_servidor = ','.join(enviar_dados)
-        print(f'enviando para o servidor: {enviar_servidor}')
         client_socket.send(enviar_servidor.encode())
 
-        resposta = client_socket.recv(4096).decode()
-        if resposta == '0':
-            print(f'Erro ao atualizar "validar" para 1 para o botão {botao_id}.')
-        else:
-            print(f'Valor de "validar" atualizado para 1 para o botão {botao_id}.')
-        
+        client_socket.recv(4096).decode()
+
         client_socket.send('15'.encode()) #sinal para pegar a lista de botoes que estão no servidor
         client_socket.send(tela.encode())
         try:
             mensagem = client_socket.recv(4096).decode()
         except:
-            print("\nNão foi possível permanecer conectado!\n")
             client_socket.close()
         if mensagem == '1':  # encontrei os botões
-            print('entrou aqui ?')
             botoa_achado_verificado = client_socket.recv(4096).decode()
-            print(f'botoes achados verific: {botoa_achado_verificado}')
             mudar_cor_botao_vermelho_valido(botoes, botoa_achado_verificado)
             
 def pintar_botao_verde_excluido(lista_botoes_todos, lista_botoes_excluidos):
-    print('ENTORU EM PINTAR BOTAO EXCLUIDO')
     # Extrai números dos identificadores dos botões excluídos
     numeros_excluidos = [int(botao.split('_')[-1]) for botao in lista_botoes_excluidos.split(',')]
 
     for button in lista_botoes_todos:
         botao_id = button.objectName()
-        print('id do botão', botao_id)
         
         # Extrai o número do identificador do botão na lista completa
         numero_botao = int(botao_id.split('_')[-1])
         
         if numero_botao in numeros_excluidos:
-            print(f'O botão {botao_id} foi excluído do banco de dados.')
             button.setStyleSheet("background-color: green;")
-            print('PINTOU DE VERDE')
+
 
 
 def enxugar_string(partes):
@@ -265,28 +240,6 @@ def enxugar_string(partes):
     if len(partes) > 4:
         partes.pop(4)
     return partes
-
-def atualizar_variavel(variavel, operacao='+', valor=1):
-    print('Entrou aqui')
-    """
-    Atualiza a variável com base na operação fornecida.
-
-    Parâmetros:
-    - variavel: A variável a ser atualizada.
-    - operacao: A operação a ser realizada ('+' para soma, '-' para subtração).
-    - valor: O valor a ser adicionado ou subtraído (padrão é 1).
-
-    Retorna:
-    O valor atualizado da variável.
-    """
-    if operacao == '+':
-        print('Entrou aqui')
-        variavel += valor
-    elif operacao == '-':
-        print('Entrou aqui')
-        variavel -= valor
-    return variavel
-
 
 #dicionario para armazenar total_compra, frequência e botoes
 def atualizar_frequencia(self, chave, tela_para_exibir):
@@ -304,6 +257,7 @@ def atualizar_frequencia(self, chave, tela_para_exibir):
         botoes = dicionario[chave]['botoes']
         botoes.append(self.botao_id)
         dicionario[chave] = {'frequencia': frequencia, 'botoes': botoes}
+
 
 
 def desatualizar_frequencia(self, tela, botao_servidor):

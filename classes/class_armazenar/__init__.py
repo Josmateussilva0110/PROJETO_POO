@@ -133,6 +133,15 @@ class Armazenar:
         cursor.close()
         return result[0] if result else None
     
+    def buscar_gerente_cpf(self, cpf):
+        cursor = self.db_connection.cursor()
+        select_query = "SELECT nome FROM Gerencia WHERE cpf = %s"
+        values = (cpf,)
+        cursor.execute(select_query, values)
+        result = cursor.fetchone()
+        cursor.close()
+        return result[0] if result else None
+    
     def buscar_email_cpf(self, cpf):
         cursor = self.db_connection.cursor()
         select_query = "SELECT email FROM Usuarios WHERE cpf = %s"
@@ -159,6 +168,4 @@ class Armazenar:
             # result é uma tupla com um único valor, que é a contagem
             return result[0] if result else 0
         except mysql.connector.Error as err:
-            print(f"Erro ao contar pessoas cadastradas: {err}")
-        finally:
             cursor.close()
