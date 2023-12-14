@@ -42,8 +42,6 @@ class Main(QtWidgets.QWidget):
     """
     def setupUi(self, Main):
         """
-        _summary_
-        ----------
         Configura a interface do usuário para a janela principal da aplicação, incluindo várias telas empilhadas.
         ----------
 
@@ -222,84 +220,37 @@ class Ui_Main(QMainWindow, Main):
     TelaVerTodosFilmes
         Envia uma solicitação para o servidor para obter a lista de todos os filmes cadastrados
         e exibe a lista na tela correspondente. Se não houver filmes cadastrados, exibe uma mensagem informando isso.
-    item_selecionado_lista_filmes(self, index):
+    item_selecionado_lista_filmes(self, index)
         Método usado para o gerente adicionar um filme em cartaz
-
-        Parameters
-        ----------
-        index : str
-            Index representa o filme selecionado pelo gerente
-    botao_buscar(self):
+    botao_buscar(self)
         Método usado para buscar um determinado filme
-    carregar_lista_completa_filmes(self):
+    carregar_lista_completa_filmes(self)
         Método usado para exibir todos os filmes cadastrados
-    carregar_filmes_em_cartaz(self):
+    carregar_filmes_em_cartaz(self)
         Método usado para exibir todos os filmes em cartaz
-    item_selecionado_Excluir_filmes(self, index):
+    item_selecionado_Excluir_filmes(self, index)
         Método usado para o gerente retirar um filme do cartaz
-        Parameters
-        ----------
-        index : str
-            Index representa o filme selecionado pelo gerente
-    botao_buscar_tela_excluir(self):
+    botao_buscar_tela_excluir(self)
         Método usado para exibir todos os filmes em cartaz
-    Tela_Cliente_Ver_Filmes(self):
+    Tela_Cliente_Ver_Filmes(self)
         Método usado para exibir todos os filmes em cartaz para o cliente
-    item_selecionado_lista_filmes_cliente(self, index):
+    item_selecionado_lista_filmes_cliente(self, index)
         Método usado para o cliente selecionar um filme que deseja comprar e escolher sua poltrona
-    Tela_Cliente_botao_buscar(self):
+    Tela_Cliente_botao_buscar(self)
         Método usado para buscar um filme para o cliente
-    ir_tela_pagamento(self, button):
-        Método usado para armazenar a poltrona que o cliente escolher
-        Parameters
-        ----------
-        button : str
-            button representa o botão selecionado pelo cliente
-    escolheuPix(self):
+    ir_tela_pagamento(self, button)
+    escolheuPix(self)
         Método que representa a forma de pagamento pix e faz a soma da compra além de enviar o comprovante por e-mail
-    botaoconfirmartelacartao(self):
+    botaoconfirmartelacartao(self)
         Método que representa a forma de pagamento pix e faz a soma da compra além de enviar o comprovante por e-mail
-    ir_tela_Excluir_Reserva(self):
+    ir_tela_Excluir_Reserva(self)
         Método que exibe todas as poltronas para o cliente excluir
-    item_selecionado_Excluir_Reserva(self, index):
+    item_selecionado_Excluir_Reserva(self, index)
         Método usado para o cliente selecionar uma poltrona e excluir sua reserva
-    Tela_Estatistica(self):
+    Tela_Estatistica(self)
         Método usado para exibir todos os dados de compra para o gerente
     """
     def __init__(self):
-        
-        """
-        Attributes
-        ----------
-        horarios_selecionados : list
-            Uma lista que recebe os horarios selecionados pelo cliente
-        classificacao : str
-            É um tipo string vazio que vai receber a classificação
-        dados_clienete : list
-            Uma lista que recebe os dados do cliente
-        saida : str
-            É um tipo string que vai receber a saida
-        cpf_do_usuario : str
-            É um tipo string que vai receber o CPF do usuario logado
-        itens_filme : str
-            É um tipo string que recebe o itens do filme 
-        horarios_cliente : str
-            É um tipo string que recebe os horarios selecionados
-        resposta : str
-            É um tipo string que recebe uma resposta
-        total_compra : str
-            É um tipo string que recebe o total da compra
-        botao_id : str
-            É um tipo string que recebe um id de um botão
-        tela_para_exibir : str
-            É um tipo string que pega a tela atual que o usuario esta usando
-        frequencia_valores : dict
-            É um tipo dicionario que pega a frequencia de valores na tela 1
-        frequencia_valores_02 : dict
-            É um tipo dicionario que pega a frequencia de valores na tela 2
-        frequencia_valores_03 : dict
-            É um tipo dicionario que pega a frequencia de valores na tela 3
-        """
         
         super(Main, self).__init__(None)
         self.setupUi(self)
