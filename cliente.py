@@ -35,7 +35,19 @@ except Exception as e:
 
 
 class Main(QtWidgets.QWidget):
+    """
+    Uma classe que representa a janela principal da aplicação com um layout empilhado para alternar entre diferentes telas.
+    ----------
+
+    """
     def setupUi(self, Main):
+        """
+        _summary_
+        ----------
+        Configura a interface do usuário para a janela principal da aplicação, incluindo várias telas empilhadas.
+        ----------
+
+        """
         Main.setObjectName('Main')
         Main.resize(640, 480)
 
@@ -133,7 +145,162 @@ class Main(QtWidgets.QWidget):
 
 
 class Ui_Main(QMainWindow, Main):
+    """
+    Uma classe de interface do usuário para a aplicação principal, que herda de QMainWindow e Main.
+    
+    Attributes
+    ----------
+        horarios_selecionados : list
+            Uma lista que recebe os horarios selecionados pelo cliente
+        classificacao : str
+            É um tipo string vazio que vai receber a classificação
+        dados_clienete : list
+            Uma lista que recebe os dados do cliente
+        saida : str
+            É um tipo string que vai receber a saida
+        cpf_do_usuario : str
+            É um tipo string que vai receber o CPF do usuario logado
+        itens_filme : str
+            É um tipo string que recebe o itens do filme 
+        horarios_cliente : str
+            É um tipo string que recebe os horarios selecionados
+        resposta : str
+            É um tipo string que recebe uma resposta
+        total_compra : str
+            É um tipo string que recebe o total da compra
+        botao_id : str
+            É um tipo string que recebe um id de um botão
+        tela_para_exibir : str
+            É um tipo string que pega a tela atual que o usuario esta usando
+        frequencia_valores : dict
+            É um tipo dicionario que pega a frequencia de valores na tela 1
+        frequencia_valores_02 : dict
+            É um tipo dicionario que pega a frequencia de valores na tela 2
+        frequencia_valores_03 : dict
+            É um tipo dicionario que pega a frequencia de valores na tela 3
+            
+    Methods
+    -------
+    VoltarMain
+        Volta para a tela principal da aplicação.
+    fecharAplicacao
+        Fecha a aplicação, enviando um sinal para o socket do cliente e encerrando o programa.
+    abrirTelaCadastro
+        Abre a tela de cadastro da aplicação.
+    abrirLoginFunc
+        Abre a tela de Login do Gerente.
+    TelaGestao
+        Abre a tela de Gestao.
+    TelaCadastraFilme
+        Abre a tela de cadastro para o filme.
+    escolhe_lugar
+        Abre a tela de Escolher lugar.
+    escolher_horarios
+        Abre a tela de Escolher Horarios.
+    escolheuCartao
+        Abre a tela de Escolher cartão.
+    botao_ok
+        Confirma os dados digitados e realiza a autenticação do usuário.
+        Se o login for bem-sucedido, direciona para a tela após o login correspondente
+        (cliente ou gerente) e exibe as informações do usuário autenticado.
+    abrirTelaDPSLoginCli
+        Abre a tela correspondente aos clientes após o login.
+    botao_Cadastra
+        Realiza o cadastro do usuário com base nos dados fornecidos.
+        Exibe mensagens de erro se os dados não forem válidos ou se o CPF já estiver cadastrado.
+    botao_cadastrar_filme
+        Realiza o cadastro de um filme com base nos dados fornecidos, incluindo horários e classificação.
+        Exibe mensagens de erro se os dados não forem válidos ou se o cadastro do filme falhar.
+    adicionar_horarios
+        Adiciona os horários selecionados à lista de horários para o cadastro de filmes.
+        Obtém o horário, tipo de filme e língua escolhidos pelo usuário na interface gráfica,
+        cria uma tupla representando essa escolha e a adiciona à lista de horários selecionados.
+        Atualiza a visualização na interface gráfica com os horários selecionados.
+        Exibe uma mensagem de erro se nenhum horário for selecionado.
+    adicionar_classificacao
+        Adiciona a classificação na tela e mostra para o usuario escolher.
+    TelaVerTodosFilmes
+        Envia uma solicitação para o servidor para obter a lista de todos os filmes cadastrados
+        e exibe a lista na tela correspondente. Se não houver filmes cadastrados, exibe uma mensagem informando isso.
+    item_selecionado_lista_filmes(self, index):
+        Método usado para o gerente adicionar um filme em cartaz
+
+        Parameters
+        ----------
+        index : str
+            Index representa o filme selecionado pelo gerente
+    botao_buscar(self):
+        Método usado para buscar um determinado filme
+    carregar_lista_completa_filmes(self):
+        Método usado para exibir todos os filmes cadastrados
+    carregar_filmes_em_cartaz(self):
+        Método usado para exibir todos os filmes em cartaz
+    item_selecionado_Excluir_filmes(self, index):
+        Método usado para o gerente retirar um filme do cartaz
+        Parameters
+        ----------
+        index : str
+            Index representa o filme selecionado pelo gerente
+    botao_buscar_tela_excluir(self):
+        Método usado para exibir todos os filmes em cartaz
+    Tela_Cliente_Ver_Filmes(self):
+        Método usado para exibir todos os filmes em cartaz para o cliente
+    item_selecionado_lista_filmes_cliente(self, index):
+        Método usado para o cliente selecionar um filme que deseja comprar e escolher sua poltrona
+    Tela_Cliente_botao_buscar(self):
+        Método usado para buscar um filme para o cliente
+    ir_tela_pagamento(self, button):
+        Método usado para armazenar a poltrona que o cliente escolher
+        Parameters
+        ----------
+        button : str
+            button representa o botão selecionado pelo cliente
+    escolheuPix(self):
+        Método que representa a forma de pagamento pix e faz a soma da compra além de enviar o comprovante por e-mail
+    botaoconfirmartelacartao(self):
+        Método que representa a forma de pagamento pix e faz a soma da compra além de enviar o comprovante por e-mail
+    ir_tela_Excluir_Reserva(self):
+        Método que exibe todas as poltronas para o cliente excluir
+    item_selecionado_Excluir_Reserva(self, index):
+        Método usado para o cliente selecionar uma poltrona e excluir sua reserva
+    Tela_Estatistica(self):
+        Método usado para exibir todos os dados de compra para o gerente
+    """
     def __init__(self):
+        
+        """
+        Attributes
+        ----------
+        horarios_selecionados : list
+            Uma lista que recebe os horarios selecionados pelo cliente
+        classificacao : str
+            É um tipo string vazio que vai receber a classificação
+        dados_clienete : list
+            Uma lista que recebe os dados do cliente
+        saida : str
+            É um tipo string que vai receber a saida
+        cpf_do_usuario : str
+            É um tipo string que vai receber o CPF do usuario logado
+        itens_filme : str
+            É um tipo string que recebe o itens do filme 
+        horarios_cliente : str
+            É um tipo string que recebe os horarios selecionados
+        resposta : str
+            É um tipo string que recebe uma resposta
+        total_compra : str
+            É um tipo string que recebe o total da compra
+        botao_id : str
+            É um tipo string que recebe um id de um botão
+        tela_para_exibir : str
+            É um tipo string que pega a tela atual que o usuario esta usando
+        frequencia_valores : dict
+            É um tipo dicionario que pega a frequencia de valores na tela 1
+        frequencia_valores_02 : dict
+            É um tipo dicionario que pega a frequencia de valores na tela 2
+        frequencia_valores_03 : dict
+            É um tipo dicionario que pega a frequencia de valores na tela 3
+        """
+        
         super(Main, self).__init__(None)
         self.setupUi(self)
         self.horarios_selecionados = list()
@@ -248,35 +415,67 @@ class Ui_Main(QMainWindow, Main):
         
     
     def VoltarMain(self):
+        """
+        Volta para a tela principal da aplicação.
+        """
         self.QtStack.setCurrentIndex(0)
 
     def fecharAplicacao(self):
+        """
+        Fecha a aplicação, enviando um sinal para o socket do cliente e encerrando o programa.
+        """
         client_socket.send('0'.encode())
         sys.exit()
     
     def abrirTelaCadastro(self):
+        """
+        Abre a tela de cadastro da aplicação.
+        """
         self.QtStack.setCurrentIndex(1)
     
     def abrirLoginFunc(self):
+        """
+        Abre a tela de Login do Gerente.
+        """
         self.QtStack.setCurrentIndex(3)
     
     def TelaGestao(self):
+        """
+        Abre a tela de Gestao.
+        """
         self.QtStack.setCurrentIndex(5)
     
     def TelaCadastraFilme(self):
+        """
+        Abre a tela de cadastro para o filme.
+        """
         self.QtStack.setCurrentIndex(6)
         
     def escolhe_lugar(self):
+        """
+        Abre a tela de Escolher lugar.
+        """
         self.QtStack.setCurrentIndex(10)
         
     def escolher_horarios(self):
+        """
+        Abre a tela de Escolher Horarios.
+        """
         self.QtStack.setCurrentIndex(11)
         
     def escolheuCartao(self):
+        """
+        Abre a tela de Escolher cartão.
+        """
         self.QtStack.setCurrentIndex(12)
         
     
     def botao_ok(self):
+        """
+        Confirma os dados digitados e realiza a autenticação do usuário.
+        Se o login for bem-sucedido, direciona para a tela após o login correspondente
+        (cliente ou gerente) e exibe as informações do usuário autenticado.
+        """
         cpf = self.tela_main_ui.lineEdit_2.text()
         self.cpf_do_usuario = cpf
         senha = self.tela_main_ui.lineEdit.text()
@@ -318,11 +517,18 @@ class Ui_Main(QMainWindow, Main):
     
     
     def abrirTelaDPSLoginCli(self):
+        """
+        Abre a tela correspondente aos clientes após o login.
+        """
         self.QtStack.setCurrentIndex(2)
     
         
     
     def botao_Cadastra(self):
+        """
+        Realiza o cadastro do usuário com base nos dados fornecidos.
+        Exibe mensagens de erro se os dados não forem válidos ou se o CPF já estiver cadastrado.
+        """
         valid = False
         nome = self.TELA_CADASTRO_ui.lineEdit.text()
         cpf = self.TELA_CADASTRO_ui.lineEdit_2.text()
@@ -366,6 +572,10 @@ class Ui_Main(QMainWindow, Main):
     
 
     def botao_cadastrar_filme(self):
+        """
+        Realiza o cadastro de um filme com base nos dados fornecidos, incluindo horários e classificação.
+        Exibe mensagens de erro se os dados não forem válidos ou se o cadastro do filme falhar.
+        """
         horarios_escolhidos = list()
         valid = False
         filme = ''
@@ -424,6 +634,16 @@ class Ui_Main(QMainWindow, Main):
     
 
     def adicionar_horarios(self):
+        """
+        Adiciona os horários selecionados à lista de horários para o cadastro de filmes.
+        
+        Obtém o horário, tipo de filme e língua escolhidos pelo usuário na interface gráfica,
+        cria uma tupla representando essa escolha e a adiciona à lista de horários selecionados.
+        
+        Atualiza a visualização na interface gráfica com os horários selecionados.
+        
+        Exibe uma mensagem de erro se nenhum horário for selecionado.
+        """
         horario = self.TELA_CADASTRO_FILMES.dateTimeEdit.text()
         tipo_filme = self.TELA_CADASTRO_FILMES.comboBox.currentText()
         lingua = self.TELA_CADASTRO_FILMES.comboBox_2.currentText()
@@ -450,6 +670,9 @@ class Ui_Main(QMainWindow, Main):
 
 
     def adicionar_classificacao(self):
+        """
+        Adiciona a classificação na tela e mostra para o usuario escolher.
+        """
         # Obtenha a classificação selecionada
         classificacao_selecionada = QInputDialog.getItem(
             self, 'Seleção', 'Selecione a classificação:', lista_de_classificacao_filme(), 0, False
@@ -477,6 +700,10 @@ class Ui_Main(QMainWindow, Main):
 
         # Cliente
     def TelaVerTodosFilmes(self): 
+        """
+        Envia uma solicitação para o servidor para obter a lista de todos os filmes cadastrados
+        e exibe a lista na tela correspondente. Se não houver filmes cadastrados, exibe uma mensagem informando isso.
+        """
         client_socket.send('4'.encode())  
         try:
             filmes = client_socket.recv(4096).decode()
@@ -495,6 +722,8 @@ class Ui_Main(QMainWindow, Main):
             self.QtStack.setCurrentIndex(7)
         else:
             QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
+            
+###############################################################################################################
             
     def item_selecionado_lista_filmes(self, index):
         if index.isValid():
