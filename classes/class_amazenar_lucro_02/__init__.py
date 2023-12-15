@@ -1,6 +1,25 @@
 import mysql.connector
 
-class Armazenar_lucros_02:
+class Armazenar_lucros_02():
+    """
+    Classe responsável por gerenciar o armazenamento de dados de lucro_2 no banco de dados.
+
+    Attributes
+    ----------
+    db_connection: Conexão com o banco de dados MySQL.
+
+    Methods
+    -------
+    drop_tabela_lucros_02:
+        Exclui do banco de dados a tabala lucros_02
+    cria_tabela_lucros_02:
+        Cria no banco de dados a tabala lucros_02
+    armazenar_lucro_02(self, valor):
+        Armazena no banco de dados a tabala lucros_02
+    obter_lucro_total_02:
+        Obtem o lucro total da tabela lucro_total_2
+
+    """
     def __init__(self, db_connection):
         self.db_connection = db_connection
         self.drop_tabela_lucros_02()
@@ -8,6 +27,10 @@ class Armazenar_lucros_02:
     
 
     def drop_tabela_lucros_02(self):
+        """
+        Exclui a tabela 'Lucros_02' do banco de dados, se ela existir.
+
+        """
         cursor = self.db_connection.cursor()
 
         try:
@@ -27,6 +50,9 @@ class Armazenar_lucros_02:
             cursor.close()
 
     def cria_tabela_lucros_02(self):
+        """
+        Cria a tabela 'Lucros_02' no banco de dados 'Cineplus', se ela não existir.
+        """
         # Use o banco de dados 'Cineplus'
         cursor = self.db_connection.cursor()
         cursor.execute("USE Cineplus")
@@ -43,6 +69,9 @@ class Armazenar_lucros_02:
 
 
     def armazenar_lucro_02(self, valor):
+        """
+        Armazena o valor do lucro no banco de dados 'Lucros_02', atualizando ou inserindo conforme necessário.
+        """
         cursor = self.db_connection.cursor()
         valid = False
 
@@ -74,6 +103,9 @@ class Armazenar_lucros_02:
 
 
     def obter_lucro_total_02(self):
+        """
+        Retorna o maior valor de lucro armazenado na tabela 'Lucros_02'.
+        """
         try:
             cursor = self.db_connection.cursor()
             cursor.execute("SELECT MAX(lucro) FROM Lucros_02")

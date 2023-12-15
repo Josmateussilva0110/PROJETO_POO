@@ -24,7 +24,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.2.105'
+ip = '10.180.42.249'
 porta = 8007
 addr = ((ip,porta))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -1245,11 +1245,11 @@ class Ui_Main(QMainWindow, Main):
                 valores = list()
                 total = total_02 = total_03 = 0.0
                 for i, v in self.frequencia_valores.items():
-                    total += i * v["frequencia"]
+                    total -= i * v["frequencia"]
                 for i, v in self.frequencia_valores_02.items():
-                    total_02 += i * v["frequencia"]
+                    total_02 -= i * v["frequencia"]
                 for i, v in self.frequencia_valores_03.items():
-                    total_03 += i * v["frequencia"]
+                    total_03 -= i * v["frequencia"]
                 valores.append(str(total))
                 valores.append(str(total_02))
                 valores.append(str(total_03))
