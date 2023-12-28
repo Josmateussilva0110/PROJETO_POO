@@ -438,7 +438,7 @@ def menu(con, cliente):
                 botao_procurar = botao[9:]
                 if sala[6] == '1':
                     if dados_botoes.Exclui_Reserva(botao_procurar):
-                        print(f'EXCLUIDO TELA 10')
+                        con.send('10'.encode())
                 elif sala[6] == '2':
                     if dados_botoes_02.Exclui_Reserva_02(botao_procurar):
                         print(f'EXCLUIDO TELA 13')
