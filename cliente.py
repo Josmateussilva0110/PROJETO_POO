@@ -971,6 +971,13 @@ class Ui_Main(QMainWindow, Main):
                     processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
                     chave = self.total_compra
                     atualizar_frequencia(self, chave, self.tela_para_exibir)
+                    soma_total = somar_lucro(self, self.tela_para_exibir)
+                    valores = list()
+                    valores.append(str(self.tela_para_exibir))
+                    valores.append(str(soma_total))
+                    enviar = ','.join(valores)
+                    client_socket.send('22'.encode())
+                    client_socket.send(enviar.encode())
         if valid:  
             self.QtStack.setCurrentIndex(2)
             self.Cartao_ui.lineEdit.setText('')

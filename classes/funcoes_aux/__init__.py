@@ -323,12 +323,11 @@ def desatualizar_frequencia(self, tela, botao_servidor):
 def somar_lucro(self, tela):
     total = 0
     if tela == 10:
-        for i, v in self.frequencia_valores.items():
-            total += i * v["frequencia"]
+        dicionario = self.frequencia_valores
     elif tela == 13:
-        for i, v in self.frequencia_valores_02.items():
-            total += i * v["frequencia"]
+        dicionario = self.frequencia_valores_02
     elif tela == 14:
-        for i, v in self.frequencia_valores_03.items():
-            total += i * v["frequencia"]
+        dicionario = self.frequencia_valores_03
+    for i, v in dicionario.items():
+        total += i * v["frequencia"]
     return total
