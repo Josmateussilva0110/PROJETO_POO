@@ -469,15 +469,20 @@ def menu(con, cliente):
                     con.send('14'.encode())
             
         elif mensagem == '22':
-            lista = list()
             receber = con.recv(4096).decode()
+            print(f'recebido da mensagem 22: {receber}')
             valores_partes = receber.split(',')
-            valor = valores_partes[0]
-            valor_02 = valores_partes[1]
-            valor_03 = valores_partes[2]
-            lucros.armazenar_lucro(valor)
-            lucros_02.armazenar_lucro_02(valor_02)
-            lucros_03.armazenar_lucro_03(valor_03)
+            tela = valores_partes[0]
+            lucro = valores_partes[1]
+            if tela == '10':
+                lucros.armazenar_lucro(lucro)
+            elif tela == '13':
+                lucros_02.armazenar_lucro_02(lucro)
+            elif tela == '14':
+                lucros_03.armazenar_lucro_03(lucro)
+        
+        elif mensagem == '23':
+            lista = list()
             total_lucro = lucros.obter_lucro_total()
             total_lucro_02 = lucros_02.obter_lucro_total_02()
             total_lucro_03 = lucros_03.obter_lucro_total_03()

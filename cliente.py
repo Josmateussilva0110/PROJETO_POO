@@ -25,7 +25,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.1.3'
+ip = '192.168.1.7'
 porta = 8007
 addr = ((ip,porta))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -901,6 +901,13 @@ class Ui_Main(QMainWindow, Main):
             processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
             chave = self.total_compra
             atualizar_frequencia(self, chave, self.tela_para_exibir)
+            soma_total = somar_lucro(self, self.tela_para_exibir)
+            valores = list()
+            valores.append(str(self.tela_para_exibir))
+            valores.append(str(soma_total))
+            enviar = ','.join(valores)
+            client_socket.send('22'.encode())
+            client_socket.send(enviar.encode())
             self.QtStack.setCurrentIndex(2)
         
         
@@ -1074,18 +1081,7 @@ class Ui_Main(QMainWindow, Main):
             cont_cliente = cont_cliente.strip(" '[]")
             cont_filmes = cont_filmes.strip(" '[]")
             cont_filmes_cartaz = cont_filmes_cartaz.strip(" '[]")
-            for i, v in self.frequencia_valores.items():
-                total += i * v["frequencia"]
-            for i, v in self.frequencia_valores_02.items():
-                total_02 += i * v["frequencia"]
-            for i, v in self.frequencia_valores_03.items():
-                total_03 += i * v["frequencia"]
-            valores.append(str(total))
-            valores.append(str(total_02))
-            valores.append(str(total_03))
-            enviar = ','.join(valores)
-            client_socket.send('22'.encode())
-            client_socket.send(enviar.encode())
+            client_socket.send('23'.encode())
             totais_de_lucro = client_socket.recv(4096).decode()
             print(f'totais de lucro: {totais_de_lucro}')
             partes_totais = totais_de_lucro.split(',')

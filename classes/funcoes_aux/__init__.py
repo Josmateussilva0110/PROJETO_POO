@@ -318,3 +318,17 @@ def desatualizar_frequencia(self, tela, botao_servidor):
         if botao_servidor in v["botoes"]:
             v["frequencia"] -=1 
             v["botoes"].remove(botao_servidor)
+
+
+def somar_lucro(self, tela):
+    total = 0
+    if tela == 10:
+        for i, v in self.frequencia_valores.items():
+            total += i * v["frequencia"]
+    elif tela == 13:
+        for i, v in self.frequencia_valores_02.items():
+            total += i * v["frequencia"]
+    elif tela == 14:
+        for i, v in self.frequencia_valores_03.items():
+            total += i * v["frequencia"]
+    return total
