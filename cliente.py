@@ -1084,8 +1084,6 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.warning(self, 'Aviso', 'Nenhum item selecionado.')
             
     def Tela_Estatistica(self):
-        valores = list()
-        total = total_02 = total_03 = 0.0
         client_socket.send('17'.encode())
         try:
             retorno = client_socket.recv(4096).decode()

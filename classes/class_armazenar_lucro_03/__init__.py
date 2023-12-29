@@ -55,17 +55,13 @@ class Armazenar_lucros_03:
         if count == 0:
             insert_query = "INSERT INTO Lucros_03(lucro) VALUES (%s)"
             values = (valor,)
-        elif flag == '1':
-            cursor.execute("SELECT lucro FROM Lucros_03")
-            lucro_existente = cursor.fetchone()[0]
-            novo_lucro = lucro_existente - float(valor)
-            update_query = "UPDATE Lucros_03 SET lucro = %s"
-            values = (novo_lucro,)
-            insert_query = None
         else:
             cursor.execute("SELECT lucro FROM Lucros_03")
             lucro_existente = cursor.fetchone()[0]
-            novo_lucro = lucro_existente + float(valor)
+            if flag == '1':
+                novo_lucro = lucro_existente - float(valor)
+            else:
+                novo_lucro = lucro_existente + float(valor)
             update_query = "UPDATE Lucros_03 SET lucro = %s"
             values = (novo_lucro,)
             insert_query = None
