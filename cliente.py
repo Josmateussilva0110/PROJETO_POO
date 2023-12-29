@@ -901,10 +901,11 @@ class Ui_Main(QMainWindow, Main):
             processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
             chave = self.total_compra
             atualizar_frequencia(self, chave, self.tela_para_exibir)
-            soma_total = somar_lucro(self, self.tela_para_exibir)
+            flag = 0
             valores = list()
             valores.append(str(self.tela_para_exibir))
-            valores.append(str(soma_total))
+            valores.append(str(self.total_compra))
+            valores.append(str(flag))
             enviar = ','.join(valores)
             client_socket.send('22'.encode())
             client_socket.send(enviar.encode())
@@ -971,10 +972,11 @@ class Ui_Main(QMainWindow, Main):
                     processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
                     chave = self.total_compra
                     atualizar_frequencia(self, chave, self.tela_para_exibir)
-                    soma_total = somar_lucro(self, self.tela_para_exibir)
+                    flag = 0
                     valores = list()
                     valores.append(str(self.tela_para_exibir))
-                    valores.append(str(soma_total))
+                    valores.append(str(self.total_compra))
+                    valores.append(str(flag))
                     enviar = ','.join(valores)
                     client_socket.send('22'.encode())
                     client_socket.send(enviar.encode())
@@ -1068,12 +1070,12 @@ class Ui_Main(QMainWindow, Main):
                     QtWidgets.QMessageBox.information(self, 'Excluir', 'reserva excluída com sucesso.')  
                 else:
                     QtWidgets.QMessageBox.information(self, 'Excluir', 'erro ao excluir.') 
-                desatualizar_frequencia(self, str_tela, botao_servidor)
-                soma_total = somar_lucro(self, int(str_tela))
-                print(f'soma depois do decremento: {soma_total}')
+                valor_excluido = desatualizar_frequencia(self, str_tela, botao_servidor)
+                flag = 1
                 lista = list()
                 lista.append(str_tela)
-                lista.append(str(soma_total))
+                lista.append(str(valor_excluido))
+                lista.append(str(flag))
                 enviar_ser = ','.join(lista)
                 client_socket.send('22'.encode())
                 client_socket.send(enviar_ser.encode())

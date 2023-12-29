@@ -46,7 +46,7 @@ class Armazenar_lucros:
         cursor.close()
 
 
-    def armazenar_lucro(self, valor):
+    def armazenar_lucro(self, valor, flag):
         cursor = self.db_connection.cursor()
         valid = False
         cursor.execute("SELECT COUNT(*) FROM Lucros")
@@ -55,6 +55,13 @@ class Armazenar_lucros:
         if count == 0:
             insert_query = "INSERT INTO Lucros(lucro) VALUES (%s)"
             values = (valor,)
+        elif flag == '1':
+            cursor.execute("SELECT lucro FROM Lucros")
+            lucro_existente = cursor.fetchone()[0]
+            novo_lucro = lucro_existente - float(valor)
+            update_query = "UPDATE Lucros SET lucro = %s"
+            values = (novo_lucro,)
+            insert_query = None
         else:
             cursor.execute("SELECT lucro FROM Lucros")
             lucro_existente = cursor.fetchone()[0]
@@ -76,8 +83,6 @@ class Armazenar_lucros:
             cursor.close()
 
         return valid
-
-
 
 
     def obter_lucro_total(self):

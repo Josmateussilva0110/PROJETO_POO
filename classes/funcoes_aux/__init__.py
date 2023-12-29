@@ -266,27 +266,6 @@ def enxugar_string(partes):
         partes.pop(4)
     return partes
 
-def atualizar_variavel(variavel, operacao='+', valor=1):
-    print('Entrou aqui')
-    """
-    Atualiza a variável com base na operação fornecida.
-
-    Parâmetros:
-    - variavel: A variável a ser atualizada.
-    - operacao: A operação a ser realizada ('+' para soma, '-' para subtração).
-    - valor: O valor a ser adicionado ou subtraído (padrão é 1).
-
-    Retorna:
-    O valor atualizado da variável.
-    """
-    if operacao == '+':
-        print('Entrou aqui')
-        variavel += valor
-    elif operacao == '-':
-        print('Entrou aqui')
-        variavel -= valor
-    return variavel
-
 
 #dicionario para armazenar total_compra, frequência e botoes
 def atualizar_frequencia(self, chave, tela_para_exibir):
@@ -307,6 +286,7 @@ def atualizar_frequencia(self, chave, tela_para_exibir):
 
 
 def desatualizar_frequencia(self, tela, botao_servidor):
+    retorno = 0
     if tela == '10':
         dicionario = self.frequencia_valores
     elif tela == '13':
@@ -316,20 +296,9 @@ def desatualizar_frequencia(self, tela, botao_servidor):
 
     for i, v in list(dicionario.items()):
         if botao_servidor in v["botoes"]:
+            retorno = i
             v["frequencia"] -= 1
             v["botoes"].remove(botao_servidor)
             if v["frequencia"] == 0:
                 del dicionario[i]
-
-
-def somar_lucro(self, tela):
-    total = 0
-    if tela == 10:
-        dicionario = self.frequencia_valores
-    elif tela == 13:
-        dicionario = self.frequencia_valores_02
-    elif tela == 14:
-        dicionario = self.frequencia_valores_03
-    for i, v in dicionario.items():
-        total += i * v["frequencia"]
-    return total
+    return retorno
