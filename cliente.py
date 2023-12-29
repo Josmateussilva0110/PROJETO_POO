@@ -1066,6 +1066,8 @@ class Ui_Main(QMainWindow, Main):
                 confirmacao = client_socket.recv(4096).decode()
                 if confirmacao == '10':
                     QtWidgets.QMessageBox.information(self, 'Excluir', 'reserva excluída com sucesso.')  
+                else:
+                    QtWidgets.QMessageBox.information(self, 'Excluir', 'erro ao excluir.') 
                 desatualizar_frequencia(self, str_tela, botao_servidor)
                 soma_total = somar_lucro(self, int(str_tela))
                 print(f'soma depois do decremento: {soma_total}')

@@ -441,10 +441,10 @@ def menu(con, cliente):
                         con.send('10'.encode())
                 elif sala[6] == '2':
                     if dados_botoes_02.Exclui_Reserva_02(botao_procurar):
-                        print(f'EXCLUIDO TELA 13')
+                        con.send('10'.encode())
                 elif sala[6] == '3':
                     if dados_botoes_03.Exclui_Reserva_03(botao_procurar):
-                        print('EXCLUIDO TELA 14')
+                        con.send('10'.encode())
         
         elif mensagem == '21':
             botao = con.recv(4096).decode()
