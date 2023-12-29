@@ -478,9 +478,9 @@ def menu(con, cliente):
             if tela == '10':
                 lucros.armazenar_lucro(lucro, flag)
             elif tela == '13':
-                lucros_02.armazenar_lucro_02(lucro)
+                lucros_02.armazenar_lucro_02(lucro, flag)
             elif tela == '14':
-                lucros_03.armazenar_lucro_03(lucro)
+                lucros_03.armazenar_lucro_03(lucro, flag)
         
         elif mensagem == '23':
             lista = list()

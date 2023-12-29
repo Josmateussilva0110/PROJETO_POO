@@ -46,27 +46,34 @@ class Armazenar_lucros_03:
         cursor.close()
 
 
-    def armazenar_lucro_03(self, valor):
+    def armazenar_lucro_03(self, valor, flag):
         cursor = self.db_connection.cursor()
         valid = False
-
         cursor.execute("SELECT COUNT(*) FROM Lucros_03")
         count = cursor.fetchone()[0]
 
         if count == 0:
             insert_query = "INSERT INTO Lucros_03(lucro) VALUES (%s)"
             values = (valor,)
-        else:
+        elif flag == '1':
+            cursor.execute("SELECT lucro FROM Lucros_03")
+            lucro_existente = cursor.fetchone()[0]
+            novo_lucro = lucro_existente - float(valor)
             update_query = "UPDATE Lucros_03 SET lucro = %s"
-            values = (valor,)
+            values = (novo_lucro,)
             insert_query = None
-
+        else:
+            cursor.execute("SELECT lucro FROM Lucros_03")
+            lucro_existente = cursor.fetchone()[0]
+            novo_lucro = lucro_existente + float(valor)
+            update_query = "UPDATE Lucros_03 SET lucro = %s"
+            values = (novo_lucro,)
+            insert_query = None
         try:
             if insert_query:
                 cursor.execute(insert_query, values)
             else:
                 cursor.execute(update_query, values)
-
             self.db_connection.commit()
             valid = True
         except mysql.connector.Error as err:
