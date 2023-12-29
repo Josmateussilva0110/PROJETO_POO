@@ -474,6 +474,8 @@ def menu(con, cliente):
             valores_partes = receber.split(',')
             tela = valores_partes[0]
             lucro = valores_partes[1]
+            print(f'tela: {tela}')
+            print(f'lucro: {lucro}')
             if tela == '10':
                 lucros.armazenar_lucro(lucro)
             elif tela == '13':
