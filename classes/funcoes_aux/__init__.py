@@ -143,7 +143,7 @@ def EnviaEmail(destinatario,mensagem):
 
 
 def formatar_mensagem(dados_cliente, total_compra, sala, flag=1, parcelas=1):
-    # Formatar a lista de dados_cliente em uma string organizada
+    print(f'string recebida do formatar: {dados_cliente}')
     formato_mensagem = "Nome cliente: {}\nNome filme: {}\nAno: {}\nClassificação: {}\nHorario: {}\nSala: {}\nTotal compra: {}\nPagamento: {}\nEmitido: {}"
     data_e_hora_atuais = datetime.now()
     data_e_hora_em_texto = data_e_hora_atuais.strftime('%d/%m/%Y %H:%M')
@@ -260,11 +260,20 @@ def pintar_botao_verde_excluido(lista_botoes_todos, lista_botoes_excluidos):
 def enxugar_string(partes):
     nome_filme_inicio = partes.index('Nome:') + 1
     proximo_marcador_index = partes.index('Ano:') if 'Ano:' in partes else len(partes)
-    nome_filme = ' '.join(partes[nome_filme_inicio:proximo_marcador_index])
-    partes[3] = nome_filme
-    if len(partes) > 4:
-        partes.pop(4)
+    
+    if proximo_marcador_index < len(partes):
+        nome_filme_fim = proximo_marcador_index
+    else:
+        nome_filme_fim = len(partes)
+    
+    if nome_filme_inicio < nome_filme_fim:
+        nome_filme = ' '.join(partes[nome_filme_inicio:nome_filme_fim])
+        partes[nome_filme_inicio] = nome_filme
+    
+    del partes[nome_filme_inicio + 1:nome_filme_fim]
+    
     return partes
+
 
 
 #dicionario para armazenar total_compra, frequência e botoes

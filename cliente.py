@@ -25,7 +25,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.1.7'
+ip = '192.168.1.3'
 porta = 8007
 addr = ((ip,porta))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -720,7 +720,9 @@ class Ui_Main(QMainWindow, Main):
             item_selecionado = index.data()
             if item_selecionado:
                 filme_selecionado = item_selecionado.split()
+                print(f'filme selecionado: {filme_selecionado}')
                 partes = enxugar_string(filme_selecionado)
+                print(f'string enxugada: {partes}')
                 filme_id = partes[1]
                 preco_inicio = partes.index('Preço:') + 1
                 proximo_index = partes.index('Classificação:') if 'Classificação:' in partes else len(partes)
@@ -893,7 +895,7 @@ class Ui_Main(QMainWindow, Main):
             self.dados_clienete.append(self.itens_filme[9])
             self.dados_clienete.append(self.horarios_cliente)
             mensagem = formatar_mensagem(self.dados_clienete, self.total_compra, self.tela_para_exibir)
-                
+            print(f'mensagem do formatar: {mensagem}') 
             EnviaEmail(email,mensagem)
             QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
             self.dados_clienete.clear()
