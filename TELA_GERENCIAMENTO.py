@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\ESCOLA\QUARTO_PERIODO\PROGRAMAÇÃO ORIENTADA A OBJETOS II\Projetos\Projeto\PROJETO_POO\PROJETO_POO\TELA_DPS_LOGIN_FUNC.ui'
+# Form implementation generated from reading ui file 'd:\ESCOLA\QUARTO_PERIODO\PROGRAMAÇÃO ORIENTADA A OBJETOS II\Projetos\Projeto\PROJETO_POO\PROJETO_POO\TELA_GERENCIAMENTO.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -23,7 +23,7 @@ class LOGIN_FUNC(object):
         Dialog.setMinimumSize(QtCore.QSize(800, 600))
         Dialog.setMaximumSize(QtCore.QSize(800, 600))
         self.frame = QtWidgets.QFrame(Dialog)
-        self.frame.setGeometry(QtCore.QRect(330, 230, 181, 231))
+        self.frame.setGeometry(QtCore.QRect(330, 280, 181, 231))
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
@@ -44,6 +44,14 @@ class LOGIN_FUNC(object):
         self.label_2 = QtWidgets.QLabel(Dialog)
         self.label_2.setGeometry(QtCore.QRect(370, 171, 93, 16))
         self.label_2.setObjectName("label_2")
+        self.label_4 = QtWidgets.QLabel(Dialog)
+        self.label_4.setEnabled(False)
+        self.label_4.setGeometry(QtCore.QRect(420, 210, 151, 21))
+        self.label_4.setText("")
+        self.label_4.setObjectName("label_4")
+        self.label_3 = QtWidgets.QLabel(Dialog)
+        self.label_3.setGeometry(QtCore.QRect(330, 210, 91, 20))
+        self.label_3.setObjectName("label_3")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -56,3 +64,4 @@ class LOGIN_FUNC(object):
         self.pushButton_4.setText(_translate("Dialog", "VOLTAR"))
         self.label.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt;\">CINEPLUS</span></p></body></html>"))
         self.label_2.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-weight:600;\">Gerente</span></p></body></html>"))
+        self.label_3.setText(_translate("Dialog", "BEM VINDO(A): "))

@@ -448,17 +448,25 @@ class Ui_Main(QMainWindow, Main):
             try:
                 retorno = client_socket.recv(4096).decode()
             except:
-                print("\nNão foi possível permanecer conectado!\n")
                 client_socket.close()
-            print(f'retorno do servidor: {retorno}')
             if retorno == '1':
                 nome_achado = client_socket.recv(4096).decode()
                 if nome_achado != None:
                     self.saida = nome_achado
                 QtWidgets.QMessageBox.information(self, 'login', 'Login cliente realizado com sucesso.')
+                print('cpf user:',self.cpf_do_usuario)
+                client_socket.send('23'.encode())
+                client_socket.send(self.cpf_do_usuario.encode())
+                nome_pessoa = client_socket.recv(4096).decode()
+                self.TELA_DPS_LOGIN_ui.label_4.setText(nome_pessoa)
                 self.QtStack.setCurrentIndex(2)
             elif retorno == '3':
                 QtWidgets.QMessageBox.information(self, 'login', 'Login gerente realizado com sucesso.')
+                print('cpf user:',self.cpf_do_usuario)
+                client_socket.send('23'.encode())
+                client_socket.send(self.cpf_do_usuario.encode())
+                nome_pessoa = client_socket.recv(4096).decode()
+                self.TELA_DPS_LOGIN_FUNC_ui.label_4.setText(nome_pessoa)
                 self.QtStack.setCurrentIndex(3)
             else:
                 QMessageBox.information(self, 'erro', 'Preencha os dados corretamente.!')
@@ -684,45 +692,52 @@ class Ui_Main(QMainWindow, Main):
                 try:
                     resposta = client_socket.recv(4096).decode()
                 except:
-                    print("\nNão foi possível permanecer conectado!\n")
                     client_socket.close()
-                #print(f'retorno do servidor: {resposta}')
+
                 if resposta == '0':
-                    # Exiba um QMessageBox para confirmar a marcação do filme como "Em Cartaz"
-                    reply = QMessageBox.question(
-                        self,
-                        'Cartaz',
-                        f'Deseja colocar o filme com ID {filme_id} em cartaz?',
-                        QMessageBox.Yes | QMessageBox.No,
-                        QMessageBox.No
-                    )
+                    # Verificar se há um filme em cartaz
+                    client_socket.send('7'.encode())
+                    try:
+                        resposta_em_cartaz = client_socket.recv(4096).decode()
+                    except:
+                        client_socket.close()
 
-                    if reply == QMessageBox.Yes:
-                        client_socket.send('6'.encode())
-                        client_socket.send(f'1 {filme_id}'.encode())
-                        try:
-                            resposta = client_socket.recv(4096).decode()
-                        except:
-                            print("\nNão foi possível permanecer conectado!\n")
-                            client_socket.close()
-                        if resposta == '1':
-                            QtWidgets.QMessageBox.information(self, 'Filmes', f'Filme com ID {filme_id} marcado como em cartaz.')
-                        else:
-                            QtWidgets.QMessageBox.information(self, 'Filmes', f'Erro ao marcar o filme com ID {filme_id} como em cartaz.')
-                        client_socket.send('4'.encode())
-                        try:
-                            filmes = client_socket.recv(4096).decode()
-                        except:
-                            print("\nNão foi possível permanecer conectado!\n")
-                            client_socket.close()
-                        if filmes:
+                    if resposta_em_cartaz == '0':
+                        # Não há filme em cartaz, pode marcar o filme selecionado
+                        reply = QMessageBox.question(
+                            self,
+                            'Cartaz',
+                            f'Deseja colocar o filme com ID {filme_id} em cartaz?',
+                            QMessageBox.Yes | QMessageBox.No,
+                            QMessageBox.No
+                        )
 
-                            model = QStringListModel()
+                        if reply == QMessageBox.Yes:
+                            client_socket.send('6'.encode())
+                            client_socket.send(f'1 {filme_id}'.encode())
+                            try:
+                                resposta = client_socket.recv(4096).decode()
+                            except:
+                                client_socket.close()
 
-                            lista_filmes_formatada = tratar_retorno_filmes(filmes)
-                            model.setStringList(lista_filmes_formatada)
-                            self.TELA_LISTA_FILMES_ui.listView.setModel(model)
+                            if resposta == '1':
+                                QtWidgets.QMessageBox.information(self, 'Filmes', f'Filme com ID {filme_id} marcado como em cartaz.')
+                            else:
+                                QtWidgets.QMessageBox.information(self, 'Filmes', f'Erro ao marcar o filme com ID {filme_id} como em cartaz.')
+                            client_socket.send('4'.encode())
+                            try:
+                                filmes = client_socket.recv(4096).decode()
+                            except:
+                                client_socket.close()
 
+                            if filmes:
+                                model = QStringListModel()
+                                lista_filmes_formatada = tratar_retorno_filmes(filmes)
+                                model.setStringList(lista_filmes_formatada)
+                                self.TELA_LISTA_FILMES_ui.listView.setModel(model)
+
+                    else:
+                        QtWidgets.QMessageBox.information(self, 'Filme em Cartaz', 'Já existe um filme em cartaz. Não é possível marcar outro.')
                 else:
                     QtWidgets.QMessageBox.information(self, 'Filme em Cartaz', 'Este filme já está em cartaz.')
         else:
@@ -1279,7 +1294,7 @@ class Ui_Main(QMainWindow, Main):
             cont_cliente = cont_cliente.strip(" '[]")
             cont_filmes = cont_filmes.strip(" '[]")
             cont_filmes_cartaz = cont_filmes_cartaz.strip(" '[]")
-            client_socket.send('23'.encode())
+            client_socket.send('24'.encode())
             totais_de_lucro = client_socket.recv(4096).decode()
             print(f'totais de lucro: {totais_de_lucro}')
             partes_totais = totais_de_lucro.split(',')

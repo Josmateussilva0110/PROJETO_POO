@@ -490,6 +490,22 @@ def menu(con, cliente):
                 lucros_03.armazenar_lucro_03(lucro, flag)
         
         elif mensagem == '23':
+            cpf = con.recv(4096).decode()
+            print(cpf)
+            if dados_usuarios.buscar_cliente_cpf(cpf):
+                pessoa = dados_usuarios.buscar_cliente_cpf(cpf)
+                pessoa = str(pessoa)
+                print('entrou aqui')
+                print(pessoa)
+            if dados_usuarios.buscar_gerente_cpf(cpf):
+                pessoa = dados_usuarios.buscar_gerente_cpf(cpf)
+                pessoa = str(pessoa)
+                print('entrou aqui')
+                print(pessoa)
+                
+            con.send(pessoa.encode())
+        
+        elif mensagem == '24':
             lista = list()
             total_lucro = lucros.obter_lucro_total()
             total_lucro_02 = lucros_02.obter_lucro_total_02()

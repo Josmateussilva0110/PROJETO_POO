@@ -133,6 +133,15 @@ class Armazenar:
         cursor.close()
         return result[0] if result else None
     
+    def buscar_gerente_cpf(self, cpf):
+        cursor = self.db_connection.cursor()
+        select_query = "SELECT nome FROM Gerencia WHERE cpf = %s"
+        values = (cpf,)
+        cursor.execute(select_query, values)
+        result = cursor.fetchone()
+        cursor.close()
+        return result[0] if result else None
+    
     def buscar_email_cpf(self, cpf):
         cursor = self.db_connection.cursor()
         select_query = "SELECT email FROM Usuarios WHERE cpf = %s"
