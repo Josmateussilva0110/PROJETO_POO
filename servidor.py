@@ -32,6 +32,13 @@ lucros_03 = Armazenar_lucros_03(mydb)
 
 
 def menu(con, cliente):
+    """
+    Esta função lida com as interações do menu com um cliente conectado.
+
+    Args:
+        con (socket): A conexão do socket para comunicar com o cliente.
+        cliente: Informações sobre o cliente conectado.
+    """
     
     conectado = True
 
@@ -501,6 +508,10 @@ def menu(con, cliente):
 
 
 def main():
+    """
+    Função principal para a aplicação do servidor. Cria uma nova thread para lidar com cada cliente conectado.
+
+    """
     print("[INICIADO] Aguardando conexão...")
     serv_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     serv_socket.bind(addr)

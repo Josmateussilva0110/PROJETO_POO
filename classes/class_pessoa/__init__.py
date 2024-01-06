@@ -1,4 +1,18 @@
 class Pessoa():
+    """
+    Classe que representa uma pessoa com informações básicas.
+
+    Attributes
+    ----------
+        cpf : str 
+            CPF da pessoa.
+        nome : str 
+            Nome da pessoa.
+        email : str
+            Endereço de e-mail da pessoa.
+        senha : str
+            Senha da pessoa.
+    """
     def __init__(self, cpf, nome, email, senha):
         self._cpf = cpf
         self._nome = nome
