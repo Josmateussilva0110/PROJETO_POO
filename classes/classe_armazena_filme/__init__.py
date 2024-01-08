@@ -1,11 +1,64 @@
 import mysql.connector
 
 class Armazenar_filmes:
+    """
+    Classe responsável por gerenciar o armazenamento e manipulação de dados relacionados a filmes na tabela Filmes
+    do banco de dados 'Cineplus'.
+
+    Attributes
+    ----------
+    db_connection : mysql.connector.connection.MySQLConnection
+        Conexão com o banco de dados MySQL.
+
+    Methods
+    -------
+    cria_tabela_filmes()
+        Cria a tabela Filmes no banco de dados 'Cineplus' se ela ainda não existir.
+    armazenar_filmes(filme)
+        Armazena informações sobre um filme na tabela Filmes.
+        Retorna True se o armazenamento for bem-sucedido, False em caso de erro.
+    buscar_filme_por_id(filme_id)
+        Busca informações sobre um filme com base no seu ID na tabela Filmes.
+        Retorna uma string formatada com os detalhes do filme ou None se não encontrado.
+    buscar_filme_em_cartaz_por_id(filme_id)
+        Busca informações sobre um filme em cartaz com base no seu ID na tabela Filmes.
+        Retorna uma string formatada com os detalhes do filme ou None se não encontrado.
+    buscar_dados_filmes(filme_id)
+        Busca informações básicas sobre um filme com base no seu ID na tabela Filmes.
+        Retorna uma string formatada com os detalhes do filme ou None se não encontrado.
+    buscar_horarios_id(filme_id)
+        Obtém a lista de horários de exibição de um filme com base no seu ID na tabela Filmes.
+        Retorna a lista de horários ou None se não encontrado.
+    obter_todos_filmes()
+        Obtém uma lista formatada com os detalhes de todos os filmes na tabela Filmes.
+        Retorna uma lista de strings ou uma lista vazia em caso de erro.
+    marcar_filme_em_cartaz(filme_id, cartaz)
+        Marca ou desmarca um filme como "em cartaz" na tabela Filmes.
+        Retorna True se a operação for bem-sucedida, False em caso de erro.
+    verificar_filme_em_cartaz(filme_id)
+        Verifica se um filme está atualmente em cartaz com base no seu ID na tabela Filmes.
+        Retorna True se estiver em cartaz, False se não estiver ou em caso de erro.
+    obter_todos_filmes_em_cartaz()
+        Obtém uma lista formatada com os detalhes de todos os filmes atualmente em cartaz na tabela Filmes.
+        Retorna uma lista de strings ou uma lista vazia em caso de erro.
+    contar_filmes_cadastrados()
+        Conta o número total de filmes cadastrados na tabela Filmes.
+        Retorna o número total de filmes cadastrados ou 0 em caso de erro.
+    contar_filmes_em_cartaz()
+        Conta o número total de filmes atualmente em cartaz na tabela Filmes.
+        Retorna o número total de filmes em cartaz ou 0 em caso de erro.
+    somar_precos_total_tela_1()
+        Soma os preços de todos os filmes na tabela Filmes.
+        Retorna o total de preços ou 0 em caso de erro.
+    """
+        
     def __init__(self, db_connection):
         self.db_connection = db_connection
         self.cria_tabela_filmes()
 
     def cria_tabela_filmes(self):
+        """"Cria a tabela Filmes no banco de dados se ela ainda não existir."""
+
         # Use o banco de dados 'Cineplus'
         cursor = self.db_connection.cursor()
         cursor.execute("USE Cineplus")
@@ -27,12 +80,23 @@ class Armazenar_filmes:
         cursor.close()
 
     def armazenar_filmes(self, filme):
+        """
+        Armazena informações sobre um filme na tabela Filmes.
+
+        Parameters
+        ----------
+        filme : objeto Filme
+            O objeto Filme contendo as informações do filme a ser armazenado.
+
+        Returns
+        -------
+        bool
+            True se o armazenamento for bem-sucedido, False em caso de erro.
+        """
+
         cursor = self.db_connection.cursor()
         valid = False
         
-        # Obtém o próximo ID automaticamente
-        #novo_id = self.obter_ultimo_id() + 1
-
         insert_query = "INSERT INTO Filmes(nome_filme, ano, preco, classificacao,horario) VALUES (%s, %s, %s, %s, %s)"
         values = (filme._nome, filme._ano, filme._preco, filme._classificacao, filme._horarios)
         try:
@@ -47,6 +111,20 @@ class Armazenar_filmes:
     
 
     def buscar_filme_por_id(self, filme_id):
+        """
+        Busca informações sobre um filme com base no seu ID na tabela Filmes.
+
+        Parameters
+        ----------
+        filme_id : int
+            O ID do filme a ser pesquisado na tabela Filmes.
+
+        Returns
+        -------
+        str or None
+            Uma string formatada com os detalhes do filme se encontrado, ou None se não encontrado.
+        """
+
         cursor = self.db_connection.cursor()
 
         # Query to fetch the film with the given ID
@@ -72,6 +150,20 @@ class Armazenar_filmes:
     
 
     def buscar_filme_em_cartaz_por_id(self, filme_id):
+        """
+        Busca informações sobre um filme em cartaz com base no seu ID na tabela Filmes.
+
+        Parameters
+        ----------
+        filme_id : int
+            O ID do filme a ser pesquisado na tabela Filmes.
+
+        Returns
+        -------
+        str or None
+            Retorna uma string formatada com os detalhes do filme ou None se não encontrado.
+        """
+
         cursor = self.db_connection.cursor()
 
         # Query to fetch the film with the given ID
@@ -94,7 +186,22 @@ class Armazenar_filmes:
             return None
     
 
+
     def buscar_dados_filmes(self, filme_id):
+        """
+        Busca informações básicas sobre um filme com base no seu ID na tabela Filmes.
+
+        Parameters
+        ----------
+        filme_id : int
+            O ID do filme a ser pesquisado na tabela Filmes.
+
+        Returns
+        -------
+        str or None
+            Retorna uma string formatada com os detalhes do filme ou None se não encontrado.
+        """
+
         cursor = self.db_connection.cursor()
 
         # Query to fetch the film with the given ID
@@ -115,8 +222,23 @@ class Armazenar_filmes:
         except mysql.connector.Error as err:
             cursor.close()
             return None
+    
 
     def buscar_horarios_id(self, filme_id):
+        """
+        Obtém a lista de horários de exibição de um filme com base no seu ID na tabela Filmes.
+
+        Parameters
+        ----------
+        filme_id : int
+            O ID do filme a ser pesquisado na tabela Filmes.
+
+        Returns
+        -------
+        list or None
+            Retorna a lista de horários ou None se não encontrado.
+        """
+
         cursor = self.db_connection.cursor()
         select_query = "SELECT * FROM Filmes WHERE id = %s"
 
@@ -138,6 +260,16 @@ class Armazenar_filmes:
         
 
     def obter_todos_filmes(self):
+        """
+        Obtém uma lista formatada com os detalhes de todos os filmes na tabela Filmes.
+
+        Returns
+        -------
+        list or None
+        Retorna uma lista de strings ou uma lista vazia em caso de erro.
+
+        """
+
         try:
             cursor = self.db_connection.cursor()
             cursor.execute("SELECT * FROM Filmes")
@@ -150,7 +282,23 @@ class Armazenar_filmes:
         except mysql.connector.Error as err:
             return []
 
-    def marcar_filme_em_cartaz(self, filme_id,cartaz):
+    def marcar_filme_em_cartaz(self, filme_id, cartaz):
+        """
+        Marca ou desmarca um filme como "em cartaz" na tabela Filmes.
+
+        Parameters
+        ----------
+        filme_id : int
+            O ID do filme a ser marcado ou desmarcado.
+        cartaz : int
+            Valor 1 para marcar o filme como "em cartaz" e 0 para desmarcar.
+
+        Returns
+        -------
+        bool
+            True se a operação for bem-sucedida, False em caso de erro.
+        """
+
         try:
             cursor = self.db_connection.cursor()
             # Atualize o banco de dados para marcar o filme como "em cartaz"
@@ -168,6 +316,20 @@ class Armazenar_filmes:
             return False
         
     def verificar_filme_em_cartaz(self, filme_id):
+        """
+        Verifica se um filme está atualmente em cartaz com base no seu ID na tabela Filmes.
+
+        Parameters
+        ----------
+        filme_id : int
+            O ID do filme a ser verificado.
+
+        Returns
+        -------
+        bool
+            True se o filme estiver em cartaz, False se não estiver ou em caso de erro.
+        """
+
         try:
             cursor = self.db_connection.cursor()
 
@@ -190,6 +352,16 @@ class Armazenar_filmes:
             cursor.close()
             
     def obter_todos_filmes_em_cartaz(self):
+        """
+        Obtém uma lista formatada com os detalhes de todos os filmes atualmente em cartaz na tabela Filmes.
+
+        Returns
+        -------
+        list
+        Retorna uma lista de strings ou uma lista vazia em caso de erro.
+
+        """
+
         try:
             cursor = self.db_connection.cursor()
             cursor.execute("SELECT * FROM filmes WHERE em_cartaz = 1")
@@ -200,6 +372,16 @@ class Armazenar_filmes:
             return []
         
     def contar_filmes_cadastrados(self):
+        """
+        Conta o número total de filmes cadastrados na tabela Filmes.
+
+        Returns
+        -------
+        int
+        Retorna o número total de filmes cadastrados ou 0 em caso de erro.
+
+        """
+
         try:
             cursor = self.db_connection.cursor()
             cursor.execute("SELECT COUNT(*) FROM Filmes")
@@ -211,6 +393,16 @@ class Armazenar_filmes:
             cursor.close()
     
     def contar_filmes_em_cartaz(self):
+        """
+        Conta o número total de filmes atualmente em cartaz na tabela Filmes.
+
+        Returns
+        -------
+        int 
+        Retorna o número total de filmes em cartaz ou 0 em caso de erro
+
+        """
+
         try:
             cursor = self.db_connection.cursor()
             cursor.execute("SELECT COUNT(*) FROM Filmes WHERE em_cartaz = 1")
@@ -222,6 +414,16 @@ class Armazenar_filmes:
             cursor.close()
 
     def somar_precos_total_tela_1(self):
+        """
+        Soma os preços de todos os filmes na tabela Filmes.
+
+        Returns
+        -------
+        int 
+        Retorna o total de preços ou 0 em caso de erro.
+        
+        """
+        
         try:
             cursor = self.db_connection.cursor()
             cursor.execute("SELECT SUM(preco) FROM Filmes")
