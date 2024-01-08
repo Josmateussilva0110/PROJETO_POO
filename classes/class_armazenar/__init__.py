@@ -1,6 +1,38 @@
 import mysql.connector
 
 class Armazenar:
+    """
+    Classe responsável por gerenciar o armazenamento de gerentes e clientes no banco de dados.
+
+    Attributes
+    ----------
+    db_connection: mysql.connector.connection.MySQLConnection
+        Conexão com o banco de dados MySQL.
+
+    Methods
+    -------
+    create_users_table()
+        Cria a tabela de usuários no banco de dados 'Cineplus'.
+    cria_gerente()
+        Cria a tabela de gerentes no banco de dados 'Cineplus'.
+    inserir_gerente1()
+        Inicia o banco de dados com gerentes cadastrados.
+    armazenar(pessoa)
+        Armazena um novo cliente no banco de dados.
+        Retorna True se o armazenamento for bem-sucedido, False se o CPF já existir.
+    verificar_login_Cliente(cpf, senha)
+        Verifica no banco de dados se o CPF do cliente está armazenado.
+    verificar_login_Ger(cpf, senha)
+        Verifica no banco de dados se o CPF do gerente está armazenado.
+    buscar_cliente_cpf(cpf)
+        Procura um cliente no banco de dados a partir de seu CPF.
+    buscar_gerente_cpf(cpf)
+        Procura um gerente no banco de dados a partir de seu CPF.
+    buscar_email_cpf(cpf)
+        Procura o email de um cliente armazenado no banco de dados.
+    contar_pessoas_cadastradas()
+        Retorna a quantidade de pessoas cadastradas no banco de dados 'Cineplus'.
+    """
     def __init__(self, db_connection):
         self.db_connection = db_connection
         self.create_users_table()
@@ -8,6 +40,8 @@ class Armazenar:
         self.inserir_gerente1()
 
     def create_users_table(self):
+        """Cria a tabela de usuários"""
+
         # Use o banco de dados 'Cineplus'
         cursor = self.db_connection.cursor()
         cursor.execute("USE Cineplus")
@@ -26,6 +60,8 @@ class Armazenar:
         cursor.close()
 
     def cria_gerente(self):
+        """Cria a tabela de gerentes"""
+
         # Use o banco de dados 'Cineplus'
         cursor = self.db_connection.cursor()
         cursor.execute("USE Cineplus")
@@ -44,6 +80,8 @@ class Armazenar:
         cursor.close()
 
     def inserir_gerente1(self):
+        """Inicia o banco de dados com gerentes cadastrados"""
+
         cursor = self.db_connection.cursor()
         cpf = '777'  # CPF do gerente a ser inserido
         select_query = "SELECT cpf FROM Gerencia WHERE cpf = %s"
@@ -75,6 +113,8 @@ class Armazenar:
         cursor.close()
 
     def armazenar(self, pessoa):
+        """Armazena um novo gerente no banco de dados"""
+
         cursor = self.db_connection.cursor()
 
         # Verifica se o CPF já existe nos usuários
@@ -105,6 +145,8 @@ class Armazenar:
 
 
     def verificar_login_Cliente(self, cpf, senha):
+        """Verifica no banco de dados se o CPF do cliente esta armazenado"""
+
         cursor = self.db_connection.cursor()
         select_query = "SELECT * FROM Usuarios WHERE cpf = %s AND senha = %s"
         values = (cpf, senha)
@@ -115,6 +157,8 @@ class Armazenar:
    
 
     def verificar_login_Ger(self, cpf, senha):
+        """Verifica no banco de dados se o CPF do gerente esta armazenado"""
+
         cursor = self.db_connection.cursor()
         select_query = "SELECT * FROM Gerencia WHERE cpf = %s AND senha = %s"
         values = (cpf, senha)
@@ -125,6 +169,8 @@ class Armazenar:
 
 
     def buscar_cliente_cpf(self, cpf):
+        """Procura um cliente no banco de dados a partir de seu cpf"""
+
         cursor = self.db_connection.cursor()
         select_query = "SELECT nome FROM Usuarios WHERE cpf = %s"
         values = (cpf,)
@@ -134,6 +180,8 @@ class Armazenar:
         return result[0] if result else None
     
     def buscar_gerente_cpf(self, cpf):
+        """Procura um gerente no banco de dados a partir de seu cpf"""
+
         cursor = self.db_connection.cursor()
         select_query = "SELECT nome FROM Gerencia WHERE cpf = %s"
         values = (cpf,)
@@ -143,6 +191,8 @@ class Armazenar:
         return result[0] if result else None
     
     def buscar_email_cpf(self, cpf):
+        """Procura o email de um cliente armazenado no banco de dados"""
+
         cursor = self.db_connection.cursor()
         select_query = "SELECT email FROM Usuarios WHERE cpf = %s"
         values = (cpf,)
@@ -152,6 +202,8 @@ class Armazenar:
         return result[0] if result else None
     
     def contar_pessoas_cadastradas(self):
+        """Retorna a quantidade de pessoas cadastradas"""
+
         try:
             cursor = self.db_connection.cursor()
             

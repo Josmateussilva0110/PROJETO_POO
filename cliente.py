@@ -679,6 +679,14 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Não há filmes cadastrados.')
             
     def item_selecionado_lista_filmes(self, index):
+        """Método usado para o gerente adicionar um filme em cartaz
+
+        Parameters
+        ----------
+        index : str
+            Index representa o filme selecionado pelo gerente
+        """
+
         if index.isValid():
             item_selecionado = index.data()
 
@@ -744,6 +752,8 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')
             
     def botao_buscar(self):
+        """Método usado para buscar um determinado filme"""
+
         client_socket.send('8'.encode())
         filme_id = self.TELA_LISTA_FILMES_ui.lineEdit_2.text()
         client_socket.send(filme_id.encode())
@@ -771,6 +781,8 @@ class Ui_Main(QMainWindow, Main):
                 QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
         
     def carregar_lista_completa_filmes(self):
+        """Método usado para exibir todos os filmes cadastrados"""
+
         client_socket.send('4'.encode())
         filmes = client_socket.recv(4096).decode()
         #print('Achei isso',filmes)
@@ -789,6 +801,8 @@ class Ui_Main(QMainWindow, Main):
         
 
     def carregar_filmes_em_cartaz(self):
+        """Método usado para exibir todos os filmes em cartaz"""
+
         client_socket.send('7'.encode())  
         try:
             filmes = client_socket.recv(4096).decode()
@@ -810,6 +824,14 @@ class Ui_Main(QMainWindow, Main):
     
 
     def item_selecionado_Excluir_filmes(self, index):
+        """Método usado para o gerente retirar um filme do cartaz
+
+        Parameters
+        ----------
+        index : str
+            Index representa o filme selecionado pelo gerente
+        """
+
         if index.isValid():
             item_selecionado = index.data()
 
@@ -869,6 +891,8 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')
             
     def botao_buscar_tela_excluir(self):
+        """Método usado para exibir todos os filmes em cartaz"""
+
         client_socket.send('9'.encode())
         filme_id = self.TELA_EXCUIR_FILME_ui.lineEdit_4.text()
         client_socket.send(filme_id.encode())
@@ -889,6 +913,7 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
                 
     def Tela_Cliente_Ver_Filmes(self):
+        """Método usado para carregar todos os filmes em cartaz para o cliente"""
     # Obtenha a lista de filmes do banco de dados
         client_socket.send('7'.encode())
         try:
@@ -907,6 +932,8 @@ class Ui_Main(QMainWindow, Main):
     
 
     def item_selecionado_lista_filmes_cliente(self, index):
+        """Método usado para o cliente selecionar um filme que deseja comprar e escolher sua poltrona"""
+
         # Obtenha o item selecionado na QListView
         if index.isValid():
             item_selecionado = index.data()
@@ -1001,6 +1028,8 @@ class Ui_Main(QMainWindow, Main):
                 QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Nenhum filme selecionado.')
     
     def Tela_Cliente_botao_buscar(self):
+        """Método usado para buscar um filme para o cliente"""
+
         client_socket.send('9'.encode())
         filme_id = self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.text()
         client_socket.send(filme_id.encode())
@@ -1021,6 +1050,14 @@ class Ui_Main(QMainWindow, Main):
     
             
     def ir_tela_pagamento(self, button):
+        """Método usado para armazenar a poltrona que o cliente escolher
+
+        Parameters
+        ----------
+        button : str
+            button representa o botão selecionado pelo cliente
+        """
+
         print('entrou aqui função ir tela pagamento')
         # self.botao_id = button.objectName() 
         # print(f'Selecionou o botao: {self.botao_id}')
@@ -1059,7 +1096,8 @@ class Ui_Main(QMainWindow, Main):
 
             
     def escolheuPix(self):
-        print('entrou na funcao de pix')
+        """Método que representa a forma de pagamento pix e enviar o comprovante por e-mail"""
+
         cpf = self.cpf_do_usuario
         client_socket.send('11'.encode())
         client_socket.send(cpf.encode())
@@ -1107,6 +1145,8 @@ class Ui_Main(QMainWindow, Main):
         
         
     def botaoconfirmartelacartao(self):
+        """Método que representa a forma de pagamento cartão e enviar o comprovante por e-mail"""
+
         valid = cancelou = False
         nome_cliente = self.Cartao_ui.lineEdit.text()
         numero_cartao = self.Cartao_ui.lineEdit_5.text()
@@ -1183,7 +1223,8 @@ class Ui_Main(QMainWindow, Main):
       
     ##Direciona para a tela de excluir_Reserva          
     def ir_tela_Excluir_Reserva(self):
-        print(f'ENTROU EM IR TELA EXCLUIR')
+        """Método que exibe todas as poltronas para o cliente excluir"""
+
         client_socket.send('19'.encode())
         tela = str(self.tela_para_exibir)
         lista_dados = [self.cpf_do_usuario, tela]
@@ -1218,6 +1259,8 @@ class Ui_Main(QMainWindow, Main):
         
     
     def item_selecionado_Excluir_Reserva(self, index):
+        """Método usado para o cliente selecionar uma poltrona e excluir sua reserva"""
+
         # Obtenha o item selecionado
         selected_index = index.row()
 
@@ -1278,6 +1321,8 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.warning(self, 'Aviso', 'Nenhum item selecionado.')
             
     def Tela_Estatistica(self):
+        """Método usado para exibir todos os dados de compra para o gerente"""
+
         client_socket.send('17'.encode())
         try:
             retorno = client_socket.recv(4096).decode()

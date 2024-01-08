@@ -1,6 +1,46 @@
 import mysql.connector
 
 class Armazenar_botoes_03():
+    """
+    Classe responsável por gerenciar o armazenamento e manipulação de dados relacionados aos botões na tabela Botoes_03
+    do banco de dados 'Cineplus'.
+
+    Attributes
+    ----------
+    db_connection : mysql.connector.connection.MySQLConnection
+        Conexão com o banco de dados MySQL.
+
+    Methods
+    -------
+    drop_tabela_botoes_03():
+        Verifica e exclui a tabela Botoes_03 se ela existir no banco de dados 'Cineplus'.
+    criar_tabela_botoes_03():
+        Cria a tabela Botoes_03 no banco de dados 'Cineplus' se ela ainda não existir.
+    armazenar_botao_02(botao):
+        Armazena um botão na tabela Botoes_03, substituindo se já existir e não tiver sido validado.
+    buscar_botao_03(botao):
+        Busca um botão na tabela Botoes_03 pelo seu nome (identificador único).
+        Retorna um dicionário representando a linha correspondente, ou None se não encontrado.
+    obter_todos_botoes_03():
+        Obtém uma lista de todos os nomes de botões na tabela Botoes_03.
+        Retorna None se não houver botões.
+    obter_botoes_validos_03():
+        Obtém uma lista de nomes de botões válidos (com o campo 'validar' igual a 1) na tabela Botoes_03.
+        Retorna None se não houver botões válidos.
+    atualizar_valido_03(nome_botao):
+        Atualiza o valor 'validar' para 1 para um botão específico na tabela Botoes_03.
+        Retorna True se a atualização for bem-sucedida, False em caso de erro.
+    atualizar_cpf_03(novo_cpf):
+        Atualiza o valor 'cpf' para o novo valor na tabela Botoes_03 onde 'cpf' é igual a 0.
+        Retorna True se a atualização for bem-sucedida, False em caso de erro.
+    obter_botoes_por_cpf_03(cpf):
+        Obtém uma lista de nomes de botões associados a um CPF específico na tabela Botoes_03.
+        Retorna None se nenhum botão estiver associado ao CPF ou em caso de erro.
+    Exclui_Reserva_03(nome_botao):
+        Exclui a linha correspondente a um botão específico na tabela Botoes_03.
+        Retorna True se a exclusão for bem-sucedida, False em caso de erro.
+    """
+
     def __init__(self, db_connection):
         self.db_connection = db_connection
         self.drop_tabela_botoes_03()
