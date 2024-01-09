@@ -371,7 +371,7 @@ def menu(con, cliente):
             botao = con.recv(4096).decode()
             str_dado = str(botao)
             sala = str_dado[6]
-            botao_buscar = str_dado[9:]
+            botao_buscar = str_dado[9:str_dado.index(" - ")]
             print(f'dados RECEBIDO DO CLIENTE 21: {botao}')
             if sala == '1':
                 aux = dados_botoes.buscar_botao(botao_buscar)

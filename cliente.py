@@ -26,7 +26,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '10.0.0.44'
+ip = '192.168.2.113'
 porta = 8007
 addr = ((ip,porta))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
