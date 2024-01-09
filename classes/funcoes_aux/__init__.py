@@ -139,11 +139,28 @@ def EnviaEmail(destinatario,mensagem):
     # Ecnviar email
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
         smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-        smtp.send_message(msg)    
+        smtp.send_message(msg)   
+
+
+def enxugar_string(partes):
+    nome_filme_inicio = partes.index('Nome:') + 1
+    proximo_marcador_index = partes.index('Ano:') if 'Ano:' in partes else len(partes)
+    
+    if proximo_marcador_index < len(partes):
+        nome_filme_fim = proximo_marcador_index
+    else:
+        nome_filme_fim = len(partes)
+    
+    if nome_filme_inicio < nome_filme_fim:
+        nome_filme = ' '.join(partes[nome_filme_inicio:nome_filme_fim])
+        partes[nome_filme_inicio] = nome_filme
+    
+    del partes[nome_filme_inicio + 1:nome_filme_fim]
+    
+    return partes
 
 
 def formatar_mensagem(dados_cliente, total_compra, sala, flag=1, parcelas=1):
-    print(f'string recebida do formatar: {dados_cliente}')
     formato_mensagem = "Nome cliente: {}\nNome filme: {}\nAno: {}\nClassificação: {}\nHorario: {}\nSala: {}\nTotal compra: {}\nPagamento: {}\nEmitido: {}"
     data_e_hora_atuais = datetime.now()
     data_e_hora_em_texto = data_e_hora_atuais.strftime('%d/%m/%Y %H:%M')
@@ -175,57 +192,31 @@ def formatar_mensagem(dados_cliente, total_compra, sala, flag=1, parcelas=1):
     return mensagem_formatada
 
             
-def mudar_cor_botao_vermelho_valido(lista_botoes_todos, lista_botoes_selecionados):
-    print('entrou em função mudar cor valido:')
-    print(f'lista de todos: {lista_botoes_todos}')
-    print(f'lista botoes selecionado: {lista_botoes_selecionados}')
-    
+def mudar_cor_botao_vermelho_valido(lista_botoes_todos, lista_botoes_selecionados):    
     # Extrai números dos identificadores dos botões selecionados
     numeros_selecionados = [int(botao.split('_')[-1]) for botao in lista_botoes_selecionados.split(',')]
 
     for button in lista_botoes_todos:
-        botao_id = button.objectName()
-        print('id do botão', botao_id)
-        
+        botao_id = button.objectName()        
         # Extrai o número do identificador do botão na lista completa
         numero_botao = int(botao_id.split('_')[-1])
         
         if numero_botao in numeros_selecionados:
-            print(f'Um elemento do button name: {botao_id} está igual a algum dos selecionados')
             button.setStyleSheet("background-color: red;")
-            print('pintou')
         else:
             button.setStyleSheet("background-color: green;")
 
 
 
-def processar_dados_do_botao(client_socket, tela_para_exibir, botao_id, botoes):
-    print('entrou na função processar dados')
-    client_socket.send('13'.encode())  # sinal para pegar a lista de botões que estão no servidor
-    print('enviou o sinal 13')
+def processar_dados_do_botao(self, client_socket, tela_para_exibir, botao_id, botoes):
     tela = str(tela_para_exibir)
-    client_socket.send(tela.encode())
-    try:
-        mensagem = client_socket.recv(4096).decode()
-    except:
-        print("\nNão foi possível permanecer conectado!\n")
-        client_socket.close()
+    client_socket.send('14'.encode())
+    enviar_dados = [botao_id, str(tela_para_exibir)]
+    enviar_servidor = ','.join(enviar_dados)
+    client_socket.send(enviar_servidor.encode())
 
-    if mensagem == '1':  # encontrei os botões
-        botoa_achado = client_socket.recv(4096).decode()##Botões achados no servidor com 0
-        client_socket.send('14'.encode())
-        print('enviou o sinal 14')
-        enviar_dados = [botao_id, str(tela_para_exibir)]
-        enviar_servidor = ','.join(enviar_dados)
-        print(f'enviando para o servidor: {enviar_servidor}')
-        client_socket.send(enviar_servidor.encode())
-
-        resposta = client_socket.recv(4096).decode()
-        if resposta == '0':
-            print(f'Erro ao atualizar "validar" para 1 para o botão {botao_id}.')
-        else:
-            print(f'Valor de "validar" atualizado para 1 para o botão {botao_id}.')
-        
+    resposta = client_socket.recv(4096).decode()
+    if resposta == '1':
         client_socket.send('15'.encode()) #sinal para pegar a lista de botoes que estão no servidor
         client_socket.send(tela.encode())
         try:
@@ -234,10 +225,13 @@ def processar_dados_do_botao(client_socket, tela_para_exibir, botao_id, botoes):
             print("\nNão foi possível permanecer conectado!\n")
             client_socket.close()
         if mensagem == '1':  # encontrei os botões
-            print('entrou aqui ?')
             botoa_achado_verificado = client_socket.recv(4096).decode()
-            print(f'botoes achados verific: {botoa_achado_verificado}')
             mudar_cor_botao_vermelho_valido(botoes, botoa_achado_verificado)
+        else:
+            self.QtWidgets.QMessageBox.information(self, 'Erro', 'Botões não encontrados.') 
+    else:
+        self.QtWidgets.QMessageBox.information(self, 'Erro', 'erro com a comunicação do servidor.') 
+        client_socket.close()
             
 def pintar_botao_verde_excluido(lista_botoes_todos, lista_botoes_excluidos):
     print('ENTORU EM PINTAR BOTAO EXCLUIDO')
@@ -256,23 +250,6 @@ def pintar_botao_verde_excluido(lista_botoes_todos, lista_botoes_excluidos):
             button.setStyleSheet("background-color: green;")
             print('PINTOU DE VERDE')
 
-
-def enxugar_string(partes):
-    nome_filme_inicio = partes.index('Nome:') + 1
-    proximo_marcador_index = partes.index('Ano:') if 'Ano:' in partes else len(partes)
-    
-    if proximo_marcador_index < len(partes):
-        nome_filme_fim = proximo_marcador_index
-    else:
-        nome_filme_fim = len(partes)
-    
-    if nome_filme_inicio < nome_filme_fim:
-        nome_filme = ' '.join(partes[nome_filme_inicio:nome_filme_fim])
-        partes[nome_filme_inicio] = nome_filme
-    
-    del partes[nome_filme_inicio + 1:nome_filme_fim]
-    
-    return partes
 
 
 

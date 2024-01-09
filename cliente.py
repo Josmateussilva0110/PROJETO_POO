@@ -15,6 +15,7 @@ from TELA_GESTAO_FILMES_ui import *#
 from TELA_CADASTRO_FILMES import *#
 from TELA_LISTA_FILMES_ui import *#
 from TELA_EXCLUIR_FILME_ui import *
+
 from TELA_EXCLUIR_RESERVA_ui import *
 from TELA_CLIENTE_VER_FILMES_ui import *
 from TELA_LAYOUT import *
@@ -25,7 +26,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '10.0.0.44'
+ip = '192.168.1.5'
 porta = 8007
 addr = ((ip,porta))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -1071,7 +1072,6 @@ class Ui_Main(QMainWindow, Main):
                 print(f'Selecionou o botao da tela 1: {self.botao_id}')
                 client_socket.send('12'.encode())
                 client_socket.send(self.botao_id.encode())
-                # self.soma_tela_1 += self.total_compra
             elif self.tela_para_exibir == 13:
                 self.botao_id = button.objectName() 
                 print(f'Selecionou o botao da tela 2: {self.botao_id}')
@@ -1083,12 +1083,7 @@ class Ui_Main(QMainWindow, Main):
                 print(f'Selecionou o botao da tela 3: {self.botao_id}')
                 client_socket.send('18'.encode())
                 client_socket.send(self.botao_id.encode())
-            try:
-                resposta = client_socket.recv(4096).decode()
-            except:
-                print("\nNão foi possível permanecer conectado!\n")
-                client_socket.close()   
-                
+            resposta = client_socket.recv(4096).decode()        
             if resposta == '2':
                   QtWidgets.QMessageBox.information(self, 'Compra', 'Acento ja escolhido.')
             else:
@@ -1125,12 +1120,11 @@ class Ui_Main(QMainWindow, Main):
             self.dados_clienete.append(self.itens_filme[9])
             self.dados_clienete.append(self.horarios_cliente)
             mensagem = formatar_mensagem(self.dados_clienete, self.total_compra, self.tela_para_exibir)
-            print(f'mensagem do formatar: {mensagem}') 
             EnviaEmail(email,mensagem)
             QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
             self.dados_clienete.clear()
             botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
-            processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
+            processar_dados_do_botao(self, client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
             chave = self.total_compra
             atualizar_frequencia(self, chave, self.tela_para_exibir)
             flag = 0
@@ -1203,7 +1197,7 @@ class Ui_Main(QMainWindow, Main):
                     QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
                     valid = True
                     botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
-                    processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
+                    processar_dados_do_botao(self, client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
                     chave = self.total_compra
                     atualizar_frequencia(self, chave, self.tela_para_exibir)
                     flag = 0
@@ -1230,9 +1224,7 @@ class Ui_Main(QMainWindow, Main):
         lista_dados = [self.cpf_do_usuario, tela]
         dados = ','.join(lista_dados)
         client_socket.send(dados.encode())
-        botoes = client_socket.recv(4096).decode()
-        print('Chegou do servidor esses botões: ', botoes)
-        
+        botoes = client_socket.recv(4096).decode()    
         if botoes != '0':
             lista_botoes = botoes.split(',')  # Converta a string de botões em uma lista
 
