@@ -25,7 +25,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '10.0.0.44'
+ip = '192.168.2.113'
 porta = 8007
 addr = ((ip,porta))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -1283,7 +1283,7 @@ class Ui_Main(QMainWindow, Main):
                 lista_dados = list()
                 client_socket.send('21'.encode())
                 str_botao = str(item_selecionado)
-                botao_servidor = str_botao[9:]
+                botao_servidor = str_botao[9:str_botao.index(" - ")]
                 print(f'BOTAO ENVIADO: {botao_servidor}')
                 client_socket.send(str_botao.encode())
                 tela = client_socket.recv(4096).decode()

@@ -413,14 +413,58 @@ def menu(con, cliente):
 
             lista_completas_botoes = []
 
+            mapeamento_nomes = {
+                'pushButton_3': 'Cadeira 1',
+                'pushButton_4': 'Cadeira 2',
+                'pushButton_5': 'Cadeira 3',
+                'pushButton_6': 'Cadeira 4',
+                'pushButton_7': 'Cadeira 5',
+                'pushButton_8': 'Cadeira 6',
+                'pushButton_9': 'Cadeira 14',
+                'pushButton_10': 'Cadeira 15',
+                'pushButton_11': 'Cadeira 16',
+                'pushButton_12': 'Cadeira 17',
+                'pushButton_13': 'Cadeira 18',
+                'pushButton_14': 'Cadeira 19',
+                'pushButton_15': 'Cadeira 27',
+                'pushButton_16': 'Cadeira 28',
+                'pushButton_17': 'Cadeira 29',
+                'pushButton_18': 'Cadeira 30',
+                'pushButton_19': 'Cadeira 31',
+                'pushButton_20': 'Cadeira 32',
+                'pushButton_21': 'Cadeira 7',
+                'pushButton_22': 'Cadeira 8',
+                'pushButton_23': 'Cadeira 9',
+                'pushButton_24': 'Cadeira 20',
+                'pushButton_25': 'Cadeira 21',
+                'pushButton_26': 'Cadeira 22',
+                'pushButton_27': 'Cadeira 33',
+                'pushButton_28': 'Cadeira 34',
+                'pushButton_29': 'Cadeira 35',
+                'pushButton_30': 'Cadeira 36',
+                'pushButton_31': 'Cadeira 37',
+                'pushButton_32': 'Cadeira 38',
+                'pushButton_33': 'Cadeira 39',
+                'pushButton_34': 'Cadeira 23',
+                'pushButton_35': 'Cadeira 24',
+                'pushButton_36': 'Cadeira 25',
+                'pushButton_37': 'Cadeira 26',
+                'pushButton_38': 'Cadeira 36',
+                'pushButton_39': 'Cadeira 10',
+                'pushButton_40': 'Cadeira 12',
+                'pushButton_41': 'Cadeira 13',
+                'pushButton_42': 'Cadeira 11',
+                
+            }
+
             if botoes_associados is not None:
-                lista_completas_botoes.extend([f'Sala 01: {botao}' for botao in botoes_associados])
+                lista_completas_botoes.extend([f'Sala 01: {botao} - {mapeamento_nomes.get(botao, "Cadeira Desconhecida")}' for botao in botoes_associados])
 
             if botoes_associados_02 is not None:
-                lista_completas_botoes.extend([f'Sala 02: {botao}' for botao in botoes_associados_02])
+                lista_completas_botoes.extend([f'Sala 02: {botao} - {mapeamento_nomes.get(botao, "Cadeira Desconhecida")}' for botao in botoes_associados_02])
 
             if botoes_associados_03 is not None:
-                lista_completas_botoes.extend([f'Sala 03: {botao}' for botao in botoes_associados_03])
+                lista_completas_botoes.extend([f'Sala 03: {botao} - {mapeamento_nomes.get(botao, "Cadeira Desconhecida")}' for botao in botoes_associados_03])
 
             if not lista_completas_botoes:
                 con.send('0'.encode())
@@ -429,6 +473,7 @@ def menu(con, cliente):
                 print(f'Botoes associados: {enviar_lista}')
                 con.send(enviar_lista.encode())
                 # Faça aqui o que desejar com a lista de botões associados
+
                 
         elif mensagem == '20':
             print(f'sinal 20')
@@ -442,7 +487,7 @@ def menu(con, cliente):
             # Verificar se há pelo menos um botão na lista
             if dados_partes[0]:
                 botao = dados_partes[0]
-                botao_procurar = botao[9:]
+                botao_procurar = botao[9:botao.index(" - ")]
                 if sala[6] == '1':
                     if dados_botoes.Exclui_Reserva(botao_procurar):
                         con.send('10'.encode())
@@ -457,7 +502,7 @@ def menu(con, cliente):
             botao = con.recv(4096).decode()
             str_dado = str(botao)
             sala = str_dado[6]
-            botao_buscar = str_dado[9:]
+            botao_buscar = str_dado[9:str_dado.index(" - ")]
             print(f'dados RECEBIDO DO CLIENTE 21: {botao}')
             if sala == '1':
                 aux = dados_botoes.buscar_botao(botao_buscar)
