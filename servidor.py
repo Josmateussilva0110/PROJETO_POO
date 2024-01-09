@@ -43,7 +43,7 @@ def menu(con, cliente):
     conectado = True
 
     while conectado:
-        mensagem = con.recv(1024).decode()
+        mensagem = con.recv(4096).decode()
         if mensagem == '0':
             conectado = False
 

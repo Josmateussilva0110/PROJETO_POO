@@ -208,7 +208,7 @@ def mudar_cor_botao_vermelho_valido(lista_botoes_todos, lista_botoes_selecionado
 
 
 
-def processar_dados_do_botao(self, client_socket, tela_para_exibir, botao_id, botoes):
+def processar_dados_do_botao(client_socket, tela_para_exibir, botao_id, botoes):
     tela = str(tela_para_exibir)
     client_socket.send('14'.encode())
     enviar_dados = [botao_id, str(tela_para_exibir)]
@@ -227,11 +227,7 @@ def processar_dados_do_botao(self, client_socket, tela_para_exibir, botao_id, bo
         if mensagem == '1':  # encontrei os botões
             botoa_achado_verificado = client_socket.recv(4096).decode()
             mudar_cor_botao_vermelho_valido(botoes, botoa_achado_verificado)
-        else:
-            self.QtWidgets.QMessageBox.information(self, 'Erro', 'Botões não encontrados.') 
-    else:
-        self.QtWidgets.QMessageBox.information(self, 'Erro', 'erro com a comunicação do servidor.') 
-        client_socket.close()
+
             
 def pintar_botao_verde_excluido(lista_botoes_todos, lista_botoes_excluidos):
     print('ENTORU EM PINTAR BOTAO EXCLUIDO')
