@@ -1212,6 +1212,10 @@ class Ui_Main(QMainWindow, Main):
             current_sala = None
             for botao in lista_botoes:
                 if botao.startswith('Sala'):
+                    #aux = str(botao)
+                    #b = aux[:8]
+                    #c = aux[25:]
+                    #d = b + c
                     current_sala = QStandardItem(botao)
                     model.appendRow(current_sala)
                 else:

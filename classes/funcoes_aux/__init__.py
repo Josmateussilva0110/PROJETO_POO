@@ -70,13 +70,11 @@ def lista_botoes_red_03(self):
 
 def lista_botoes_tela_layout(self, tela):
     if tela == 10:
-        print('PEGOU OS BOTOES DA TELA 10')
         botao = [
         getattr(self.TELA_LAYOUT, f"pushButton_{i}") for i in range(3, 43)
         ]
     
     elif tela == 13:
-        print('PEGOU OS BOTOES DA TELA 13')
         botao = [
         getattr(self.TELA_LAYOUT_02, f"pushButton_{i}") for i in range(3, 43)
         ]
@@ -230,21 +228,17 @@ def processar_dados_do_botao(client_socket, tela_para_exibir, botao_id, botoes):
 
             
 def pintar_botao_verde_excluido(lista_botoes_todos, lista_botoes_excluidos):
-    print('ENTORU EM PINTAR BOTAO EXCLUIDO')
     # Extrai números dos identificadores dos botões excluídos
     numeros_excluidos = [int(botao.split('_')[-1]) for botao in lista_botoes_excluidos.split(',')]
 
     for button in lista_botoes_todos:
         botao_id = button.objectName()
-        print('id do botão', botao_id)
         
         # Extrai o número do identificador do botão na lista completa
         numero_botao = int(botao_id.split('_')[-1])
         
         if numero_botao in numeros_excluidos:
-            print(f'O botão {botao_id} foi excluído do banco de dados.')
             button.setStyleSheet("background-color: green;")
-            print('PINTOU DE VERDE')
 
 
 
