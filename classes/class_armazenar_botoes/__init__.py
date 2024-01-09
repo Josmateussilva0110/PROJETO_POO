@@ -116,7 +116,7 @@ class Armazenar_botoes():
             else:
                 # Se o botão não existe, inserir um novo
                 insert_query = "INSERT INTO Botoes(botao) VALUES (%s)"
-                print('inseri aqui',botao)
+                #print('inseri aqui',botao)
                 values = (botao,)
                 cursor.execute(insert_query, values)
 
@@ -135,7 +135,6 @@ class Armazenar_botoes():
 
         cursor = self.db_connection.cursor(dictionary=True)  # Usar dictionary=True para obter resultados como dicionários
         select_query = "SELECT * FROM Botoes WHERE botao = %s"
-        print(select_query)
         
         try:
             cursor.execute(select_query, (botao,))

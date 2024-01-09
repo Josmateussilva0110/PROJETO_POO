@@ -209,8 +209,6 @@ class Armazenar_botoes_02():
             update_query = "UPDATE Botoes_02 SET validar = 1 WHERE botao = %s"
             cursor.execute(update_query, (nome_botao,))
             self.db_connection.commit()
-            
-            print(f'Valor de "validar" atualizado para 1 para o botão {nome_botao}.')
             return True
         except mysql.connector.Error as err:
             print(f'Erro ao atualizar "validar" para 1 para o botão {nome_botao}: {err}')

@@ -269,7 +269,7 @@ def menu(con, cliente):
             # Buscar o botão no banco de dados
             validar = dados_botoes_03.buscar_botao_03(botao)
             if validar is None:
-                aux = dados_botoes_03.armazenar_botao_0(botao)
+                aux = dados_botoes_03.armazenar_botao_03(botao)
                 if aux:
                     con.send('1'.encode())
             elif validar["validar"] == 0:
@@ -288,49 +288,13 @@ def menu(con, cliente):
 
             lista_completas_botoes = []
 
-            mapeamento_nomes = {
-                'pushButton_3': 'Cadeira 1',
-                'pushButton_4': 'Cadeira 2',
-                'pushButton_5': 'Cadeira 3',
-                'pushButton_6': 'Cadeira 4',
-                'pushButton_7': 'Cadeira 5',
-                'pushButton_8': 'Cadeira 6',
-                'pushButton_9': 'Cadeira 14',
-                'pushButton_10': 'Cadeira 15',
-                'pushButton_11': 'Cadeira 16',
-                'pushButton_12': 'Cadeira 17',
-                'pushButton_13': 'Cadeira 18',
-                'pushButton_14': 'Cadeira 19',
-                'pushButton_15': 'Cadeira 27',
-                'pushButton_16': 'Cadeira 28',
-                'pushButton_17': 'Cadeira 29',
-                'pushButton_18': 'Cadeira 30',
-                'pushButton_19': 'Cadeira 31',
-                'pushButton_20': 'Cadeira 32',
-                'pushButton_21': 'Cadeira 7',
-                'pushButton_22': 'Cadeira 8',
-                'pushButton_23': 'Cadeira 9',
-                'pushButton_24': 'Cadeira 20',
-                'pushButton_25': 'Cadeira 21',
-                'pushButton_26': 'Cadeira 22',
-                'pushButton_27': 'Cadeira 33',
-                'pushButton_28': 'Cadeira 34',
-                'pushButton_29': 'Cadeira 35',
-                'pushButton_30': 'Cadeira 36',
-                'pushButton_31': 'Cadeira 37',
-                'pushButton_32': 'Cadeira 38',
-                'pushButton_33': 'Cadeira 39',
-                'pushButton_34': 'Cadeira 23',
-                'pushButton_35': 'Cadeira 24',
-                'pushButton_36': 'Cadeira 25',
-                'pushButton_37': 'Cadeira 26',
-                'pushButton_38': 'Cadeira 36',
-                'pushButton_39': 'Cadeira 10',
-                'pushButton_40': 'Cadeira 12',
-                'pushButton_41': 'Cadeira 13',
-                'pushButton_42': 'Cadeira 11',
-                
-            }
+            mapeamento_nomes = {}
+            cadeiras_associadas = [1, 2, 3, 4, 5, 6, 14, 15, 16, 17, 18, 19, 27, 28, 29, 30, 31, 32, 7, 8, 9, 20, 21, 22, 33, 34, 35, 36, 37, 38, 39, 23, 24, 25, 26, 36, 10, 12, 13, 11]
+
+            for i in range(3, 43):
+                botao = f'pushButton_{i}'
+                mapeamento_nomes[botao] = f'Cadeira {cadeiras_associadas[i - 3]}'
+
 
             if botoes_associados is not None:
                 lista_completas_botoes.extend([f'Sala 01: {botao} - {mapeamento_nomes.get(botao, "Cadeira Desconhecida")}' for botao in botoes_associados])
@@ -372,7 +336,6 @@ def menu(con, cliente):
             str_dado = str(botao)
             sala = str_dado[6]
             botao_buscar = str_dado[9:str_dado.index(" - ")]
-            print(f'dados RECEBIDO DO CLIENTE 21: {botao}')
             if sala == '1':
                 aux = dados_botoes.buscar_botao(botao_buscar)
                 if aux != None:
