@@ -278,3 +278,24 @@ def desatualizar_frequencia(self, tela, botao_servidor):
             if v["frequencia"] == 0:
                 del dicionario[i]
     return retorno
+
+
+def retornar_dicionario_botoes():
+    dicionario = {}
+    cadeiras = [1, 2, 3, 4, 5, 6, 14, 15, 16, 17, 18, 19, 27, 28, 29, 30, 31, 32, 7, 8, 9, 20, 21, 22, 33, 34, 35, 36, 37, 38, 39, 23, 24, 25, 26, 36, 10, 12, 13, 11]
+
+    for i in range(3, 43):
+        botao = f'pushButton_{i}'
+        dicionario[botao] = f'Cadeira {cadeiras[i - 3]}'
+    
+    return dicionario
+
+
+def retornar_botao_dicionario(cadeira, dicionario):
+    botao = None
+    for i, v in dicionario.items():
+        if cadeira == v:
+            botao = i
+            break
+        
+    return botao

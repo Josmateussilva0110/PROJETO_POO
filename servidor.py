@@ -288,22 +288,17 @@ def menu(con, cliente):
 
             lista_completas_botoes = []
 
-            mapeamento_nomes = {}
-            cadeiras_associadas = [1, 2, 3, 4, 5, 6, 14, 15, 16, 17, 18, 19, 27, 28, 29, 30, 31, 32, 7, 8, 9, 20, 21, 22, 33, 34, 35, 36, 37, 38, 39, 23, 24, 25, 26, 36, 10, 12, 13, 11]
-
-            for i in range(3, 43):
-                botao = f'pushButton_{i}'
-                mapeamento_nomes[botao] = f'Cadeira {cadeiras_associadas[i - 3]}'
+            mapeamento_nomes = retornar_dicionario_botoes()
 
 
             if botoes_associados is not None:
-                lista_completas_botoes.extend([f'Sala 01: {botao} - {mapeamento_nomes.get(botao, "Cadeira Desconhecida")}' for botao in botoes_associados])
+                lista_completas_botoes.extend([f'Sala 01  : {botao}  {mapeamento_nomes.get(botao, "Cadeira")}' for botao in botoes_associados])
 
             if botoes_associados_02 is not None:
-                lista_completas_botoes.extend([f'Sala 02: {botao} - {mapeamento_nomes.get(botao, "Cadeira Desconhecida")}' for botao in botoes_associados_02])
+                lista_completas_botoes.extend([f'Sala 02 : {botao} - {mapeamento_nomes.get(botao, "Cadeira Desconhecida")}' for botao in botoes_associados_02])
 
             if botoes_associados_03 is not None:
-                lista_completas_botoes.extend([f'Sala 03: {botao} - {mapeamento_nomes.get(botao, "Cadeira Desconhecida")}' for botao in botoes_associados_03])
+                lista_completas_botoes.extend([f'Sala 03 : {botao} - {mapeamento_nomes.get(botao, "Cadeira Desconhecida")}' for botao in botoes_associados_03])
 
             if not lista_completas_botoes:
                 con.send('0'.encode())
@@ -320,7 +315,8 @@ def menu(con, cliente):
             # Verificar se há pelo menos um botão na lista
             if dados_partes[0]:
                 botao = dados_partes[0]
-                botao_procurar = botao[9:botao.index(" - ")]
+                botao_procurar = botao[8:]
+                print(f'{botao_procurar}')
                 if sala[6] == '1':
                     if dados_botoes.Exclui_Reserva(botao_procurar):
                         con.send('10'.encode())
@@ -335,7 +331,7 @@ def menu(con, cliente):
             botao = con.recv(4096).decode()
             str_dado = str(botao)
             sala = str_dado[6]
-            botao_buscar = str_dado[9:str_dado.index(" - ")]
+            botao_buscar = str_dado[8:]
             if sala == '1':
                 aux = dados_botoes.buscar_botao(botao_buscar)
                 if aux != None:

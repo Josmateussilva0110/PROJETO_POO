@@ -1212,15 +1212,15 @@ class Ui_Main(QMainWindow, Main):
             current_sala = None
             for botao in lista_botoes:
                 if botao.startswith('Sala'):
-                    #aux = str(botao)
-                    #b = aux[:8]
-                    #c = aux[25:]
-                    #d = b + c
-                    current_sala = QStandardItem(botao)
+                    aux = str(botao)
+                    b = aux[:8]
+                    c = aux[25:]
+                    d = b + c
+                    current_sala = QStandardItem(d)
                     model.appendRow(current_sala)
                 else:
                     if current_sala is not None:
-                        current_sala.appendRow(QStandardItem(botao))
+                        current_sala.appendRow(QStandardItem(d))
 
             # Configure o modelo no QListView
             self.TELA_EXCLUIR_RESERVA_ui.listView.setModel(model)
@@ -1252,18 +1252,21 @@ class Ui_Main(QMainWindow, Main):
 
             # Verifique a resposta do usuário
             if resposta == QtWidgets.QMessageBox.Yes:
+                cad = item_selecionado[9:]
+                dici = retornar_dicionario_botoes()
+                bot = retornar_botao_dicionario(cad, dici)
+                sala = item_selecionado[:8]
+                bot_enviar = sala + bot
                 lista_dados = list()
                 client_socket.send('21'.encode())
-                str_botao = str(item_selecionado)
-                botao_servidor = str_botao[9:str_botao.index(" - ")]
-                client_socket.send(str_botao.encode())
+                client_socket.send(str(bot_enviar).encode())
                 tela = client_socket.recv(4096).decode()
                 int_tela = int(tela)
                 botoes_tela_lay = lista_botoes_tela_layout(self, int_tela)
-                pintar_botao_verde_excluido(botoes_tela_lay,botao_servidor)
+                pintar_botao_verde_excluido(botoes_tela_lay,bot)
                 client_socket.send('20'.encode())
                 str_tela = str(tela)
-                lista_dados.append(str_botao)
+                lista_dados.append(bot_enviar)
                 lista_dados.append(str_tela)
                 dados = ','.join(lista_dados)
                 client_socket.send(dados.encode())
@@ -1272,7 +1275,7 @@ class Ui_Main(QMainWindow, Main):
                     QtWidgets.QMessageBox.information(self, 'Excluir', 'reserva excluída com sucesso.')  
                 else:
                     QtWidgets.QMessageBox.information(self, 'Excluir', 'erro ao excluir.') 
-                valor_excluido = desatualizar_frequencia(self, str_tela, botao_servidor)
+                valor_excluido = desatualizar_frequencia(self, str_tela, bot)
                 flag = 1
                 lista = list()
                 lista.append(str_tela)
