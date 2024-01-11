@@ -26,7 +26,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.1.5'
+ip = '192.168.2.113'
 porta = 8007
 addr = ((ip,porta))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -1241,6 +1241,7 @@ class Ui_Main(QMainWindow, Main):
         if selected_index >= 0:
             
             item_selecionado = index.data()
+            print("Selecionei esse:",item_selecionado)
             # Exiba um diálogo de confirmação
             resposta = QtWidgets.QMessageBox.question(
                 self,
@@ -1252,10 +1253,19 @@ class Ui_Main(QMainWindow, Main):
 
             # Verifique a resposta do usuário
             if resposta == QtWidgets.QMessageBox.Yes:
-                cad = item_selecionado[9:]
+                separa = item_selecionado.split(" ")
+                print(separa)
+                numero_cadeira = separa[-1]
+                print("Número da Cadeira:", numero_cadeira)
+                cad = f'Cadeira ' + numero_cadeira
+                print("Vem do cad",cad)
+                print(type(cad))
                 dici = retornar_dicionario_botoes()
+                print("Vem do Dici",dici)
                 bot = retornar_botao_dicionario(cad, dici)
+                print("Bot",bot)
                 sala = item_selecionado[:8]
+                print("Sala",sala)
                 bot_enviar = sala + bot
                 lista_dados = list()
                 client_socket.send('21'.encode())

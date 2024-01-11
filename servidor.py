@@ -292,7 +292,7 @@ def menu(con, cliente):
 
 
             if botoes_associados is not None:
-                lista_completas_botoes.extend([f'Sala 01  : {botao}  {mapeamento_nomes.get(botao, "Cadeira")}' for botao in botoes_associados])
+                lista_completas_botoes.extend([f'Sala 01 : {botao} - {mapeamento_nomes.get(botao,"Cadeira")}' for botao in botoes_associados])
 
             if botoes_associados_02 is not None:
                 lista_completas_botoes.extend([f'Sala 02 : {botao} - {mapeamento_nomes.get(botao, "Cadeira Desconhecida")}' for botao in botoes_associados_02])

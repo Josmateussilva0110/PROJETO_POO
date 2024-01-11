@@ -288,6 +288,7 @@ def retornar_dicionario_botoes():
         botao = f'pushButton_{i}'
         dicionario[botao] = f'Cadeira {cadeiras[i - 3]}'
     
+    print(dicionario)
     return dicionario
 
 
@@ -297,5 +298,6 @@ def retornar_botao_dicionario(cadeira, dicionario):
         if cadeira == v:
             botao = i
             break
-        
+    
+    print(botao)    
     return botao
