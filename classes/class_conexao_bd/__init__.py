@@ -8,7 +8,7 @@ def configure_mysql_connection():
         mydb = mysql.connector.connect(
             host="127.0.0.1",
             user="root",
-            password="7319",
+            password="12345678",
         )
         return mydb
     except mysql.connector.Error as err:

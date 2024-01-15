@@ -316,7 +316,6 @@ def menu(con, cliente):
             if dados_partes[0]:
                 botao = dados_partes[0]
                 botao_procurar = botao[8:]
-                print(f'{botao_procurar}')
                 if sala[6] == '1':
                     if dados_botoes.Exclui_Reserva(botao_procurar):
                         con.send('10'.encode())

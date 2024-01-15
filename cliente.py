@@ -2,6 +2,7 @@ import sys
 import socket
 import random
 import math
+import hashlib
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox, QInputDialog
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QStringListModel
@@ -26,7 +27,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '192.168.2.113'
+ip = '192.168.1.4'
 porta = 8007
 addr = ((ip,porta))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -497,10 +498,11 @@ class Ui_Main(QMainWindow, Main):
         else:
             client_socket.send('1'.encode())
             lista_dados = list()
+            hashed_senha = hashlib.md5(senha.encode()).hexdigest()
             lista_dados.append(nome)
             lista_dados.append(cpf)
             lista_dados.append(email)
-            lista_dados.append(senha)
+            lista_dados.append(hashed_senha)
             dados = ",".join(lista_dados)
             client_socket.send(dados.encode())
             try:

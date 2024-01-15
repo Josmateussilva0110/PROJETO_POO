@@ -1,4 +1,5 @@
 import mysql.connector
+import hashlib
 
 class Armazenar:
     """
@@ -145,15 +146,25 @@ class Armazenar:
 
 
     def verificar_login_Cliente(self, cpf, senha):
-        """Verifica no banco de dados se o CPF do cliente esta armazenado"""
+        """Verifica no banco de dados se o CPF do cliente está armazenado."""
 
         cursor = self.db_connection.cursor()
-        select_query = "SELECT * FROM Usuarios WHERE cpf = %s AND senha = %s"
-        values = (cpf, senha)
-        cursor.execute(select_query, values)
+        select_query = "SELECT * FROM Usuarios WHERE cpf = %s"
+        cursor.execute(select_query, (cpf,))
         result = cursor.fetchone()
+
+        if result is not None:
+            stored_hashed_senha = result[4] 
+            input_hashed_senha = hashlib.md5(senha.encode()).hexdigest()
+
+            if stored_hashed_senha == input_hashed_senha:
+                # As senhas coincidem, o login é bem-sucedido
+                cursor.close()
+                return True
+
+        # CPF não encontrado ou senha incorreta
         cursor.close()
-        return result is not None
+        return False
    
 
     def verificar_login_Ger(self, cpf, senha):
