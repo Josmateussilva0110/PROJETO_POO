@@ -98,16 +98,18 @@ class Armazenar:
             nome = 'rai'
             email = 'raileal_gerente@gmail.com'
             senha = '777'
+            hash_senha = hashlib.md5(senha.encode()).hexdigest()
             insert_query = "INSERT INTO Gerencia (nome, cpf, email, senha) VALUES (%s, %s, %s, %s)"
-            values = (nome, cpf, email, senha)
+            values = (nome, cpf, email, hash_senha)
             cursor.execute(insert_query, values)
             
         if not existing_gerente_cpf1:
             nome1 = 'mateus'
             email1 = 'mateus_gerente@gmail.com'
             senha1 = '111'
+            hash_senha1 = hashlib.md5(senha1.encode()).hexdigest()
             insert_query1 = "INSERT INTO Gerencia (nome, cpf, email, senha) VALUES (%s, %s, %s, %s)"
-            values1 = (nome1, cpf1, email1, senha1)
+            values1 = (nome1, cpf1, email1, hash_senha1)
             cursor1.execute(insert_query1, values1)
 
         # Certifique-se de fechar o cursor
@@ -171,12 +173,22 @@ class Armazenar:
         """Verifica no banco de dados se o CPF do gerente esta armazenado"""
 
         cursor = self.db_connection.cursor()
-        select_query = "SELECT * FROM Gerencia WHERE cpf = %s AND senha = %s"
-        values = (cpf, senha)
-        cursor.execute(select_query, values)
+        select_query = "SELECT * FROM Gerencia WHERE cpf = %s"
+        cursor.execute(select_query, (cpf,))
         result = cursor.fetchone()
-        #self.db_connection.close()
-        return result is not None
+
+        if result is not None:
+            stored_hashed_senha = result[4] 
+            input_hashed_senha = hashlib.md5(senha.encode()).hexdigest()
+
+            if stored_hashed_senha == input_hashed_senha:
+                # As senhas coincidem, o login é bem-sucedido
+                cursor.close()
+                return True
+
+        # CPF não encontrado ou senha incorreta
+        cursor.close()
+        return False
 
 
     def buscar_cliente_cpf(self, cpf):
