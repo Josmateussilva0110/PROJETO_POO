@@ -116,7 +116,13 @@ class Armazenar:
         cursor.close()
 
     def armazenar(self, pessoa):
-        """Armazena um novo gerente no banco de dados"""
+        """Armazena um novo gerente no banco de dados
+        
+        Returns
+        -------
+        bool
+        Retorna True se o gerente for armazenado com sucesso, False se o CPF já existir no banco de dados ou em caso de erro.
+        """
 
         cursor = self.db_connection.cursor()
 
@@ -148,7 +154,13 @@ class Armazenar:
 
 
     def verificar_login_Cliente(self, cpf, senha):
-        """Verifica no banco de dados se o CPF do cliente está armazenado."""
+        """Verifica no banco de dados se o CPF do cliente está armazenado.
+        
+        Returns
+        -------
+        bool
+        Retorna True se o login for bem-sucedido (CPF encontrado e senha correta), False caso contrário.
+        """
 
         cursor = self.db_connection.cursor()
         select_query = "SELECT * FROM Usuarios WHERE cpf = %s"
@@ -170,7 +182,12 @@ class Armazenar:
    
 
     def verificar_login_Ger(self, cpf, senha):
-        """Verifica no banco de dados se o CPF do gerente esta armazenado"""
+        """Verifica no banco de dados se o CPF do gerente esta armazenado
+        Returns
+        -------
+        bool
+        Retorna True se o login for bem-sucedido (CPF encontrado e senha correta), False caso contrário.
+        """
 
         cursor = self.db_connection.cursor()
         select_query = "SELECT * FROM Gerencia WHERE cpf = %s"
@@ -192,7 +209,13 @@ class Armazenar:
 
 
     def buscar_cliente_cpf(self, cpf):
-        """Procura um cliente no banco de dados a partir de seu cpf"""
+        """Procura um cliente no banco de dados a partir de seu cpf
+        
+            Returns
+        -------
+        str or None
+        Retorna o nome do cliente se encontrado, None se o cliente não for encontrado.
+        """
 
         cursor = self.db_connection.cursor()
         select_query = "SELECT nome FROM Usuarios WHERE cpf = %s"
@@ -203,7 +226,13 @@ class Armazenar:
         return result[0] if result else None
     
     def buscar_gerente_cpf(self, cpf):
-        """Procura um gerente no banco de dados a partir de seu cpf"""
+        """Procura um gerente no banco de dados a partir de seu cpf
+        
+        Returns
+        -------
+        str or None
+        Retorna o nome do gerente se encontrado, None se o gerente não for encontrado.
+        """
 
         cursor = self.db_connection.cursor()
         select_query = "SELECT nome FROM Gerencia WHERE cpf = %s"
@@ -214,7 +243,13 @@ class Armazenar:
         return result[0] if result else None
     
     def buscar_email_cpf(self, cpf):
-        """Procura o email de um cliente armazenado no banco de dados"""
+        """Procura o email de um cliente armazenado no banco de dados
+        
+        Returns
+        -------
+        str or None
+        Retorna o email do cliente se encontrado, None se o cliente não for encontrado.
+        """
 
         cursor = self.db_connection.cursor()
         select_query = "SELECT email FROM Usuarios WHERE cpf = %s"

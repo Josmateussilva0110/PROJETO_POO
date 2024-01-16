@@ -94,7 +94,12 @@ class Armazenar_botoes_02():
 
 
     def armazenar_botao_02(self, botao):
-        """Armazena um botão na tabela Botoes_02, substituindo se já existir e não tiver sido validado"""
+        """Armazena um botão na tabela Botoes_02, substituindo se já existir e não tiver sido validado
+        Returns
+        -------
+        bool
+        Retorna True se o botão for armazenado com sucesso, False em caso de erro.
+        """
 
         cursor = self.db_connection.cursor()
         
@@ -127,6 +132,11 @@ class Armazenar_botoes_02():
         """Busca um botão na tabela Botoes_02 pelo seu nome (identificador único).
         Retorna um dicionário representando a linha correspondente, ou None se não encontrado.
         
+        Returns
+        -------
+        dict or None
+        Retorna um dicionário representando a linha correspondente na tabela Botoes_02 se o botão for encontrado, 
+        ou None se não for encontrado.
         """
         cursor = self.db_connection.cursor(dictionary=True)  # Usar dictionary=True para obter resultados como dicionários
         select_query = "SELECT * FROM Botoes_02 WHERE botao = %s"
@@ -151,6 +161,11 @@ class Armazenar_botoes_02():
         Obtém uma lista de todos os nomes de botões na tabela Botoes_02.
         Retorna None se não houver botões
 
+        Returns
+        -------
+        list or None
+        Retorna uma lista de identificadores únicos de botões se houver botões na tabela Botoes_02, 
+        ou None se não houver botões.
         """
         cursor = self.db_connection.cursor()
 
@@ -175,6 +190,12 @@ class Armazenar_botoes_02():
         """
         Obtém uma lista de nomes de botões válidos (com o campo 'validar' igual a 1) na tabela Botoes_02.
         Retorna None se não houver botões válidos
+        
+        Returns
+        -------
+        list or None
+        Retorna uma lista de identificadores únicos de botões válidos se houver botões válidos na tabela Botoes_02, 
+        ou None se não houver botões válidos.
         """
         cursor = self.db_connection.cursor()
 
@@ -201,6 +222,11 @@ class Armazenar_botoes_02():
         """
         Atualiza o valor 'validar' para 1 para um botão específico na tabela Botoes_02.
         Retorna True se a atualização for bem-sucedida, False em caso de erro
+        
+        Returns
+        -------
+        bool
+        Retorna True se a atualização for bem-sucedida, False em caso de erro.
         """
         cursor = self.db_connection.cursor()
 
@@ -221,6 +247,11 @@ class Armazenar_botoes_02():
         """
         Atualiza o valor 'cpf' para o novo valor na tabela Botoes_02 onde 'cpf' é igual a 0.
         Retorna True se a atualização for bem-sucedida, False em caso de erro
+        
+        Returns
+        -------
+        bool
+        Retorna True se a atualização for bem-sucedida, False em caso de erro.
         """
         cursor = self.db_connection.cursor()
 
@@ -240,6 +271,12 @@ class Armazenar_botoes_02():
         """
         Obtém uma lista de nomes de botões associados a um CPF específico na tabela Botoes_02.
         Retorna None se nenhum botão estiver associado ao CPF ou em caso de erro
+        
+        Returns
+        -------
+        list or None
+        Retorna uma lista de identificadores únicos de botões associados ao CPF se houver algum na tabela Botoes_02, 
+        ou None se nenhum botão estiver associado ao CPF ou em caso de erro.
         """
         cursor = self.db_connection.cursor()
 
@@ -266,6 +303,11 @@ class Armazenar_botoes_02():
         """
         Exclui a linha correspondente a um botão específico na tabela Botoes_02.
         Retorna True se a exclusão for bem-sucedida, False em caso de erro
+        
+        Returns
+        -------
+        bool
+        Retorna True se a exclusão for bem-sucedida, False em caso de erro.
         """
         cursor = self.db_connection.cursor()
         try:
