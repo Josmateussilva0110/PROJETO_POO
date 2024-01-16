@@ -75,11 +75,6 @@ class Armazenar_lucros:
     def armazenar_lucro(self, valor, flag):
         """
         Armazena o valor do lucro no banco de dados 'Lucros', atualizando ou inserindo conforme necessário.
-        
-        Returns
-        -------
-        bool
-        Retorna True se o armazenamento do lucro for bem-sucedido, False em caso de erro.
         """
         cursor = self.db_connection.cursor()
         valid = False
@@ -118,11 +113,6 @@ class Armazenar_lucros:
     def obter_lucro_total(self):
         """
         Retorna o maior valor de lucro armazenado na tabela 'Lucros'.
-        
-        Returns
-        -------
-        float
-        Retorna o maior valor de lucro armazenado na tabela 'Lucros'. Retorna 0.0 se não houver registros ou em caso de erro.
         """
         try:
             cursor = self.db_connection.cursor()

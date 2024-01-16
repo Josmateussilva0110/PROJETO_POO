@@ -75,6 +75,13 @@ class Armazenar_lucros_03:
     def armazenar_lucro_03(self, valor, flag):
         """
         Armazena o valor do lucro no banco de dados 'Lucros_03', atualizando ou inserindo conforme necessário.
+
+        Args:
+            valor (float): O valor do lucro a ser armazenado.
+            flag (str): Uma flag indicando se o lucro deve ser subtraído ('1') ou adicionado (outro valor).
+
+        Returns:
+            bool: True se o armazenamento for bem-sucedido, False em caso de erro.
         """
         cursor = self.db_connection.cursor()
         valid = False
@@ -113,6 +120,9 @@ class Armazenar_lucros_03:
     def obter_lucro_total_03(self):
         """
         Retorna o maior valor de lucro armazenado na tabela 'Lucros_03'.
+
+        Returns:
+            float: O maior valor de lucro encontrado na tabela 'Lucros_03' ou 0.0 se nenhum valor for encontrado ou em caso de erro.
         """
         try:
             cursor = self.db_connection.cursor()
