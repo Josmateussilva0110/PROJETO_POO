@@ -99,6 +99,12 @@ class Armazenar_botoes():
     def armazenar_botao(self, botao):
         """
         Armazena um botão na tabela Botoes, substituindo se já existir e não tiver sido validado.
+
+        Args:
+            botao (str): O código do botão a ser armazenado.
+
+        Returns:
+            bool: True se o armazenamento for bem-sucedido, False se houver um erro.
         """
                 
         cursor = self.db_connection.cursor()
@@ -131,6 +137,12 @@ class Armazenar_botoes():
     def buscar_botao(self, botao):
         """
         Busca um botão na tabela Botoes pelo seu nome (identificador único).
+
+        Args:
+            botao (str): O código do botão a ser buscado.
+
+        Returns:
+            dict or None: Um dicionário representando os detalhes do botão se encontrado, ou None se não encontrado.
         """
 
         cursor = self.db_connection.cursor(dictionary=True)  # Usar dictionary=True para obter resultados como dicionários
@@ -154,6 +166,9 @@ class Armazenar_botoes():
     def obter_todos_botoes(self):
         """
         Obtém uma lista de todos os nomes de botões na tabela Botoes.
+
+        Returns:
+            list or None: Uma lista contendo todos os nomes de botões se encontrados, ou None se nenhum botão for encontrado ou em caso de erro.
         """
 
         cursor = self.db_connection.cursor()
@@ -177,6 +192,9 @@ class Armazenar_botoes():
     def obter_botoes_validos(self):
         """
         Obtém uma lista de nomes de botões válidos (com o campo 'validar' igual a 1) na tabela Botoes.
+
+        Returns:
+            list or None: Uma lista contendo os nomes de botões válidos se encontrados, ou None se nenhum botão válido for encontrado ou em caso de erro.
         """
 
         cursor = self.db_connection.cursor()
@@ -202,7 +220,12 @@ class Armazenar_botoes():
     def atualizar_valido(self, nome_botao):
         """
         Atualiza o valor 'validar' para 1 para um botão específico na tabela Botoes.
-        Retorna True se a atualização for bem-sucedida, False em caso de erro.
+
+        Args:
+            nome_botao (str): O nome do botão a ser atualizado.
+
+        Returns:
+            bool: True se a atualização for bem-sucedida, False em caso de erro.
         """
 
         cursor = self.db_connection.cursor()
@@ -220,9 +243,14 @@ class Armazenar_botoes():
             cursor.close()
             
     def atualizar_cpf(self, novo_cpf):
-        """"
+        """
         Atualiza o valor 'cpf' para o novo valor na tabela Botoes onde 'cpf' é igual a 0.
-        Retorna True se a atualização for bem-sucedida, False em caso de erro.
+
+        Args:
+            novo_cpf (str): O novo valor para o campo 'cpf'.
+
+        Returns:
+            bool: True se a atualização for bem-sucedida, False em caso de erro.
         """
 
         cursor = self.db_connection.cursor()
@@ -242,7 +270,12 @@ class Armazenar_botoes():
     def obter_botoes_por_cpf(self, cpf):
         """
         Obtém uma lista de nomes de botões associados a um CPF específico na tabela Botoes.
-        Retorna None se nenhum botão estiver associado ao CPF ou em caso de erro.
+
+        Args:
+            cpf (str): O CPF para o qual buscar os botões associados.
+
+        Returns:
+            list or None: Uma lista contendo os nomes de botões associados ao CPF se encontrados, ou None se nenhum botão estiver associado ao CPF ou em caso de erro.
         """
 
         cursor = self.db_connection.cursor()
@@ -268,8 +301,14 @@ class Armazenar_botoes():
     def Exclui_Reserva(self, nome_botao):
         """
         Exclui a linha correspondente a um botão específico na tabela Botoes.
-        Retorna True se a exclusão for bem-sucedida, False em caso de erro.
+
+        Args:
+            nome_botao (str): O nome do botão a ser excluído.
+
+        Returns:
+            bool: True se a exclusão for bem-sucedida, False em caso de erro.
         """
+
 
         cursor = self.db_connection.cursor()
         try:

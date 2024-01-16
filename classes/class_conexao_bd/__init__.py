@@ -3,6 +3,11 @@ import mysql.connector
 def configure_mysql_connection():
     """
     Configura uma conexão com um servidor MySQL.
+
+    Returns:
+        mysql.connector.connection.MySQLConnection or None: 
+        Retorna uma conexão MySQL se a configuração for bem-sucedida, 
+        ou None se ocorrer um erro durante a tentativa de conexão.
     """
     try:
         mydb = mysql.connector.connect(
