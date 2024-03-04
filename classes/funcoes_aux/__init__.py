@@ -136,11 +136,28 @@ def EnviaEmail(destinatario,mensagem):
     # Ecnviar email
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
         smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-        smtp.send_message(msg)    
+        smtp.send_message(msg)   
+
+
+def enxugar_string(partes):
+    nome_filme_inicio = partes.index('Nome:') + 1
+    proximo_marcador_index = partes.index('Ano:') if 'Ano:' in partes else len(partes)
+    
+    if proximo_marcador_index < len(partes):
+        nome_filme_fim = proximo_marcador_index
+    else:
+        nome_filme_fim = len(partes)
+    
+    if nome_filme_inicio < nome_filme_fim:
+        nome_filme = ' '.join(partes[nome_filme_inicio:nome_filme_fim])
+        partes[nome_filme_inicio] = nome_filme
+    
+    del partes[nome_filme_inicio + 1:nome_filme_fim]
+    
+    return partes
 
 
 def formatar_mensagem(dados_cliente, total_compra, sala, flag=1, parcelas=1):
-    # Formatar a lista de dados_cliente em uma string organizada
     formato_mensagem = "Nome cliente: {}\nNome filme: {}\nAno: {}\nClassificação: {}\nHorario: {}\nSala: {}\nTotal compra: {}\nPagamento: {}\nEmitido: {}"
     data_e_hora_atuais = datetime.now()
     data_e_hora_em_texto = data_e_hora_atuais.strftime('%d/%m/%Y %H:%M')
@@ -172,13 +189,12 @@ def formatar_mensagem(dados_cliente, total_compra, sala, flag=1, parcelas=1):
     return mensagem_formatada
 
             
-def mudar_cor_botao_vermelho_valido(lista_botoes_todos, lista_botoes_selecionados):
+def mudar_cor_botao_vermelho_valido(lista_botoes_todos, lista_botoes_selecionados):    
     # Extrai números dos identificadores dos botões selecionados
     numeros_selecionados = [int(botao.split('_')[-1]) for botao in lista_botoes_selecionados.split(',')]
 
     for button in lista_botoes_todos:
-        botao_id = button.objectName()
-        
+        botao_id = button.objectName()        
         # Extrai o número do identificador do botão na lista completa
         numero_botao = int(botao_id.split('_')[-1])
         
@@ -190,23 +206,14 @@ def mudar_cor_botao_vermelho_valido(lista_botoes_todos, lista_botoes_selecionado
 
 
 def processar_dados_do_botao(client_socket, tela_para_exibir, botao_id, botoes):
-    client_socket.send('13'.encode())  # sinal para pegar a lista de botões que estão no servidor
     tela = str(tela_para_exibir)
-    client_socket.send(tela.encode())
-    try:
-        mensagem = client_socket.recv(4096).decode()
-    except:
-        client_socket.close()
+    client_socket.send('14'.encode())
+    enviar_dados = [botao_id, str(tela_para_exibir)]
+    enviar_servidor = ','.join(enviar_dados)
+    client_socket.send(enviar_servidor.encode())
 
-    if mensagem == '1':  # encontrei os botões
-        botoa_achado = client_socket.recv(4096).decode()##Botões achados no servidor com 0
-        client_socket.send('14'.encode())
-        enviar_dados = [botao_id, str(tela_para_exibir)]
-        enviar_servidor = ','.join(enviar_dados)
-        client_socket.send(enviar_servidor.encode())
-
-        client_socket.recv(4096).decode()
-
+    resposta = client_socket.recv(4096).decode()
+    if resposta == '1':
         client_socket.send('15'.encode()) #sinal para pegar a lista de botoes que estão no servidor
         client_socket.send(tela.encode())
         try:
@@ -216,6 +223,7 @@ def processar_dados_do_botao(client_socket, tela_para_exibir, botao_id, botoes):
         if mensagem == '1':  # encontrei os botões
             botoa_achado_verificado = client_socket.recv(4096).decode()
             mudar_cor_botao_vermelho_valido(botoes, botoa_achado_verificado)
+
             
 def pintar_botao_verde_excluido(lista_botoes_todos, lista_botoes_excluidos):
     # Extrai números dos identificadores dos botões excluídos
@@ -232,14 +240,6 @@ def pintar_botao_verde_excluido(lista_botoes_todos, lista_botoes_excluidos):
 
 
 
-def enxugar_string(partes):
-    nome_filme_inicio = partes.index('Nome:') + 1
-    proximo_marcador_index = partes.index('Ano:') if 'Ano:' in partes else len(partes)
-    nome_filme = ' '.join(partes[nome_filme_inicio:proximo_marcador_index])
-    partes[3] = nome_filme
-    if len(partes) > 4:
-        partes.pop(4)
-    return partes
 
 #dicionario para armazenar total_compra, frequência e botoes
 def atualizar_frequencia(self, chave, tela_para_exibir):
@@ -261,6 +261,7 @@ def atualizar_frequencia(self, chave, tela_para_exibir):
 
 
 def desatualizar_frequencia(self, tela, botao_servidor):
+    retorno = 0
     if tela == '10':
         dicionario = self.frequencia_valores
     elif tela == '13':
@@ -268,7 +269,32 @@ def desatualizar_frequencia(self, tela, botao_servidor):
     elif tela == '14':
         dicionario = self.frequencia_valores_03
 
-    for _, v in dicionario.items():
+    for i, v in list(dicionario.items()):
         if botao_servidor in v["botoes"]:
-            v["frequencia"] -=1 
+            retorno = i
+            v["frequencia"] -= 1
             v["botoes"].remove(botao_servidor)
+            if v["frequencia"] == 0:
+                del dicionario[i]
+    return retorno
+
+
+def retornar_dicionario_botoes():
+    dicionario = {}
+    cadeiras = [1, 2, 3, 4, 5, 6, 14, 15, 16, 17, 18, 19, 27, 28, 29, 30, 31, 32, 7, 8, 9, 20, 21, 22, 33, 34, 35, 36, 37, 38, 39, 23, 24, 25, 26, 36, 10, 12, 13, 11]
+
+    for i in range(3, 43):
+        botao = f'pushButton_{i}'
+        dicionario[botao] = f'Cadeira {cadeiras[i - 3]}'
+    
+    return dicionario
+
+
+def retornar_botao_dicionario(cadeira, dicionario):
+    botao = None
+    for i, v in dicionario.items():
+        if cadeira == v:
+            botao = i
+            break
+  
+    return botao

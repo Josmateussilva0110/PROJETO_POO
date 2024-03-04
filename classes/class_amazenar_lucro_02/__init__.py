@@ -1,6 +1,6 @@
 import mysql.connector
 
-class Armazenar_lucros_02():
+class Armazenar_lucros_02:
     """
     Classe responsável por gerenciar o armazenamento de dados de lucro_2 no banco de dados.
 
@@ -67,14 +67,17 @@ class Armazenar_lucros_02():
         self.db_connection.commit()
         cursor.close()
 
-
-    def armazenar_lucro_02(self, valor):
+    def armazenar_lucro_02(self, valor, flag):
         """
         Armazena o valor do lucro no banco de dados 'Lucros_02', atualizando ou inserindo conforme necessário.
+        
+        Returns
+        -------
+        bool
+        Retorna True se o lucro for armazenado com sucesso, False se não houver lucro ou em caso de erro.
         """
         cursor = self.db_connection.cursor()
         valid = False
-
         cursor.execute("SELECT COUNT(*) FROM Lucros_02")
         count = cursor.fetchone()[0]
 
@@ -82,16 +85,20 @@ class Armazenar_lucros_02():
             insert_query = "INSERT INTO Lucros_02(lucro) VALUES (%s)"
             values = (valor,)
         else:
+            cursor.execute("SELECT lucro FROM Lucros_02")
+            lucro_existente = cursor.fetchone()[0]
+            if flag == '1':
+                novo_lucro = lucro_existente - float(valor)
+            else:
+                novo_lucro = lucro_existente + float(valor)
             update_query = "UPDATE Lucros_02 SET lucro = %s"
-            values = (valor,)
+            values = (novo_lucro,)
             insert_query = None
-
         try:
             if insert_query:
                 cursor.execute(insert_query, values)
             else:
                 cursor.execute(update_query, values)
-
             self.db_connection.commit()
             valid = True
         except mysql.connector.Error as err:
@@ -105,6 +112,12 @@ class Armazenar_lucros_02():
     def obter_lucro_total_02(self):
         """
         Retorna o maior valor de lucro armazenado na tabela 'Lucros_02'.
+        
+        Returns
+        -------
+        float
+        O maior valor de lucro armazenado na tabela 'Lucros_02'. Retorna 0.0 se ocorrer um erro ou se não houver registros.
+        
         """
         try:
             cursor = self.db_connection.cursor()

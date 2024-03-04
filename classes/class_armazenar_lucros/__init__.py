@@ -68,33 +68,33 @@ class Armazenar_lucros:
         cursor.close()
 
 
-    def armazenar_lucro(self, valor):
+    def armazenar_lucro(self, valor, flag):
         """
         Armazena o valor do lucro no banco de dados 'Lucros', atualizando ou inserindo conforme necessário.
         """
         cursor = self.db_connection.cursor()
         valid = False
-
-        # Verifica se já existe um registro na tabela
         cursor.execute("SELECT COUNT(*) FROM Lucros")
         count = cursor.fetchone()[0]
 
         if count == 0:
-            # Se não houver nenhum registro, insere um novo
             insert_query = "INSERT INTO Lucros(lucro) VALUES (%s)"
             values = (valor,)
         else:
-            # Se houver um registro, atualiza o valor existente
+            cursor.execute("SELECT lucro FROM Lucros")
+            lucro_existente = cursor.fetchone()[0]
+            if flag == '1':
+                novo_lucro = lucro_existente - float(valor)
+            else:
+                novo_lucro = lucro_existente + float(valor)
             update_query = "UPDATE Lucros SET lucro = %s"
-            values = (valor,)
+            values = (novo_lucro,)
             insert_query = None
-
         try:
             if insert_query:
                 cursor.execute(insert_query, values)
             else:
                 cursor.execute(update_query, values)
-
             self.db_connection.commit()
             valid = True
         except mysql.connector.Error as err:
@@ -103,7 +103,6 @@ class Armazenar_lucros:
             cursor.close()
 
         return valid
-
 
 
     def obter_lucro_total(self):

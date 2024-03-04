@@ -67,13 +67,19 @@ class Armazenar_lucros_03:
         cursor.close()
 
 
-    def armazenar_lucro_03(self, valor):
+    def armazenar_lucro_03(self, valor, flag):
         """
         Armazena o valor do lucro no banco de dados 'Lucros_03', atualizando ou inserindo conforme necessário.
+
+        Args:
+            valor (float): O valor do lucro a ser armazenado.
+            flag (str): Uma flag indicando se o lucro deve ser subtraído ('1') ou adicionado (outro valor).
+
+        Returns:
+            bool: True se o armazenamento for bem-sucedido, False em caso de erro.
         """
         cursor = self.db_connection.cursor()
         valid = False
-
         cursor.execute("SELECT COUNT(*) FROM Lucros_03")
         count = cursor.fetchone()[0]
 
@@ -81,16 +87,20 @@ class Armazenar_lucros_03:
             insert_query = "INSERT INTO Lucros_03(lucro) VALUES (%s)"
             values = (valor,)
         else:
+            cursor.execute("SELECT lucro FROM Lucros_03")
+            lucro_existente = cursor.fetchone()[0]
+            if flag == '1':
+                novo_lucro = lucro_existente - float(valor)
+            else:
+                novo_lucro = lucro_existente + float(valor)
             update_query = "UPDATE Lucros_03 SET lucro = %s"
-            values = (valor,)
+            values = (novo_lucro,)
             insert_query = None
-
         try:
             if insert_query:
                 cursor.execute(insert_query, values)
             else:
                 cursor.execute(update_query, values)
-
             self.db_connection.commit()
             valid = True
         except mysql.connector.Error as err:
@@ -104,6 +114,9 @@ class Armazenar_lucros_03:
     def obter_lucro_total_03(self):
         """
         Retorna o maior valor de lucro armazenado na tabela 'Lucros_03'.
+
+        Returns:
+            float: O maior valor de lucro encontrado na tabela 'Lucros_03' ou 0.0 se nenhum valor for encontrado ou em caso de erro.
         """
         try:
             cursor = self.db_connection.cursor()

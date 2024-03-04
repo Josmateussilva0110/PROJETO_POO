@@ -43,7 +43,7 @@ def menu(con, cliente):
     conectado = True
 
     while conectado:
-        mensagem = con.recv(1024).decode()
+        mensagem = con.recv(4096).decode()
         if mensagem == '0':
             conectado = False
 
@@ -162,54 +162,20 @@ def menu(con, cliente):
                 retorno = dados_usuarios.buscar_email_cpf(cpf)
                 con.send(retorno.encode())
 
+        #armazenar botão
         elif mensagem == '12':
             botao = con.recv(4096).decode()
-            
             # Buscar o botão no banco de dados
             validar = dados_botoes.buscar_botao(botao)
-
             if validar is None:
-                con.send('1'.encode())
-                # Armazenar o botão no banco de dados
-
-                dados_botoes.armazenar_botao(botao)
+                aux = dados_botoes.armazenar_botao(botao)
+                if aux:
+                    con.send('1'.encode())
             elif validar["validar"] == 0:
                 con.send('0'.encode())
-                # Adicione aqui a lógica específica para tratar o caso de validar == 0
             elif validar["validar"] == 1:
                 con.send('2'.encode())
         
-        #sinal para retornar para o cliente a lista de todos os botoes que foram clicados
-        elif mensagem == '13':
-            tela = con.recv(4096).decode()
-            if tela == '10':
-                lista_botoes = dados_botoes.obter_todos_botoes()
-            
-                if lista_botoes != None:
-                    con.send('1'.encode())
-                    lista_botoes_str = ','.join(lista_botoes)
-                    con.send(lista_botoes_str.encode())
-                else:
-                    con.send('0'.encode())
-            elif tela == '13':
-                lista_botoes = dados_botoes_02.obter_todos_botoes_02()
-            
-                if lista_botoes != None:
-                    con.send('1'.encode())
-                    lista_botoes_str = ','.join(lista_botoes)
-                    con.send(lista_botoes_str.encode())
-                else:
-                    con.send('0'.encode())
-            
-            elif tela == '14':
-                lista_botoes = dados_botoes_03.obter_todos_botoes_03()
-            
-                if lista_botoes != None:
-                    con.send('1'.encode())
-                    lista_botoes_str = ','.join(lista_botoes)
-                    con.send(lista_botoes_str.encode())
-                else:
-                    con.send('0'.encode())
                 
         elif mensagem == '14':
             lista_botoes = con.recv(4096).decode().split(',')  # Supondo que os botões estejam separados por vírgula
@@ -221,41 +187,25 @@ def menu(con, cliente):
                     # Atualizar o valor de 'validar' para 1 apenas para o último botão no banco de dados
                     if dados_botoes.atualizar_valido(ultimo_botao):
                         if dados_botoes.atualizar_cpf(cpf):
-                            # Enviar confirmação ao cliente
                             con.send('1'.encode())
                     else:
-                        # Enviar informação de erro ao cliente
                         con.send('0'.encode())
                 elif lista_botoes[1] == '13':
                     # Atualizar o valor de 'validar' para 1 apenas para o último botão no banco de dados
                     if dados_botoes_02.atualizar_valido_02(ultimo_botao):
                         if dados_botoes_02.atualizar_cpf_02(cpf):
-                            # Enviar confirmação ao cliente
                             con.send('1'.encode())
                     else:
-                        # Enviar informação de erro ao cliente
                         con.send('0'.encode())
                     
                 elif lista_botoes[1] == '14':
                     # Atualizar o valor de 'validar' para 1 apenas para o último botão no banco de dados
                     if dados_botoes_03.atualizar_valido_03(ultimo_botao):
                         if dados_botoes_03.atualizar_cpf_03(cpf):
-                            # Enviar confirmação ao cliente
                             con.send('1'.encode())
                     else:
-                        # Enviar informação de erro ao cliente
-                        con.send('0'.encode())
-                
-                elif lista_botoes[1] == '14':
-                    # Atualizar o valor de 'validar' para 1 apenas para o último botão no banco de dados
-                    if dados_botoes_03.atualizar_valido_03(ultimo_botao):
-                        # Enviar confirmação ao cliente
-                        con.send('1'.encode())
-                    else:
-                        # Enviar informação de erro ao cliente
                         con.send('0'.encode())
             else:
-                # Enviar informação de erro ao cliente
                 con.send('0'.encode())
             
             
@@ -279,7 +229,6 @@ def menu(con, cliente):
                     con.send('0'.encode())
             
             elif tela == '14':
-
                 lista_botoes_validos = dados_botoes_03.obter_botoes_validos_03()
                 if lista_botoes_validos != None:
                     con.send('1'.encode())
@@ -290,19 +239,14 @@ def menu(con, cliente):
         
         elif mensagem == '16':
             botao = con.recv(4096).decode()
-            
             # Buscar o botão no banco de dados
             validar = dados_botoes_02.buscar_botao_02(botao)
-            
             if validar is None:
-                con.send('1'.encode())
-                # Armazenar o botão no banco de dados
-
-                dados_botoes_02.armazenar_botao_02(botao)
-
+                aux = dados_botoes_02.armazenar_botao_02(botao)
+                if aux:
+                    con.send('1'.encode())
             elif validar["validar"] == 0:
                 con.send('0'.encode())
-                # Adicione aqui a lógica específica para tratar o caso de validar == 0
             elif validar["validar"] == 1:
                 con.send('2'.encode())
                 
@@ -323,27 +267,19 @@ def menu(con, cliente):
             lista_todos.append(cont_cliente)
             lista_todos.append(cont_filmes)
             lista_todos.append(cont_filmes_cartaz)  # Adicionado o contador de filmes em cartaz
-            lista_todos.append(total_lucro)
-            lista_todos.append(total_lucro_02)
-            lista_todos.append(total_lucro_03)
             con.send(','.join(lista_todos).encode())  # Enviando a lista como uma string separada por vírgulas
             
 
         elif mensagem == '18':
             botao = con.recv(4096).decode()
-            
             # Buscar o botão no banco de dados
             validar = dados_botoes_03.buscar_botao_03(botao)
-
             if validar is None:
-                con.send('1'.encode())
-                # Armazenar o botão no banco de dados
-
-                dados_botoes_03.armazenar_botao_03(botao)
-
+                aux = dados_botoes_03.armazenar_botao_03(botao)
+                if aux:
+                    con.send('1'.encode())
             elif validar["validar"] == 0:
                 con.send('0'.encode())
-                # Adicione aqui a lógica específica para tratar o caso de validar == 0
             elif validar["validar"] == 1:
                 con.send('2'.encode())
         
@@ -358,21 +294,25 @@ def menu(con, cliente):
 
             lista_completas_botoes = []
 
+            mapeamento_nomes = retornar_dicionario_botoes()
+
+
             if botoes_associados is not None:
-                lista_completas_botoes.extend([f'Sala 01: {botao}' for botao in botoes_associados])
+                lista_completas_botoes.extend([f'Sala 01 : {botao} - {mapeamento_nomes.get(botao,"Cadeira")}' for botao in botoes_associados])
 
             if botoes_associados_02 is not None:
-                lista_completas_botoes.extend([f'Sala 02: {botao}' for botao in botoes_associados_02])
+                lista_completas_botoes.extend([f'Sala 02 : {botao} - {mapeamento_nomes.get(botao, "Cadeira Desconhecida")}' for botao in botoes_associados_02])
 
             if botoes_associados_03 is not None:
-                lista_completas_botoes.extend([f'Sala 03: {botao}' for botao in botoes_associados_03])
+                lista_completas_botoes.extend([f'Sala 03 : {botao} - {mapeamento_nomes.get(botao, "Cadeira Desconhecida")}' for botao in botoes_associados_03])
 
             if not lista_completas_botoes:
                 con.send('0'.encode())
             else:
                 enviar_lista = ','.join(map(str, lista_completas_botoes))
                 con.send(enviar_lista.encode())
-                # Faça aqui o que desejar com a lista de botões associados
+
+
                 
         elif mensagem == '20':
             dados = con.recv(4096).decode()
@@ -381,19 +321,22 @@ def menu(con, cliente):
             # Verificar se há pelo menos um botão na lista
             if dados_partes[0]:
                 botao = dados_partes[0]
-                botao_procurar = botao[9:]
+                botao_procurar = botao[8:]
                 if sala[6] == '1':
-                    dados_botoes.Exclui_Reserva(botao_procurar)
+                    if dados_botoes.Exclui_Reserva(botao_procurar):
+                        con.send('10'.encode())
                 elif sala[6] == '2':
-                    dados_botoes_02.Exclui_Reserva_02(botao_procurar)
+                    if dados_botoes_02.Exclui_Reserva_02(botao_procurar):
+                        con.send('10'.encode())
                 elif sala[6] == '3':
-                    dados_botoes_03.Exclui_Reserva_03(botao_procurar)
+                    if dados_botoes_03.Exclui_Reserva_03(botao_procurar):
+                        con.send('10'.encode())
         
         elif mensagem == '21':
             botao = con.recv(4096).decode()
             str_dado = str(botao)
             sala = str_dado[6]
-            botao_buscar = str_dado[9:]
+            botao_buscar = str_dado[8:]
             if sala == '1':
                 aux = dados_botoes.buscar_botao(botao_buscar)
                 if aux != None:
@@ -408,31 +351,38 @@ def menu(con, cliente):
                     con.send('14'.encode())
             
         elif mensagem == '22':
-            lista = list()
             receber = con.recv(4096).decode()
             valores_partes = receber.split(',')
-            valor = valores_partes[0]
-            valor_02 = valores_partes[1]
-            valor_03 = valores_partes[2]
-            lucros.armazenar_lucro(valor)
-            lucros_02.armazenar_lucro_02(valor_02)
-            lucros_03.armazenar_lucro_03(valor_03)
-            
+            tela = valores_partes[0]
+            lucro = valores_partes[1]
+            flag = valores_partes[2]
+            if tela == '10':
+                lucros.armazenar_lucro(lucro, flag)
+            elif tela == '13':
+                lucros_02.armazenar_lucro_02(lucro, flag)
+            elif tela == '14':
+                lucros_03.armazenar_lucro_03(lucro, flag)
+        
         elif mensagem == '23':
             cpf = con.recv(4096).decode()
-            print(cpf)
             if dados_usuarios.buscar_cliente_cpf(cpf):
                 pessoa = dados_usuarios.buscar_cliente_cpf(cpf)
                 pessoa = str(pessoa)
-                print('entrou aqui')
-                print(pessoa)
             if dados_usuarios.buscar_gerente_cpf(cpf):
                 pessoa = dados_usuarios.buscar_gerente_cpf(cpf)
-                pessoa = str(pessoa)
-                print('entrou aqui')
-                print(pessoa)
-                
+                pessoa = str(pessoa)    
             con.send(pessoa.encode())
+        
+        elif mensagem == '24':
+            lista = list()
+            total_lucro = lucros.obter_lucro_total()
+            total_lucro_02 = lucros_02.obter_lucro_total_02()
+            total_lucro_03 = lucros_03.obter_lucro_total_03()
+            lista.append(str(total_lucro))
+            lista.append(str(total_lucro_02))
+            lista.append(str(total_lucro_03))
+            enviar_cliente = ','.join(lista)
+            con.send(enviar_cliente.encode())
             
             
 

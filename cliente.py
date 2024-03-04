@@ -2,6 +2,7 @@ import sys
 import socket
 import random
 import math
+import hashlib
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox, QInputDialog
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QStringListModel
@@ -14,6 +15,7 @@ from TELA_GESTAO_FILMES_ui import *#
 from TELA_CADASTRO_FILMES import *#
 from TELA_LISTA_FILMES_ui import *#
 from TELA_EXCLUIR_FILME_ui import *
+
 from TELA_EXCLUIR_RESERVA_ui import *
 from TELA_CLIENTE_VER_FILMES_ui import *
 from TELA_LAYOUT import *
@@ -24,7 +26,7 @@ from Cartao_ui import *
 from classes.funcoes_aux import *
 
 
-ip = '10.180.42.249'
+ip = '10.180.43.63'
 porta = 8007
 addr = ((ip,porta))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -384,6 +386,12 @@ class Ui_Main(QMainWindow, Main):
         """
         self.QtStack.setCurrentIndex(1)
     
+    def abrirTelaDPSLoginCli(self):
+        """
+        Abre a tela correspondente aos clientes após o login.
+        """
+        self.QtStack.setCurrentIndex(2)
+    
     def abrirLoginFunc(self):
         """
         Abre a tela de Login do Gerente.
@@ -446,7 +454,6 @@ class Ui_Main(QMainWindow, Main):
                 if nome_achado != None:
                     self.saida = nome_achado
                 QtWidgets.QMessageBox.information(self, 'login', 'Login cliente realizado com sucesso.')
-                print('cpf user:',self.cpf_do_usuario)
                 client_socket.send('23'.encode())
                 client_socket.send(self.cpf_do_usuario.encode())
                 nome_pessoa = client_socket.recv(4096).decode()
@@ -454,11 +461,10 @@ class Ui_Main(QMainWindow, Main):
                 self.QtStack.setCurrentIndex(2)
             elif retorno == '3':
                 QtWidgets.QMessageBox.information(self, 'login', 'Login gerente realizado com sucesso.')
-                print('cpf user:',self.cpf_do_usuario)
                 client_socket.send('23'.encode())
                 client_socket.send(self.cpf_do_usuario.encode())
                 nome_pessoa = client_socket.recv(4096).decode()
-                self.TELA_GERENCIAMENTO_ui.label_4.setText(nome_pessoa)
+                self.TELA_DPS_LOGIN_FUNC_ui.label_4.setText(nome_pessoa)
                 self.QtStack.setCurrentIndex(3)
             else:
                 QMessageBox.information(self, 'erro', 'Preencha os dados corretamente.!')
@@ -497,10 +503,11 @@ class Ui_Main(QMainWindow, Main):
         else:
             client_socket.send('1'.encode())
             lista_dados = list()
+            hashed_senha = hashlib.md5(senha.encode()).hexdigest()
             lista_dados.append(nome)
             lista_dados.append(cpf)
             lista_dados.append(email)
-            lista_dados.append(senha)
+            lista_dados.append(hashed_senha)
             dados = ",".join(lista_dados)
             client_socket.send(dados.encode())
             try:
@@ -677,6 +684,14 @@ class Ui_Main(QMainWindow, Main):
 ###############################################################################################################
             
     def item_selecionado_lista_filmes(self, index):
+        """Método usado para o gerente adicionar um filme em cartaz
+
+        Parameters
+        ----------
+        index : str
+            Index representa o filme selecionado pelo gerente
+        """
+
         if index.isValid():
             item_selecionado = index.data()
 
@@ -743,6 +758,8 @@ class Ui_Main(QMainWindow, Main):
 
             
     def botao_buscar(self):
+        """Método usado para buscar um determinado filme"""
+
         client_socket.send('8'.encode())
         filme_id = self.TELA_LISTA_FILMES_ui.lineEdit_2.text()
         client_socket.send(filme_id.encode())
@@ -767,6 +784,8 @@ class Ui_Main(QMainWindow, Main):
                 QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
         
     def carregar_lista_completa_filmes(self):
+        """Método usado para exibir todos os filmes cadastrados"""
+
         client_socket.send('4'.encode())
         filmes = client_socket.recv(4096).decode()
         if filmes:
@@ -784,6 +803,8 @@ class Ui_Main(QMainWindow, Main):
         
 
     def carregar_filmes_em_cartaz(self):
+        """Método usado para exibir todos os filmes em cartaz"""
+
         client_socket.send('7'.encode())  
         try:
             filmes = client_socket.recv(4096).decode()
@@ -805,6 +826,14 @@ class Ui_Main(QMainWindow, Main):
     
 
     def item_selecionado_Excluir_filmes(self, index):
+        """Método usado para o gerente retirar um filme do cartaz
+
+        Parameters
+        ----------
+        index : str
+            Index representa o filme selecionado pelo gerente
+        """
+
         if index.isValid():
             item_selecionado = index.data()
 
@@ -863,6 +892,8 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.information(self, 'Itens Filme', 'Nenhum item selecionado.')
             
     def botao_buscar_tela_excluir(self):
+        """Método usado para exibir todos os filmes em cartaz"""
+
         client_socket.send('9'.encode())
         filme_id = self.TELA_EXCUIR_FILME_ui.lineEdit_4.text()
         client_socket.send(filme_id.encode())
@@ -882,6 +913,7 @@ class Ui_Main(QMainWindow, Main):
             QtWidgets.QMessageBox.information(self, 'Buscar Filme', 'Nenhum filme com o ID especificado foi encontrado.')
                 
     def Tela_Cliente_Ver_Filmes(self):
+        """Método usado para carregar todos os filmes em cartaz para o cliente"""
     # Obtenha a lista de filmes do banco de dados
         client_socket.send('7'.encode())
         try:
@@ -900,6 +932,8 @@ class Ui_Main(QMainWindow, Main):
     
 
     def item_selecionado_lista_filmes_cliente(self, index):
+        """Método usado para o cliente selecionar um filme que deseja comprar e escolher sua poltrona"""
+
         # Obtenha o item selecionado na QListView
         if index.isValid():
             item_selecionado = index.data()
@@ -964,14 +998,11 @@ class Ui_Main(QMainWindow, Main):
                         client_socket.send('15'.encode()) #sinal para pegar a lista de botoes que estão no servidor
                         tela = str(self.tela_para_exibir)
                         client_socket.send(tela.encode()) 
-                        try:
-                            mensagem = client_socket.recv(4096).decode()
-                        except:
-                            
-                            client_socket.close()
+                        mensagem = client_socket.recv(4096).decode()
                         if mensagem == '1': # encontrei os botoes
                             botoa_achado = client_socket.recv(4096).decode()
                             botoes_tela_lay = lista_botoes_tela_layout(self, self.tela_para_exibir)
+                            print()
                             mudar_cor_botao_vermelho_valido(botoes_tela_lay, botoa_achado) # esta em funções aux.py
                         if self.tela_para_exibir == 10:
                             self.QtStack.setCurrentIndex(10)
@@ -985,6 +1016,8 @@ class Ui_Main(QMainWindow, Main):
                 QtWidgets.QMessageBox.information(self, 'Lista de Filmes', 'Nenhum filme selecionado.')
     
     def Tela_Cliente_botao_buscar(self):
+        """Método usado para buscar um filme para o cliente"""
+
         client_socket.send('9'.encode())
         filme_id = self.TELA_CLIENTE_VER_FILMES_ui.lineEdit_2.text()
         client_socket.send(filme_id.encode())
@@ -1005,6 +1038,14 @@ class Ui_Main(QMainWindow, Main):
     
             
     def ir_tela_pagamento(self, button):
+        """Método usado para armazenar a poltrona que o cliente escolher
+
+        Parameters
+        ----------
+        button : str
+            button representa o botão selecionado pelo cliente
+        """
+
         op = QtWidgets.QMessageBox.question(
             self, 'Seleção', 'Finalizar escolha?',
             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No
@@ -1014,22 +1055,15 @@ class Ui_Main(QMainWindow, Main):
                 self.botao_id = button.objectName() 
                 client_socket.send('12'.encode())
                 client_socket.send(self.botao_id.encode())
-                # self.soma_tela_1 += self.total_compra
             elif self.tela_para_exibir == 13:
                 self.botao_id = button.objectName() 
                 client_socket.send('16'.encode())
                 client_socket.send(self.botao_id.encode())
-                # self.soma_tela_2 += self.total_compra
             elif self.tela_para_exibir == 14:
                 self.botao_id = button.objectName() 
                 client_socket.send('18'.encode())
                 client_socket.send(self.botao_id.encode())
-            try:
-                resposta = client_socket.recv(4096).decode()
-            except:
-                
-                client_socket.close()   
-                
+            resposta = client_socket.recv(4096).decode()        
             if resposta == '2':
                   QtWidgets.QMessageBox.information(self, 'Compra', 'Acento ja escolhido.')
             else:
@@ -1037,6 +1071,8 @@ class Ui_Main(QMainWindow, Main):
 
             
     def escolheuPix(self):
+        """Método que representa a forma de pagamento pix e enviar o comprovante por e-mail"""
+
         cpf = self.cpf_do_usuario
         client_socket.send('11'.encode())
         client_socket.send(cpf.encode())
@@ -1064,7 +1100,6 @@ class Ui_Main(QMainWindow, Main):
             self.dados_clienete.append(self.itens_filme[9])
             self.dados_clienete.append(self.horarios_cliente)
             mensagem = formatar_mensagem(self.dados_clienete, self.total_compra, self.tela_para_exibir)
-                
             EnviaEmail(email,mensagem)
             QtWidgets.QMessageBox.information(self, 'Opção de Pagamento', f'Obrigado pela compra, comprovante enviado por email')
             self.dados_clienete.clear()
@@ -1072,26 +1107,20 @@ class Ui_Main(QMainWindow, Main):
             processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
             chave = self.total_compra
             atualizar_frequencia(self, chave, self.tela_para_exibir)
+            flag = 0
             valores = list()
-            total = total_02 = total_03 = 0.0
-            for i, v in self.frequencia_valores.items():
-                total += i * v["frequencia"]
-            for i, v in self.frequencia_valores_02.items():
-                total_02 += i * v["frequencia"]
-            for i, v in self.frequencia_valores_03.items():
-                total_03 += i * v["frequencia"]
-            valores.append(str(total))
-            valores.append(str(total_02))
-            valores.append(str(total_03))
+            valores.append(str(self.tela_para_exibir))
+            valores.append(str(self.total_compra))
+            valores.append(str(flag))
             enviar = ','.join(valores)
             client_socket.send('22'.encode())
             client_socket.send(enviar.encode())
-            
-            
-        self.QtStack.setCurrentIndex(2)
+            self.QtStack.setCurrentIndex(2)
         
         
     def botaoconfirmartelacartao(self):
+        """Método que representa a forma de pagamento cartão e enviar o comprovante por e-mail"""
+
         valid = cancelou = False
         nome_cliente = self.Cartao_ui.lineEdit.text()
         numero_cartao = self.Cartao_ui.lineEdit_5.text()
@@ -1151,17 +1180,11 @@ class Ui_Main(QMainWindow, Main):
                     processar_dados_do_botao(client_socket, self.tela_para_exibir, self.botao_id, botoes_tela_lay)
                     chave = self.total_compra
                     atualizar_frequencia(self, chave, self.tela_para_exibir)
+                    flag = 0
                     valores = list()
-                    total = total_02 = total_03 = 0.0
-                    for i, v in self.frequencia_valores.items():
-                        total += i * v["frequencia"]
-                    for i, v in self.frequencia_valores_02.items():
-                        total_02 += i * v["frequencia"]
-                    for i, v in self.frequencia_valores_03.items():
-                        total_03 += i * v["frequencia"]
-                    valores.append(str(total))
-                    valores.append(str(total_02))
-                    valores.append(str(total_03))
+                    valores.append(str(self.tela_para_exibir))
+                    valores.append(str(self.total_compra))
+                    valores.append(str(flag))
                     enviar = ','.join(valores)
                     client_socket.send('22'.encode())
                     client_socket.send(enviar.encode())
@@ -1174,13 +1197,14 @@ class Ui_Main(QMainWindow, Main):
       
     ##Direciona para a tela de excluir_Reserva          
     def ir_tela_Excluir_Reserva(self):
+        """Método que exibe todas as poltronas para o cliente excluir"""
+
         client_socket.send('19'.encode())
         tela = str(self.tela_para_exibir)
         lista_dados = [self.cpf_do_usuario, tela]
         dados = ','.join(lista_dados)
         client_socket.send(dados.encode())
-        botoes = client_socket.recv(4096).decode()
-        
+        botoes = client_socket.recv(4096).decode()    
         if botoes != '0':
             lista_botoes = botoes.split(',')  # Converta a string de botões em uma lista
 
@@ -1191,11 +1215,15 @@ class Ui_Main(QMainWindow, Main):
             current_sala = None
             for botao in lista_botoes:
                 if botao.startswith('Sala'):
-                    current_sala = QStandardItem(botao)
+                    aux = str(botao)
+                    b = aux[:8]
+                    c = aux[25:]
+                    d = b + c
+                    current_sala = QStandardItem(d)
                     model.appendRow(current_sala)
                 else:
                     if current_sala is not None:
-                        current_sala.appendRow(QStandardItem(botao))
+                        current_sala.appendRow(QStandardItem(d))
 
             # Configure o modelo no QListView
             self.TELA_EXCLUIR_RESERVA_ui.listView.setModel(model)
@@ -1207,6 +1235,8 @@ class Ui_Main(QMainWindow, Main):
         
     
     def item_selecionado_Excluir_Reserva(self, index):
+        """Método usado para o cliente selecionar uma poltrona e excluir sua reserva"""
+
         # Obtenha o item selecionado
         selected_index = index.row()
 
@@ -1225,43 +1255,47 @@ class Ui_Main(QMainWindow, Main):
 
             # Verifique a resposta do usuário
             if resposta == QtWidgets.QMessageBox.Yes:
+                separa = item_selecionado.split(" ")
+                numero_cadeira = separa[-1]
+                cad = f'Cadeira ' + numero_cadeira
+                dici = retornar_dicionario_botoes()
+                bot = retornar_botao_dicionario(cad, dici)
+                sala = item_selecionado[:8]
+                bot_enviar = sala + bot
                 lista_dados = list()
                 client_socket.send('21'.encode())
-                str_botao = str(item_selecionado)
-                botao_servidor = str_botao[9:]
-                client_socket.send(str_botao.encode())
+                client_socket.send(str(bot_enviar).encode())
                 tela = client_socket.recv(4096).decode()
                 int_tela = int(tela)
                 botoes_tela_lay = lista_botoes_tela_layout(self, int_tela)
-                pintar_botao_verde_excluido(botoes_tela_lay,botao_servidor)
+                pintar_botao_verde_excluido(botoes_tela_lay,bot)
                 client_socket.send('20'.encode())
                 str_tela = str(tela)
-                lista_dados.append(str_botao)
+                lista_dados.append(bot_enviar)
                 lista_dados.append(str_tela)
                 dados = ','.join(lista_dados)
                 client_socket.send(dados.encode())
-                desatualizar_frequencia(self, str_tela, botao_servidor)
-                print("Tela estatistica")
-                valores = list()
-                total = total_02 = total_03 = 0.0
-                for i, v in self.frequencia_valores.items():
-                    total -= i * v["frequencia"]
-                for i, v in self.frequencia_valores_02.items():
-                    total_02 -= i * v["frequencia"]
-                for i, v in self.frequencia_valores_03.items():
-                    total_03 -= i * v["frequencia"]
-                valores.append(str(total))
-                valores.append(str(total_02))
-                valores.append(str(total_03))
-                enviar = ','.join(valores)
+                confirmacao = client_socket.recv(4096).decode()
+                if confirmacao == '10':
+                    QtWidgets.QMessageBox.information(self, 'Excluir', 'reserva excluída com sucesso.')  
+                else:
+                    QtWidgets.QMessageBox.information(self, 'Excluir', 'erro ao excluir.') 
+                valor_excluido = desatualizar_frequencia(self, str_tela, bot)
+                flag = 1
+                lista = list()
+                lista.append(str_tela)
+                lista.append(str(valor_excluido))
+                lista.append(str(flag))
+                enviar_ser = ','.join(lista)
                 client_socket.send('22'.encode())
-                client_socket.send(enviar.encode())
+                client_socket.send(enviar_ser.encode())
                 self.QtStack.setCurrentIndex(2)
             else:
                 QtWidgets.QMessageBox.warning(self, 'Aviso', 'Nenhum item selecionado.')
             
     def Tela_Estatistica(self):
-        print("Tela estatistica")
+        """Método usado para exibir todos os dados de compra para o gerente"""
+
         client_socket.send('17'.encode())
         try:
             retorno = client_socket.recv(4096).decode()
@@ -1282,14 +1316,10 @@ class Ui_Main(QMainWindow, Main):
             cont_cliente = cont_cliente.strip(" '[]")
             cont_filmes = cont_filmes.strip(" '[]")
             cont_filmes_cartaz = cont_filmes_cartaz.strip(" '[]")
-            total_lucro = total_lucro.strip(" '[]")
-            total_lucro_02 = total_lucro_02.strip(" '[]")
-            total_lucro_03 = total_lucro_03.strip(" '[]")
-        
-           
-            renda_total = float(total_lucro) + float(total_lucro_02) + float(total_lucro_03)
-            
-            
+            client_socket.send('24'.encode())
+            totais_de_lucro = client_socket.recv(4096).decode()
+            partes_totais = totais_de_lucro.split(',')
+            renda_total = float(partes_totais[0]) + float(partes_totais[1]) + float(partes_totais[2])
             self.TELA_ESTATISTICA_ui.lineEdit.setText(f"{cont_cliente}")
             self.TELA_ESTATISTICA_ui.lineEdit_4.setText(f"{cont_filmes}")
             self.TELA_ESTATISTICA_ui.lineEdit_2.setText(f"{cont_filmes_cartaz}")

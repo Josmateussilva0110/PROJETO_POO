@@ -1,6 +1,46 @@
 import mysql.connector
 
 class Armazenar_botoes_03():
+    """
+    Classe responsável por gerenciar o armazenamento e manipulação de dados relacionados aos botões na tabela Botoes_03
+    do banco de dados 'Cineplus'.
+
+    Attributes
+    ----------
+    db_connection : mysql.connector.connection.MySQLConnection
+        Conexão com o banco de dados MySQL.
+
+    Methods
+    -------
+    drop_tabela_botoes_03():
+        Verifica e exclui a tabela Botoes_03 se ela existir no banco de dados 'Cineplus'.
+    criar_tabela_botoes_03():
+        Cria a tabela Botoes_03 no banco de dados 'Cineplus' se ela ainda não existir.
+    armazenar_botao_02(botao):
+        Armazena um botão na tabela Botoes_03, substituindo se já existir e não tiver sido validado.
+    buscar_botao_03(botao):
+        Busca um botão na tabela Botoes_03 pelo seu nome (identificador único).
+        Retorna um dicionário representando a linha correspondente, ou None se não encontrado.
+    obter_todos_botoes_03():
+        Obtém uma lista de todos os nomes de botões na tabela Botoes_03.
+        Retorna None se não houver botões.
+    obter_botoes_validos_03():
+        Obtém uma lista de nomes de botões válidos (com o campo 'validar' igual a 1) na tabela Botoes_03.
+        Retorna None se não houver botões válidos.
+    atualizar_valido_03(nome_botao):
+        Atualiza o valor 'validar' para 1 para um botão específico na tabela Botoes_03.
+        Retorna True se a atualização for bem-sucedida, False em caso de erro.
+    atualizar_cpf_03(novo_cpf):
+        Atualiza o valor 'cpf' para o novo valor na tabela Botoes_03 onde 'cpf' é igual a 0.
+        Retorna True se a atualização for bem-sucedida, False em caso de erro.
+    obter_botoes_por_cpf_03(cpf):
+        Obtém uma lista de nomes de botões associados a um CPF específico na tabela Botoes_03.
+        Retorna None se nenhum botão estiver associado ao CPF ou em caso de erro.
+    Exclui_Reserva_03(nome_botao):
+        Exclui a linha correspondente a um botão específico na tabela Botoes_03.
+        Retorna True se a exclusão for bem-sucedida, False em caso de erro.
+    """
+
     def __init__(self, db_connection):
         self.db_connection = db_connection
         self.drop_tabela_botoes_03()
@@ -9,6 +49,10 @@ class Armazenar_botoes_03():
     
     
     def drop_tabela_botoes_03(self):
+        """
+        Verifica e exclui a tabela Botoes_03 se ela existir no banco de dados
+        """
+
         cursor = self.db_connection.cursor()
 
         try:
@@ -28,6 +72,10 @@ class Armazenar_botoes_03():
 
 
     def criar_tabela_botoes_03(self):
+        """
+        Cria a tabela Botoes_03 no banco de dados se ela ainda não existir.
+        """
+
         # Use o banco de dados 'Cineplus'
         cursor = self.db_connection.cursor()
         cursor.execute("USE Cineplus")
@@ -46,6 +94,16 @@ class Armazenar_botoes_03():
 
 
     def armazenar_botao_03(self, botao):
+        """
+        Armazena um botão na tabela Botoes_03, substituindo se já existir e não tiver sido validado.
+
+        Args:
+            botao (str): O código do botão a ser armazenado.
+
+        Returns:
+            bool: True se o armazenamento for bem-sucedido, False se houver um erro.
+        """
+
         cursor = self.db_connection.cursor()
         
         # Verificar se o botão já existe no banco de dados
@@ -74,6 +132,16 @@ class Armazenar_botoes_03():
 
 
     def buscar_botao_03(self, botao):
+        """
+        Busca um botão na tabela Botoes_03 pelo seu nome (identificador único).
+
+        Args:
+            botao (str): O código do botão a ser buscado.
+
+        Returns:
+            dict or None: Um dicionário representando os detalhes do botão se encontrado, ou None se não encontrado.
+        """
+
         cursor = self.db_connection.cursor(dictionary=True)  # Usar dictionary=True para obter resultados como dicionários
         select_query = "SELECT * FROM Botoes_03 WHERE botao = %s"
         
@@ -92,6 +160,13 @@ class Armazenar_botoes_03():
 
 
     def obter_todos_botoes_03(self):
+        """
+        Obtém uma lista de todos os nomes de botões na tabela Botoes_03.
+
+        Returns:
+            list or None: Uma lista contendo todos os nomes de botões se encontrados, ou None se nenhum botão for encontrado.
+        """
+
         cursor = self.db_connection.cursor()
 
         select_query = "SELECT botao FROM Botoes_03"
@@ -111,6 +186,13 @@ class Armazenar_botoes_03():
 
 
     def obter_botoes_validos_03(self):
+        """
+        Obtém uma lista de nomes de botões válidos (com o campo 'validar' igual a 1) na tabela Botoes_03.
+
+        Returns:
+            list or None: Uma lista contendo os nomes de botões válidos se encontrados, ou None se nenhum botão válido for encontrado.
+        """
+
         cursor = self.db_connection.cursor()
 
         select_query = "SELECT botao FROM Botoes_03 WHERE validar = 1"
@@ -132,6 +214,16 @@ class Armazenar_botoes_03():
 
 
     def atualizar_valido_03(self, nome_botao):
+        """
+        Atualiza o valor 'validar' para 1 para um botão específico na tabela Botoes_03.
+        
+        Args:
+            nome_botao (str): O nome do botão a ser atualizado.
+
+        Returns:
+            bool: True se a atualização for bem-sucedida, False em caso de erro.
+        """
+
         cursor = self.db_connection.cursor()
 
         try:
@@ -139,7 +231,6 @@ class Armazenar_botoes_03():
             update_query = "UPDATE Botoes_03 SET validar = 1 WHERE botao = %s"
             cursor.execute(update_query, (nome_botao,))
             self.db_connection.commit()
-            
             return True
         except mysql.connector.Error as err:
             return False
@@ -148,6 +239,15 @@ class Armazenar_botoes_03():
     
 
     def atualizar_cpf_03(self, novo_cpf):
+        """
+        Atualiza o valor 'cpf' para o novo valor na tabela Botoes_03 onde 'cpf' é igual a 0.
+
+        Args:
+            novo_cpf (str): O novo valor para o campo 'cpf'.
+
+        Returns:
+            bool: True se a atualização for bem-sucedida, False em caso de erro.
+        """
         cursor = self.db_connection.cursor()
 
         try:
@@ -162,6 +262,16 @@ class Armazenar_botoes_03():
             cursor.close()
 
     def obter_botoes_por_cpf_03(self, cpf):
+        """
+        Obtém uma lista de nomes de botões associados a um CPF específico na tabela Botoes_03.
+
+        Args:
+            cpf (str): O CPF para o qual buscar os botões associados.
+
+        Returns:
+            list or None: Uma lista contendo os nomes de botões associados ao CPF se encontrados, ou None se nenhum botão estiver associado ao CPF ou em caso de erro.
+        """
+
         cursor = self.db_connection.cursor()
 
         select_query = "SELECT botao FROM Botoes_03 WHERE cpf = %s"
@@ -183,6 +293,16 @@ class Armazenar_botoes_03():
 
 
     def Exclui_Reserva_03(self, nome_botao):
+        """
+        Exclui a linha correspondente a um botão específico na tabela Botoes_03.
+
+        Args:
+            nome_botao (str): O nome do botão a ser excluído.
+
+        Returns:
+            bool: True se a exclusão for bem-sucedida, False em caso de erro.
+        """
+        
         cursor = self.db_connection.cursor()
         try:
             # Excluir a linha correspondente ao botão específico

@@ -1,6 +1,39 @@
 import mysql.connector
+import hashlib
 
 class Armazenar:
+    """
+    Classe responsável por gerenciar o armazenamento de gerentes e clientes no banco de dados.
+
+    Attributes
+    ----------
+    db_connection: mysql.connector.connection.MySQLConnection
+        Conexão com o banco de dados MySQL.
+
+    Methods
+    -------
+    create_users_table()
+        Cria a tabela de usuários no banco de dados 'Cineplus'.
+    cria_gerente()
+        Cria a tabela de gerentes no banco de dados 'Cineplus'.
+    inserir_gerente1()
+        Inicia o banco de dados com gerentes cadastrados.
+    armazenar(pessoa)
+        Armazena um novo cliente no banco de dados.
+        Retorna True se o armazenamento for bem-sucedido, False se o CPF já existir.
+    verificar_login_Cliente(cpf, senha)
+        Verifica no banco de dados se o CPF do cliente está armazenado.
+    verificar_login_Ger(cpf, senha)
+        Verifica no banco de dados se o CPF do gerente está armazenado.
+    buscar_cliente_cpf(cpf)
+        Procura um cliente no banco de dados a partir de seu CPF.
+    buscar_gerente_cpf(cpf)
+        Procura um gerente no banco de dados a partir de seu CPF.
+    buscar_email_cpf(cpf)
+        Procura o email de um cliente armazenado no banco de dados.
+    contar_pessoas_cadastradas()
+        Retorna a quantidade de pessoas cadastradas no banco de dados 'Cineplus'.
+    """
     def __init__(self, db_connection):
         self.db_connection = db_connection
         self.create_users_table()
@@ -8,6 +41,8 @@ class Armazenar:
         self.inserir_gerente1()
 
     def create_users_table(self):
+        """Cria a tabela de usuários"""
+
         # Use o banco de dados 'Cineplus'
         cursor = self.db_connection.cursor()
         cursor.execute("USE Cineplus")
@@ -26,6 +61,8 @@ class Armazenar:
         cursor.close()
 
     def cria_gerente(self):
+        """Cria a tabela de gerentes"""
+
         # Use o banco de dados 'Cineplus'
         cursor = self.db_connection.cursor()
         cursor.execute("USE Cineplus")
@@ -44,6 +81,8 @@ class Armazenar:
         cursor.close()
 
     def inserir_gerente1(self):
+        """Inicia o banco de dados com gerentes cadastrados"""
+
         cursor = self.db_connection.cursor()
         cpf = '777'  # CPF do gerente a ser inserido
         select_query = "SELECT cpf FROM Gerencia WHERE cpf = %s"
@@ -59,22 +98,32 @@ class Armazenar:
             nome = 'rai'
             email = 'raileal_gerente@gmail.com'
             senha = '777'
+            hash_senha = hashlib.md5(senha.encode()).hexdigest()
             insert_query = "INSERT INTO Gerencia (nome, cpf, email, senha) VALUES (%s, %s, %s, %s)"
-            values = (nome, cpf, email, senha)
+            values = (nome, cpf, email, hash_senha)
             cursor.execute(insert_query, values)
             
         if not existing_gerente_cpf1:
             nome1 = 'mateus'
             email1 = 'mateus_gerente@gmail.com'
             senha1 = '111'
+            hash_senha1 = hashlib.md5(senha1.encode()).hexdigest()
             insert_query1 = "INSERT INTO Gerencia (nome, cpf, email, senha) VALUES (%s, %s, %s, %s)"
-            values1 = (nome1, cpf1, email1, senha1)
+            values1 = (nome1, cpf1, email1, hash_senha1)
             cursor1.execute(insert_query1, values1)
 
         # Certifique-se de fechar o cursor
         cursor.close()
 
     def armazenar(self, pessoa):
+        """Armazena um novo gerente no banco de dados
+        
+        Returns
+        -------
+        bool
+        Retorna True se o gerente for armazenado com sucesso, False se o CPF já existir no banco de dados ou em caso de erro.
+        """
+
         cursor = self.db_connection.cursor()
 
         # Verifica se o CPF já existe nos usuários
@@ -105,26 +154,69 @@ class Armazenar:
 
 
     def verificar_login_Cliente(self, cpf, senha):
+        """Verifica no banco de dados se o CPF do cliente está armazenado.
+        
+        Returns
+        -------
+        bool
+        Retorna True se o login for bem-sucedido (CPF encontrado e senha correta), False caso contrário.
+        """
+
         cursor = self.db_connection.cursor()
-        select_query = "SELECT * FROM Usuarios WHERE cpf = %s AND senha = %s"
-        values = (cpf, senha)
-        cursor.execute(select_query, values)
+        select_query = "SELECT * FROM Usuarios WHERE cpf = %s"
+        cursor.execute(select_query, (cpf,))
         result = cursor.fetchone()
+
+        if result is not None:
+            stored_hashed_senha = result[4] 
+            input_hashed_senha = hashlib.md5(senha.encode()).hexdigest()
+
+            if stored_hashed_senha == input_hashed_senha:
+                # As senhas coincidem, o login é bem-sucedido
+                cursor.close()
+                return True
+
+        # CPF não encontrado ou senha incorreta
         cursor.close()
-        return result is not None
+        return False
    
 
     def verificar_login_Ger(self, cpf, senha):
+        """Verifica no banco de dados se o CPF do gerente esta armazenado
+        Returns
+        -------
+        bool
+        Retorna True se o login for bem-sucedido (CPF encontrado e senha correta), False caso contrário.
+        """
+
         cursor = self.db_connection.cursor()
-        select_query = "SELECT * FROM Gerencia WHERE cpf = %s AND senha = %s"
-        values = (cpf, senha)
-        cursor.execute(select_query, values)
+        select_query = "SELECT * FROM Gerencia WHERE cpf = %s"
+        cursor.execute(select_query, (cpf,))
         result = cursor.fetchone()
-        #self.db_connection.close()
-        return result is not None
+
+        if result is not None:
+            stored_hashed_senha = result[4] 
+            input_hashed_senha = hashlib.md5(senha.encode()).hexdigest()
+
+            if stored_hashed_senha == input_hashed_senha:
+                # As senhas coincidem, o login é bem-sucedido
+                cursor.close()
+                return True
+
+        # CPF não encontrado ou senha incorreta
+        cursor.close()
+        return False
 
 
     def buscar_cliente_cpf(self, cpf):
+        """Procura um cliente no banco de dados a partir de seu cpf
+        
+            Returns
+        -------
+        str or None
+        Retorna o nome do cliente se encontrado, None se o cliente não for encontrado.
+        """
+
         cursor = self.db_connection.cursor()
         select_query = "SELECT nome FROM Usuarios WHERE cpf = %s"
         values = (cpf,)
@@ -134,6 +226,14 @@ class Armazenar:
         return result[0] if result else None
     
     def buscar_gerente_cpf(self, cpf):
+        """Procura um gerente no banco de dados a partir de seu cpf
+        
+        Returns
+        -------
+        str or None
+        Retorna o nome do gerente se encontrado, None se o gerente não for encontrado.
+        """
+
         cursor = self.db_connection.cursor()
         select_query = "SELECT nome FROM Gerencia WHERE cpf = %s"
         values = (cpf,)
@@ -143,6 +243,14 @@ class Armazenar:
         return result[0] if result else None
     
     def buscar_email_cpf(self, cpf):
+        """Procura o email de um cliente armazenado no banco de dados
+        
+        Returns
+        -------
+        str or None
+        Retorna o email do cliente se encontrado, None se o cliente não for encontrado.
+        """
+
         cursor = self.db_connection.cursor()
         select_query = "SELECT email FROM Usuarios WHERE cpf = %s"
         values = (cpf,)
@@ -152,6 +260,8 @@ class Armazenar:
         return result[0] if result else None
     
     def contar_pessoas_cadastradas(self):
+        """Retorna a quantidade de pessoas cadastradas"""
+
         try:
             cursor = self.db_connection.cursor()
             
